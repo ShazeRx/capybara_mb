@@ -1,4 +1,5 @@
-
+import 'package:capybara_app_new/themes/default_theme/default_theme.dart';
+import 'package:capybara_app_new/themes/main_theme.dart';
 import 'package:flutter/material.dart';
 
 class CapybaraApp extends StatelessWidget {
@@ -6,8 +7,6 @@ class CapybaraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Capybara',
-    );
+        debugShowCheckedModeBanner: false, title: 'Capybara', theme: mainTheme);
   }
 }
