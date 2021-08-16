@@ -37,7 +37,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   // controller: this.emailController,
                   keyboardType: TextInputType.emailAddress,
                   saveData: this._saveRegisterData,
-                  authFormFieldType: FormFieldType.Email,
+                  authFormFieldType: FormFieldType.email,
                   validator: (value) {
                     if (!ValidationHelper.validateIfNotEmpty(value)) {
                       return ValidationMessages.emptyValue;
@@ -52,7 +52,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   placeholder: 'Full name',
                   // controller: this.nameController,
                   saveData: this._saveRegisterData,
-                  authFormFieldType: FormFieldType.FullName,
+                  authFormFieldType: FormFieldType.fullName,
                   validator: (value) {
                     if (!ValidationHelper.validateIfNotEmpty(value)) {
                       return ValidationMessages.emptyValue;
@@ -65,7 +65,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   placeholder: 'Password',
                   controller: this.passwordController,
                   saveData: this._saveRegisterData,
-                  authFormFieldType: FormFieldType.Password,
+                  authFormFieldType: FormFieldType.password,
                   validator: (value) {
                     if (!ValidationHelper.validateIfNotEmpty(value)) {
                       return ValidationMessages.emptyValue;
@@ -87,7 +87,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   // controller: this.repeatPasswordController,
                   inputAction: TextInputAction.done,
                   saveData: this._saveRegisterData,
-                  authFormFieldType: FormFieldType.RepeatPassword,
+                  authFormFieldType: FormFieldType.repeatPassword,
                   validator: (value) {
                     if (!ValidationHelper.validateIfNotEmpty(value)) {
                       return ValidationMessages.emptyValue;

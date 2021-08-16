@@ -1,1 +1,1 @@
-enum ProviderState { Idle, Busy }
+enum ProviderState { idle, busy }

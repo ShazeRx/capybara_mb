@@ -1,6 +1,6 @@
 enum FormFieldType {
-  Email,
-  Password,
-  FullName,
-  RepeatPassword
+  email,
+  password,
+  fullName,
+  repeatPassword
 }

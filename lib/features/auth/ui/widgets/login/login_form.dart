@@ -38,7 +38,7 @@ class _LoginFormState extends State<LoginForm> {
                   placeholder: 'name@email.com',
                   // controller: this.emailController,
                   saveData: _saveLoginData,
-                  authFormFieldType: FormFieldType.Email,
+                  authFormFieldType: FormFieldType.email,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (!ValidationHelper.validateIfNotEmpty(value)) {
@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
                 AuthFormField(
                   placeholder: 'Password',
                   // controller: this.passwordController,
-                  authFormFieldType: FormFieldType.Password,
+                  authFormFieldType: FormFieldType.password,
                   saveData: _saveLoginData,
                   inputAction: TextInputAction.done,
                   validator: (value) {
@@ -77,11 +77,11 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         VerticalSpaceHelper.verticalSpaceMedium(context),
-        loginProvider.state == ProviderState.Busy
+        loginProvider.state == ProviderState.busy
             ? CircularProgressIndicator()
             : ElevatedButton(
                 onPressed: () {
-                  // this._submitForm();
+                  loginProvider.onLoginPressed();
                 },
                 child: Text(
                   'Login',

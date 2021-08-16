@@ -39,8 +39,8 @@ class AuthFormField extends StatelessWidget {
       textInputAction: this.inputAction,
       keyboardType: this.keyboardType,
       validator: this.validator,
-      obscureText: this.authFormFieldType == FormFieldType.Password ||
-          this.authFormFieldType == FormFieldType.RepeatPassword,
+      obscureText: this.authFormFieldType == FormFieldType.password ||
+          this.authFormFieldType == FormFieldType.repeatPassword,
       onSaved: (value) => this.saveData(this.authFormFieldType, value),
     );
   }

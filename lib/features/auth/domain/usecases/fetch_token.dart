@@ -3,9 +3,8 @@ import 'package:capybara_app/features/auth/domain/entities/token.dart';
 import 'package:capybara_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
-import 'package:equatable/equatable.dart';
 
-class FetchToken extends UseCase<Token, NoParams> {
+class FetchToken implements UseCase<Token, NoParams> {
   final AuthRepository authRepository;
 
   FetchToken({required this.authRepository});

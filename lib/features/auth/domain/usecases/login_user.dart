@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:equatable/equatable.dart';
 
-class LoginUser extends UseCase<Token, LoginParams> {
+class LoginUser implements UseCase<Token, LoginParams> {
   final AuthRepository authRepository;
 
   LoginUser({required this.authRepository});
