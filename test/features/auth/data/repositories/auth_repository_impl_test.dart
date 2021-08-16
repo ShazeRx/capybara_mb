@@ -7,8 +7,10 @@ import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/features/auth/data/datasource/auth_local_data_source.dart';
 import 'package:capybara_app/features/auth/data/datasource/auth_remote_data_source.dart';
 import 'package:capybara_app/features/auth/data/models/token_model.dart';
+import 'package:capybara_app/features/auth/data/models/user_model.dart';
 import 'package:capybara_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:capybara_app/features/auth/domain/entities/token.dart';
+import 'package:capybara_app/features/auth/domain/entities/user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -61,6 +63,8 @@ void main() {
   final tPassword = 'admin';
   final TokenModel tTokenModel = TokenModel(access: '123', refresh: '321');
   final Token tToken = tTokenModel;
+  final UserModel tUserModel = UserModel(username: 'user', email: 'user@user.com');
+  final User tUser = tUserModel;
 
   group('login user', () {
     setUp(() {
@@ -163,7 +167,7 @@ void main() {
 
       when(() =>
               mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword))
-          .thenAnswer((_) async => tTokenModel);
+          .thenAnswer((_) async => tUserModel);
     });
 
     test('should check if the device is online', () {
@@ -178,44 +182,6 @@ void main() {
     });
 
     runTestsOnline(() {
-      test(
-        'should return the token when the remote call is successful',
-        () async {
-          // Arrange
-          when(() => mockRemoteDataSource.registerUser(any(), any(), any()))
-              .thenAnswer((_) async => tTokenModel);
-
-          // Act
-          final result =
-              await repository.registerUser(tUsername, tEmail, tPassword);
-
-          // Verify that the method has been called on the Repository
-          verify(() =>
-              mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword));
-
-          // Assert
-          expect(result, equals(Right(tToken)));
-        },
-      );
-
-      test(
-        'should cache the token locally when the remote call is successful',
-        () async {
-          // Arrange
-          when(() => mockRemoteDataSource.registerUser(any(), any(), any()))
-              .thenAnswer((_) async => tTokenModel);
-
-          // Act
-          await repository.registerUser(tUsername, tEmail, tPassword);
-
-          // Assert
-          verify(() =>
-              mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword));
-
-          verify(() => mockLocalDataSource.cacheToken(tTokenModel));
-        },
-      );
-
       test(
         'should return server failure when the remote call is unsuccessful',
         () async {
@@ -244,7 +210,7 @@ void main() {
         // Arrange
         when(() =>
                 mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword))
-            .thenAnswer((_) async => tTokenModel);
+            .thenAnswer((_) async => tUserModel);
 
         // Act
         final result =
