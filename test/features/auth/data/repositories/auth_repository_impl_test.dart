@@ -183,6 +183,24 @@ void main() {
 
     runTestsOnline(() {
       test(
+        'should return the user when the remote call is successful',
+        () async {
+          // Arrange
+          when(() => mockRemoteDataSource.registerUser(any(), any(), any()))
+              .thenAnswer((_) async => tUserModel);
+
+          // Act
+          final result = await repository.registerUser(tUsername, tEmail, tPassword);
+
+          // Verify that the method has been called on the Repository
+          verify(() => mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword));
+
+          // Assert
+          expect(result, equals(Right(tUser)));
+        },
+      );
+
+      test(
         'should return server failure when the remote call is unsuccessful',
         () async {
           // Arrange
