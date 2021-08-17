@@ -1,8 +1,9 @@
 
 
-import 'package:capybara_app/ui/widgets/auth_scroll_view.dart';
-import 'package:capybara_app/ui/widgets/register/register_back_to_login.dart';
-import 'package:capybara_app/ui/widgets/register/register_form.dart';
+
+import 'package:capybara_app/ui/widgets/auth/auth_scroll_view.dart';
+import 'package:capybara_app/ui/widgets/auth/register/register_back_to_login.dart';
+import 'package:capybara_app/ui/widgets/auth/register/register_form.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatelessWidget {
