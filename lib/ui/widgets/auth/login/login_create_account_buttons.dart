@@ -1,7 +1,7 @@
 
-import 'package:capybara_app/core/utils/constants/route_paths.dart';
-import 'package:capybara_app/core/utils/helpers/ui/focus_scope_helper.dart';
-import 'package:capybara_app/core/utils/helpers/ui/vertical_space_helper.dart';
+import 'package:capybara_app/core/constants/route_paths.dart';
+import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
+import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
 import 'package:flutter/material.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 

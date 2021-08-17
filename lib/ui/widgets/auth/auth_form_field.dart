@@ -1,5 +1,4 @@
-
-import 'package:capybara_app/core/utils/enums/form_field_type.dart';
+import 'package:capybara_app/core/enums/form_field_type.dart';
 import 'package:flutter/material.dart';
 
 class AuthFormField extends StatelessWidget {

@@ -1,8 +1,8 @@
-import 'package:capybara_app/core/utils/constants/validation_messages.dart';
-import 'package:capybara_app/core/utils/enums/form_field_type.dart';
-import 'package:capybara_app/core/utils/enums/provider_state.dart';
-import 'package:capybara_app/core/utils/helpers/ui/vertical_space_helper.dart';
-import 'package:capybara_app/core/utils/helpers/validation/validation_helper.dart';
+import 'package:capybara_app/core/constants/validation_messages.dart';
+import 'package:capybara_app/core/enums/form_field_type.dart';
+import 'package:capybara_app/core/enums/provider_state.dart';
+import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
+import 'package:capybara_app/core/helpers/validation/validation_helper.dart';
 import 'package:capybara_app/ui/providers/login_provider.dart';
 
 import 'package:flutter/material.dart';

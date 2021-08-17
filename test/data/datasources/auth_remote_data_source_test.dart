@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
-import 'package:capybara_app/core/utils/constants/api.dart';
 import 'package:capybara_app/data/models/token_model.dart';
 import 'package:capybara_app/data/models/user_model.dart';
 import 'package:http/http.dart' as http;

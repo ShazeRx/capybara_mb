@@ -1,4 +1,4 @@
-import 'package:capybara_app/core/utils/helpers/ui/vertical_space_helper.dart';
+import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
 import 'package:capybara_app/ui/widgets/auth/auth_scroll_view.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_create_account_buttons.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_form.dart';

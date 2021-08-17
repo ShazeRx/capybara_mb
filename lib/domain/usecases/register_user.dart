@@ -1,5 +1,5 @@
 import 'package:capybara_app/core/errors/failures/failure.dart';
-import 'package:capybara_app/core/usecases/usecase.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/domain/entities/user.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';

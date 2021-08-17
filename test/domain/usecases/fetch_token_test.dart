@@ -1,4 +1,4 @@
-import 'package:capybara_app/core/usecases/usecase.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/domain/entities/token.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:capybara_app/domain/usecases/fetch_token.dart';
