@@ -26,13 +26,16 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client client;
 
+  // TODO - add interceptor that will add headers to every http request
+  final headers = {'Content-Type': 'application/json'};
+
   AuthRemoteDataSourceImpl({required this.client});
 
   @override
   Future<TokenModel> loginUser(String username, String password) async {
     final response = await client.post(
       Uri.parse(Api.mainUrl + Api.loginUrl),
-      headers: {'Content-Type': 'application/json'},
+      headers: this.headers,
     );
 
     if (response.statusCode != 200) throw ServerException();
@@ -42,7 +45,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> registerUser(
-      String username, String email, String password) {
-    throw UnimplementedError();
+      String username, String email, String password) async {
+    final response = await client.post(
+      Uri.parse(Api.mainUrl + Api.registerUrl),
+      headers: this.headers,
+    );
+
+    if (response.statusCode != 200) throw ServerException();
+
+    return UserModel.fromJson(json.decode(response.body));
   }
 }
