@@ -16,7 +16,7 @@ void main() {
 
   group('check connection', () {
     test(
-      'should forward the call to DataConnectionChecker.hasConnection',
+      'should forward the call to InternetConnectionChecker.hasConnection',
       () async {
         // Arrange
         final tHasConnectionFuture = Future.value(true);
