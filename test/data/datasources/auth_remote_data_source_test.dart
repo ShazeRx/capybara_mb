@@ -27,30 +27,60 @@ void main() {
     registerFallbackValue<Uri>(FakeUri());
   });
 
-  void mockHttpPostLogin200Success() {
-    when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-        .thenAnswer(
-      (_) async => http.Response(fixture('token.json'), 200),
-    );
-  }
-
-  void mockHttpPostRegister200Success() {
-    when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-        .thenAnswer(
-      (_) async => http.Response(fixture('user.json'), 200),
-    );
-  }
-
-  void mockHttpPost500Failure() {
-    when(() => mockHttpClient.post(any(), headers: any(named: 'headers')))
-        .thenAnswer((_) async => http.Response('Something went wrong', 500));
-  }
-
   final tUsername = 'user';
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
   final tTokenModel = TokenModel.fromJson(json.decode(fixture('token.json')));
   final tUserModel = UserModel.fromJson(json.decode(fixture('user.json')));
+  final tLoginRequest = jsonEncode(
+    {
+      'username': tUsername,
+      'password': tPassword,
+    },
+  );
+  final tRegisterRequest = jsonEncode(
+    {
+      'username': tUsername,
+      'email': tEmail,
+      'password': tPassword,
+    },
+  );
+
+  void mockHttpPostLogin200Success() {
+    when(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: tLoginRequest,
+        )).thenAnswer(
+      (_) async => http.Response(fixture('token.json'), 200),
+    );
+  }
+
+  void mockHttpPostRegister200Success() {
+    when(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: tRegisterRequest,
+        )).thenAnswer(
+      (_) async => http.Response(fixture('user.json'), 200),
+    );
+  }
+
+  void mockHttpPostLogin500Failure() {
+    when(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: tLoginRequest,
+        )).thenAnswer((_) async => http.Response('Something went wrong', 500));
+  }
+
+  void mockHttpPostRegister500Failure() {
+    when(() => mockHttpClient.post(
+          any(),
+          headers: any(named: 'headers'),
+          body: tRegisterRequest,
+        )).thenAnswer((_) async => http.Response('Something went wrong', 500));
+  }
 
   group('login user', () {
     test(
@@ -66,6 +96,7 @@ void main() {
       verify(() => mockHttpClient.post(
             Uri.parse(Api.mainUrl + Api.loginUrl),
             headers: {'Content-Type': 'application/json'},
+            body: tLoginRequest,
           ));
     });
 
@@ -85,7 +116,7 @@ void main() {
         'should throw a ServerException when the response code is 500 or other than 200',
         () async {
       // Arrange
-      mockHttpPost500Failure();
+      mockHttpPostLogin500Failure();
 
       // Act
       final call = dataSource.loginUser;
@@ -110,6 +141,7 @@ void main() {
       verify(() => mockHttpClient.post(
             Uri.parse(Api.mainUrl + Api.registerUrl),
             headers: {'Content-Type': 'application/json'},
+            body: tRegisterRequest,
           ));
     });
 
@@ -119,7 +151,8 @@ void main() {
       mockHttpPostRegister200Success();
 
       // Act
-      final result = await dataSource.registerUser(tUsername, tEmail, tPassword);
+      final result =
+          await dataSource.registerUser(tUsername, tEmail, tPassword);
 
       // Assert
       expect(result, equals(tUserModel));
@@ -129,7 +162,7 @@ void main() {
         'should throw a ServerException when the response code is 500 or other than 200',
         () async {
       // Arrange
-      mockHttpPost500Failure();
+      mockHttpPostRegister500Failure();
 
       // Act
       final call = dataSource.registerUser;

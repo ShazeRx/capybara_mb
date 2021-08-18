@@ -37,6 +37,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await client.post(
       Uri.parse(Api.mainUrl + Api.loginUrl),
       headers: this.headers,
+      body: jsonEncode(
+        {
+          'username': username,
+          'password': password,
+        },
+      ),
     );
 
     if (response.statusCode != 200) throw ServerException();
@@ -50,6 +56,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final response = await client.post(
       Uri.parse(Api.mainUrl + Api.registerUrl),
       headers: this.headers,
+      body: jsonEncode(
+        {
+          'username': username,
+          'email': email,
+          'password': password,
+        },
+      ),
     );
 
     if (response.statusCode != 200) throw ServerException();
