@@ -14,8 +14,8 @@ dependencies:
 
   # State management
   provider: ^5.0.0
-
-  # Service locator
+  
+  # dependency injection
   get_it: ^7.2.0
 
   # Value equality for reference types
@@ -33,6 +33,9 @@ dependencies:
 
   # Validators
   form_field_validator: ^1.1.0
+
+  # third party services
+  stacked_services:
  
 
 dev_dependencies:
@@ -41,8 +44,6 @@ dev_dependencies:
 
   # Mock testing
   mocktail: ^0.1.4
-
-
 
 flutter:
   uses-material-design: true
