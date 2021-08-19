@@ -14,6 +14,8 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -22,6 +24,7 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           AuthFormWrapper(
             form: Form(
+              key: this._formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -46,8 +49,10 @@ class _LoginFormState extends State<LoginForm> {
               ? CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: () async {
-                    // await login.showBasicDialog();
-                    login.onLoginSubmitted();
+                    if (this._formKey.currentState!.validate()) {
+                      this._formKey.currentState!.save();
+                      login.onLoginSubmitted();
+                    }
                   },
                   child: Text(
                     'Login',
