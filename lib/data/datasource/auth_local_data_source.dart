@@ -16,13 +16,15 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final SharedPreferences _sharedPreferences;
 
-  AuthLocalDataSourceImpl({required this.sharedPreferences});
+  AuthLocalDataSourceImpl({
+    required sharedPreferences,
+  }) : this._sharedPreferences = sharedPreferences;
 
   @override
   Future<TokenModel> fetchToken() {
-    final jsonString = this.sharedPreferences.getString(CachedValues.token);
+    final jsonString = this._sharedPreferences.getString(CachedValues.token);
 
     if (jsonString == null) throw CacheException();
 
@@ -34,7 +36,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> cacheToken(TokenModel token) {
-    return this.sharedPreferences.setString(
+    return this._sharedPreferences.setString(
           CachedValues.token,
           json.encode(token.toJson()),
         );

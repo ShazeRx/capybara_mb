@@ -8,8 +8,7 @@ import 'package:stacked_services/stacked_services.dart';
 class BaseProvider with ChangeNotifier {
   DialogService dialogService = getIt<DialogService>();
   NavigationService navigationService = getIt<NavigationService>();
-
-  SnackbarService _snackbarService = getIt<SnackbarService>();
+  SnackbarService snackbarService = getIt<SnackbarService>();
 
   ProviderState _state = ProviderState.idle;
 
@@ -22,6 +21,6 @@ class BaseProvider with ChangeNotifier {
 
   void showError(Failure failure) {
     final errorMessage = FailureMessagesHelper.getMessage(failure);
-    this._snackbarService.showSnackbar(message: errorMessage);
+    this.snackbarService.showSnackbar(message: errorMessage);
   }
 }

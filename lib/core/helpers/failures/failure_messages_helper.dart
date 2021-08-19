@@ -4,12 +4,12 @@ import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 
 class FailureMessagesHelper {
-  static final messages = {
+  static final _messages = {
     CacheFailure: FailureMessages.cacheFailure,
     ServerFailure: FailureMessages.serverFailure
   };
 
   static String getMessage(Failure failure) {
-    return messages[failure.runtimeType]!;
+    return _messages[failure.runtimeType]!;
   }
 }

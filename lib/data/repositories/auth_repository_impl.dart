@@ -15,27 +15,29 @@ import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource remoteDataSource;
-  final AuthLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
+  final AuthRemoteDataSource _remoteDataSource;
+  final AuthLocalDataSource _localDataSource;
+  final NetworkInfo _networkInfo;
 
   AuthRepositoryImpl({
-    required this.remoteDataSource,
-    required this.localDataSource,
-    required this.networkInfo,
-  });
+    required remoteDataSource,
+    required localDataSource,
+    required networkInfo,
+  })  : this._remoteDataSource = remoteDataSource,
+        this._localDataSource = localDataSource,
+        this._networkInfo = networkInfo;
 
   @override
   Future<Either<Failure, Token>> loginUser(
     String username,
     String password,
   ) async {
-    if (!await this.networkInfo.isConnected) {
+    if (!await this._networkInfo.isConnected) {
       return Left(NoConnectionFailure());
     }
     try {
-      final token = await this.remoteDataSource.loginUser(username, password);
-      this.localDataSource.cacheToken(token);
+      final token = await this._remoteDataSource.loginUser(username, password);
+      this._localDataSource.cacheToken(token);
       return Right(token);
     } on ServerException {
       return Left(ServerFailure());
@@ -48,12 +50,12 @@ class AuthRepositoryImpl implements AuthRepository {
     String email,
     String password,
   ) async {
-    if (!await this.networkInfo.isConnected) {
+    if (!await this._networkInfo.isConnected) {
       return Left(NoConnectionFailure());
     }
     try {
       final user =
-          await this.remoteDataSource.registerUser(username, email, password);
+          await this._remoteDataSource.registerUser(username, email, password);
       return Right(user);
     } on ServerException {
       return Left(ServerFailure());
@@ -63,7 +65,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, Token>> fetchToken() async {
     try {
-      final token = await this.localDataSource.fetchToken();
+      final token = await this._localDataSource.fetchToken();
       return Right(token);
     } on CacheException {
       return Left(CacheFailure());

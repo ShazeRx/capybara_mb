@@ -6,15 +6,19 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 class RegisterUser implements UseCase<User, RegisterParams> {
-  final AuthRepository authRepository;
+  final AuthRepository _authRepository;
 
-  RegisterUser({required this.authRepository});
+  RegisterUser({
+    required authRepository,
+  }) : this._authRepository = authRepository;
 
   @override
   Future<Either<Failure, User>> call(RegisterParams params) async {
-    return await this
-        .authRepository
-        .registerUser(params.username, params.email, params.password);
+    return await this._authRepository.registerUser(
+          params.username,
+          params.email,
+          params.password,
+        );
   }
 }
 

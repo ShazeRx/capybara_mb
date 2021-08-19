@@ -5,12 +5,14 @@ import 'package:dartz/dartz.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 
 class FetchToken implements UseCase<Token, NoParams> {
-  final AuthRepository authRepository;
+  final AuthRepository _authRepository;
 
-  FetchToken({required this.authRepository});
+  FetchToken({
+    required authRepository,
+  }) : this._authRepository = authRepository;
 
   @override
   Future<Either<Failure, Token>> call(NoParams params) async {
-    return await this.authRepository.fetchToken();
+    return await this._authRepository.fetchToken();
   }
 }
