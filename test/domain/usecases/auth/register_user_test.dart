@@ -1,6 +1,6 @@
-import 'package:capybara_app/domain/entities/token.dart';
+import 'package:capybara_app/domain/entities/user.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
-import 'package:capybara_app/domain/usecases/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,37 +9,39 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   late MockAuthRepository mockAuthRepository;
-  late LoginUser usecase;
+  late RegisterUser usecase;
 
   setUp(() {
     mockAuthRepository = MockAuthRepository();
-    usecase = LoginUser(authRepository: mockAuthRepository);
+    usecase = RegisterUser(authRepository: mockAuthRepository);
   });
 
   final tUsername = 'user';
+  final tEmail = 'user@user.com';
   final tPassword = 'user123';
-  final Token tToken = Token(access: '123', refresh: '321');
+  final User tUser = User(email: tEmail, username: tUsername);
 
-  test('should get a token from the repository', () async {
+  test('should return registered user', () async {
     // Arrange
-    // When loginUser is called with any arguments, always answer with
-    // the Right "side" of Either containing a test Token object.
-    when(() => mockAuthRepository.loginUser(any(), any()))
-        .thenAnswer((_) async => Right(tToken));
+    // When registerUser is called with any arguments, always answer with
+    // the Right "side" of Either containing a test User object.
+    when(() => mockAuthRepository.registerUser(any(), any(), any()))
+        .thenAnswer((_) async => Right(tUser));
 
     // Act
     final result = await usecase(
-      LoginParams(
+      RegisterParams(
         username: tUsername,
+        email: tEmail,
         password: tPassword,
       ),
     );
 
     // Assert
-    expect(result, Right(tToken));
+    expect(result, Right(tUser));
 
     // Verify that the method has been called on the Repository
-    verify(() => mockAuthRepository.loginUser(tUsername, tPassword));
+    verify(() => mockAuthRepository.registerUser(tUsername, tEmail, tPassword));
 
     // Only the above method should be called and nothing more.
     verifyNoMoreInteractions(mockAuthRepository);

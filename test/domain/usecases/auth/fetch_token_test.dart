@@ -1,7 +1,7 @@
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/domain/entities/token.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
-import 'package:capybara_app/domain/usecases/fetch_token.dart';
+import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
