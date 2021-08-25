@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
-import 'package:capybara_app/core/errors/exceptions/network_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/data/models/token_model.dart';
@@ -31,30 +30,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<TokenModel> loginUser(LoginRequest request) async {
-    try {
-      final response = await this._client.invoke(
-            url: Api.loginUrl,
-            method: HttpMethods.post,
-            body: request.toJson(),
-          );
-      return TokenModel.fromJson(json.decode(response));
-    } on ServerException {
-      rethrow;
-    }
+    final response = await this._client.invoke(
+          url: Api.loginUrl,
+          method: HttpMethods.post,
+          body: request.toJson(),
+        );
+    return TokenModel.fromJson(json.decode(response));
   }
 
   @override
   Future<UserModel> registerUser(RegisterRequest request) async {
-    try {
-      final response = await this._client.invoke(
-            url: Api.registerUrl,
-            method: HttpMethods.post,
-            body: request.toJson(),
-          );
+    final response = await this._client.invoke(
+          url: Api.registerUrl,
+          method: HttpMethods.post,
+          body: request.toJson(),
+        );
 
-      return UserModel.fromJson(json.decode(response));
-    } on ServerException {
-      rethrow;
-    }
+    return UserModel.fromJson(json.decode(response));
   }
 }

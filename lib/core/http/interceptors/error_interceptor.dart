@@ -25,18 +25,14 @@ class ErrorInterceptor extends InterceptorsWrapper {
   }
 
   Future<RefreshModel?> _refreshToken() async {
-    try {
-      final currentToken = await HttpHelper.getCurrentToken();
-      final payload = RefreshRequest(refresh: currentToken.refresh).toJson();
-      final response = await this._invoke(
-        url: Api.refreshUrl,
-        method: HttpMethods.post,
-        body: payload,
-      );
-      return RefreshModel.fromJson(json.decode(response));
-    } on CacheException {
-      rethrow;
-    }
+    final currentToken = await HttpHelper.getCurrentToken();
+    final payload = RefreshRequest(refresh: currentToken.refresh).toJson();
+    final response = await this._invoke(
+      url: Api.refreshUrl,
+      method: HttpMethods.post,
+      body: payload,
+    );
+    return RefreshModel.fromJson(json.decode(response));
   }
 
   Future<dynamic> _retry(RequestOptions requestOptions) async {
