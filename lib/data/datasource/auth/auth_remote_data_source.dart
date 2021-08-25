@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
+import 'package:capybara_app/core/errors/exceptions/network_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/data/models/token_model.dart';
@@ -37,8 +38,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             body: request.toJson(),
           );
       return TokenModel.fromJson(json.decode(response));
-    } on ServerException catch (e) {
-      throw e;
+    } on ServerException {
+      rethrow;
     }
   }
 
@@ -52,8 +53,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           );
 
       return UserModel.fromJson(json.decode(response));
-    } on ServerException catch (e) {
-      throw e;
+    } on ServerException {
+      rethrow;
     }
   }
 }

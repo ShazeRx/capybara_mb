@@ -1,4 +1,5 @@
 import 'package:capybara_app/core/constants/api.dart';
+import 'package:capybara_app/core/errors/exceptions/network_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/interceptors/error_interceptor.dart';
 import 'package:capybara_app/core/http/interceptors/token_interceptor.dart';
@@ -40,8 +41,11 @@ class HttpClientImpl implements HttpClient {
             queryParameters: queryParameters,
           );
       return response.data;
-    } on DioError catch (error) {
-      throw ServerException(message: error.response!.data['message']);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        throw ServerException(message: e.response!.data['message']);
+      }
+      throw NetworkException();
     }
   }
 
