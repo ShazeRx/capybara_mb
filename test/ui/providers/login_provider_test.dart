@@ -1,7 +1,8 @@
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/usecases/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/login_provider.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,21 +10,21 @@ import 'package:mocktail/mocktail.dart';
 
 import '../../setup/test_helpers.dart';
 
-class MockLoginUser extends Mock implements LoginUser {}
+class MockAuthFacade extends Mock implements AuthFacade {}
 
 class FakeParams extends Fake implements LoginParams {}
 
 void main() {
   late LoginProvider provider;
-  late MockLoginUser mockLoginUser;
+  late MockAuthFacade mockAuthFacade;
 
   setUp(() {
     registerThirdPartyServices();
 
-    mockLoginUser = MockLoginUser();
+    mockAuthFacade = MockAuthFacade();
 
     provider = LoginProvider(
-      loginUser: mockLoginUser,
+      authFacade: mockAuthFacade,
     );
     registerFallbackValue<LoginParams>(FakeParams());
   });
@@ -35,14 +36,14 @@ void main() {
   final tToken = Token(access: '123', refresh: '321');
 
   void mockLoginSuccess() {
-    when(() => mockLoginUser(any())).thenAnswer(
+    when(() => mockAuthFacade.loginUser(any())).thenAnswer(
       (_) async => Right(tToken),
     );
   }
 
   void mockLoginfailure() {
-    when(() => mockLoginUser(any())).thenAnswer(
-      (_) async => Left(ServerFailure()),
+    when(() => mockAuthFacade.loginUser(any())).thenAnswer(
+      (_) async => Left(ServerFailure(message: 'Server failure')),
     );
   }
 
@@ -77,8 +78,8 @@ void main() {
       provider.onLoginSubmitted();
 
       // Assert
-      verify(() =>
-          mockLoginUser(LoginParams(username: tUsername, password: tPassword)));
+      verify(() => mockAuthFacade
+          .loginUser(LoginParams(username: tUsername, password: tPassword)));
     });
 
     test('should change provider state to idle after unsuccessful login',
@@ -105,18 +106,6 @@ void main() {
 
       // Assert
       expect(result, ProviderState.idle);
-    });
-
-    test('should assign valid token after successful login', () async {
-      // Arrange
-      mockLoginSuccess();
-
-      // Act
-      await provider.onLoginSubmitted();
-      final result = provider.token;
-
-      // Assert
-      expect(result, tToken);
     });
 
     test('should change provider state to busy after login attempt', () async {

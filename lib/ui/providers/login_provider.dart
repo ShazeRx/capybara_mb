@@ -1,36 +1,28 @@
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/usecases/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/base_provider.dart';
 
 class LoginProvider extends BaseProvider {
-  late Token _token;
-  final LoginUser _loginUser;
+  final AuthFacade _authFacade;
 
   var loginData = {
     'username': '',
     'password': '',
   };
 
-  Token get token => _token;
-
-  void setToken(Token token) {
-    this._token = token;
-    notifyListeners();
-  }
-
   LoginProvider({
-    required LoginUser loginUser,
-  }) : _loginUser = loginUser;
+    required AuthFacade authFacade,
+  }) : _authFacade = authFacade;
 
   Future<void> onLoginSubmitted() async {
     this.setState(ProviderState.busy);
 
-    final result = await this._loginUser(this.getLoginParams());
+    final result = await this._authFacade.loginUser(this.getLoginParams());
 
     result.fold(
       (failure) => this.showError(failure),
-      (token) => this.setToken(token),
+      (token) => this.navigationService.navigateTo(''),
     );
 
     this.setState(ProviderState.idle);
