@@ -8,7 +8,7 @@ class NetworkInfoImpl implements NetworkInfo {
   final InternetConnectionChecker _connectionChecker;
 
   NetworkInfoImpl({
-    required connectionChecker,
+    required InternetConnectionChecker connectionChecker,
   }) : this._connectionChecker = connectionChecker;
 
   @override
