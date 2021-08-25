@@ -9,15 +9,12 @@ class LoginUser implements UseCase<Token, LoginParams> {
   final AuthRepository _authRepository;
 
   LoginUser({
-    required authRepository,
+    required AuthRepository authRepository,
   }) : this._authRepository = authRepository;
 
   @override
   Future<Either<Failure, Token>> call(LoginParams params) async {
-    return await this._authRepository.loginUser(
-          params.username,
-          params.password,
-        );
+    return await this._authRepository.loginUser(params);
   }
 }
 

@@ -9,16 +9,12 @@ class RegisterUser implements UseCase<User, RegisterParams> {
   final AuthRepository _authRepository;
 
   RegisterUser({
-    required authRepository,
+    required AuthRepository authRepository,
   }) : this._authRepository = authRepository;
 
   @override
   Future<Either<Failure, User>> call(RegisterParams params) async {
-    return await this._authRepository.registerUser(
-          params.username,
-          params.email,
-          params.password,
-        );
+    return await this._authRepository.registerUser(params);
   }
 }
 

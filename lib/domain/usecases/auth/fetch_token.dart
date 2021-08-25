@@ -8,7 +8,7 @@ class FetchToken implements UseCase<Token, NoParams> {
   final AuthRepository _authRepository;
 
   FetchToken({
-    required authRepository,
+    required AuthRepository authRepository,
   }) : this._authRepository = authRepository;
 
   @override
