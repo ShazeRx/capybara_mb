@@ -27,19 +27,19 @@ class AuthFacade {
 
   Future<Either<Failure, Token>> fetchToken() async {
     final result = await this._fetchToken(NoParams());
-    this._authState.setToken(result.getValueOrNull<Token?>());
+    this._authState.setToken(result.getValueOrNull<Token>());
     return result;
   }
 
   Future<Either<Failure, Token>> loginUser(LoginParams params) async {
     final result = await this._loginUser(params);
-    this._authState.setToken(result.getValueOrNull<Token?>());
+    this._authState.setToken(result.getValueOrNull<Token>());
     return result;
   }
 
   Future<Either<Failure, User>> registerUser(RegisterParams params) async {
     final result = await this._registerUser(params);
-    this._authState.setUser(result.getValueOrNull<User?>());
+    this._authState.setUser(result.getValueOrNull<User>());
     return result;
   }
 }

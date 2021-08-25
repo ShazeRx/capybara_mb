@@ -3,7 +3,7 @@ import 'package:capybara_app/domain/entities/user.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:flutter/cupertino.dart';
 
-class AuthStateReader with ChangeNotifier {
+class AuthStateNotifier with ChangeNotifier {
   final AuthState _authState;
 
   Token? _token;
@@ -12,7 +12,7 @@ class AuthStateReader with ChangeNotifier {
   Token? get token => this._token;
   User? get user => this._user;
 
-  AuthStateReader({
+  AuthStateNotifier({
     required AuthState authState,
   }) : this._authState = authState {
     this._addTokenListener();

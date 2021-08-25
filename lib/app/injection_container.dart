@@ -11,7 +11,7 @@ import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/login_provider.dart';
 import 'package:capybara_app/ui/providers/register_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
-import 'package:capybara_app/ui/states/auth/auth_state_reader.dart';
+import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -60,7 +60,7 @@ void _registerFacades() {
 
 void _registerStates() {
   getIt.registerLazySingleton(
-    () => AuthStateReader(
+    () => AuthStateNotifier(
       authState: getIt(),
     ),
   );
@@ -122,7 +122,6 @@ void _registerCoreFeatures() {
   getIt.registerLazySingleton<HttpClient>(
     () => HttpClientImpl(
       dio: getIt(),
-      authStateReader: getIt(),
     ),
   );
 }
