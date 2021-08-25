@@ -180,49 +180,4 @@ void main() {
           throwsA(TypeMatcher<ServerException>()));
     });
   });
-
-  group('refresh token', () {
-    test(
-        'should perform a POST request on a URL with refresh being the endpoint',
-        () {
-      // Arrange
-      mockHttpPostRefresh200Success();
-
-      // Act
-      dataSource.refreshToken(tRefreshRequest);
-
-      // Assert
-      verify(
-        () => mockHttpClient.invoke(
-          url: Api.refreshUrl,
-          method: HttpMethods.post,
-          body: tRefreshRequest.toJson(),
-        ),
-      );
-    });
-
-    test('should return RefreshModel when the response code is 200 (success)',
-        () async {
-      // Arrange
-      mockHttpPostRefresh200Success();
-
-      // Act
-      final result = await dataSource.refreshToken(tRefreshRequest);
-
-      // Assert
-      expect(result, equals(tRefreshModel));
-    });
-
-    test('should throw a ServerException for all error codes', () async {
-      // Arrange
-      mockHttpPostRefresh500Failure();
-
-      // Act
-      final call = dataSource.refreshToken;
-
-      // Assert
-      expect(
-          () => call(tRefreshRequest), throwsA(TypeMatcher<ServerException>()));
-    });
-  });
 }
