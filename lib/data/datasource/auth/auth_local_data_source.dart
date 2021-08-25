@@ -19,7 +19,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final SharedPreferences _sharedPreferences;
 
   AuthLocalDataSourceImpl({
-    required sharedPreferences,
+    required SharedPreferences sharedPreferences,
   }) : this._sharedPreferences = sharedPreferences;
 
   @override
