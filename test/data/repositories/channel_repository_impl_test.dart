@@ -62,7 +62,7 @@ void main() {
         when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
         when(() => mockLocalDataSource.cacheChannels(any()))
-            .thenAnswer((_) async => channels);
+            .thenAnswer((_) async => null);
       });
       test('should return remote data when connection is available', () async {
         //arrange

@@ -1,6 +1,6 @@
 import 'package:capybara_app/domain/entities/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
-import 'package:capybara_app/domain/usecases/create_channel.dart';
+import 'package:capybara_app/domain/usecases/chat/create_channel.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
