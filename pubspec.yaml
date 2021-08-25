@@ -14,8 +14,8 @@ dependencies:
 
   # State management
   provider: ^5.0.0
-
-  # Service locator
+  
+  # dependency injection
   get_it: ^7.2.0
 
   # Value equality for reference types
@@ -25,14 +25,21 @@ dependencies:
   dartz: ^0.10.0
 
   # Remote API
-  http: ^0.13.3
+  # http: ^0.13.3
   internet_connection_checker: ^0.0.1+2
+  dio: ^4.0.0
 
   # Local cache
   shared_preferences: ^2.0.6
 
   # Validators
   form_field_validator: ^1.1.0
+
+  # third party services
+  stacked_services:
+
+  # Reactive extensions for Dart
+  rxdart: ^0.27.1
  
 
 dev_dependencies:
@@ -41,8 +48,7 @@ dev_dependencies:
 
   # Mock testing
   mocktail: ^0.1.4
-
-
+  http_mock_adapter: ^0.3.2
 
 flutter:
   uses-material-design: true

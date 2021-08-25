@@ -31,8 +31,8 @@ void main() {
 
     // Act
     final expectedJsonMap = {
-      "refresh": "123",
-      "access": "321",
+      'refresh': '123',
+      'access': '321',
     };
 
     // Assert

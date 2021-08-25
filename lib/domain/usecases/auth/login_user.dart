@@ -6,15 +6,15 @@ import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:equatable/equatable.dart';
 
 class LoginUser implements UseCase<Token, LoginParams> {
-  final AuthRepository authRepository;
+  final AuthRepository _authRepository;
 
-  LoginUser({required this.authRepository});
+  LoginUser({
+    required AuthRepository authRepository,
+  }) : this._authRepository = authRepository;
 
   @override
   Future<Either<Failure, Token>> call(LoginParams params) async {
-    return await this
-        .authRepository
-        .loginUser(params.username, params.password);
+    return await this._authRepository.loginUser(params);
   }
 }
 

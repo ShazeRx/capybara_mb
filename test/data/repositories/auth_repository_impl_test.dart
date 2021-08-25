@@ -1,16 +1,17 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
+import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
-import 'package:capybara_app/core/errors/failures/no_connection_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
-import 'package:capybara_app/data/datasource/auth_local_data_source.dart';
-import 'package:capybara_app/data/datasource/auth_remote_data_source.dart';
+import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
+import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/models/token_model.dart';
 import 'package:capybara_app/data/models/user_model.dart';
 import 'package:capybara_app/data/repositories/auth_repository_impl.dart';
-import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/data/requests/login_request.dart';
+import 'package:capybara_app/data/requests/refresh_request.dart';
+import 'package:capybara_app/data/requests/register_request.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,6 +21,12 @@ class MockRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 class MockLocalDataSource extends Mock implements AuthLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
+
+class FakeLoginRequest extends Fake implements LoginRequest {}
+
+class FakeRegisterRequest extends Fake implements RegisterRequest {}
+
+class FakeRefreshRequest extends Fake implements RefreshRequest {}
 
 void main() {
   late AuthRepositoryImpl repository;
@@ -36,8 +43,11 @@ void main() {
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
     );
-  });
 
+    registerFallbackValue<LoginRequest>(FakeLoginRequest());
+    registerFallbackValue<RegisterRequest>(FakeRegisterRequest());
+    registerFallbackValue<RefreshRequest>(FakeRefreshRequest());
+  });
   void runTestsOnline(Function body) {
     group('device is online', () {
       setUp(() {
@@ -58,29 +68,39 @@ void main() {
     });
   }
 
-  final tUsername = 'admin';
-  final tEmail = 'admin@admin.com';
-  final tPassword = 'admin';
-  final TokenModel tTokenModel = TokenModel(access: '123', refresh: '321');
-  final Token tToken = tTokenModel;
-  final UserModel tUserModel = UserModel(username: 'user', email: 'user@user.com');
-  final User tUser = tUserModel;
+  final tUsername = 'user';
+  final tEmail = 'user@user.com';
+  final tPassword = 'user123';
+  final tErrorMessage = 'Fail';
+
+  final tLoginRequest = LoginRequest(username: tUsername, password: tPassword);
+
+  final tRegisterRequest =
+      RegisterRequest(username: tUsername, email: tEmail, password: tPassword);
+
+  final tTokenModel = TokenModel(access: '123', refresh: '321');
+
+  final tToken = tTokenModel;
+
+  final tUserModel = UserModel(username: tUsername, email: tEmail);
+
+  final tUser = tUserModel;
 
   group('login user', () {
     setUp(() {
       when(() => mockLocalDataSource.cacheToken(tTokenModel))
           .thenAnswer((_) async => {});
 
-      when(() => mockRemoteDataSource.loginUser(tUsername, tPassword))
+      when(() => mockRemoteDataSource.loginUser(tLoginRequest))
           .thenAnswer((_) async => tTokenModel);
     });
 
-    test('should check if the device is online', () {
+    test('should check if the device is online', () async {
       // Arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       // Act
-      repository.loginUser(tUsername, tPassword);
+      await repository.loginUser(tLoginRequest);
 
       // assert
       verify(() => mockNetworkInfo.isConnected);
@@ -91,14 +111,14 @@ void main() {
         'should return the token when the remote call is successful',
         () async {
           // Arrange
-          when(() => mockRemoteDataSource.loginUser(any(), any()))
+          when(() => mockRemoteDataSource.loginUser(any()))
               .thenAnswer((_) async => tTokenModel);
 
           // Act
-          final result = await repository.loginUser(tUsername, tPassword);
+          final result = await repository.loginUser(tLoginRequest);
 
           // Verify that the method has been called on the Repository
-          verify(() => mockRemoteDataSource.loginUser(tUsername, tPassword));
+          verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
 
           // Assert
           expect(result, equals(Right(tToken)));
@@ -109,14 +129,14 @@ void main() {
         'should cache the token locally when the remote call is successful',
         () async {
           // Arrange
-          when(() => mockRemoteDataSource.loginUser(any(), any()))
+          when(() => mockRemoteDataSource.loginUser(any()))
               .thenAnswer((_) async => tTokenModel);
 
           // Act
-          await repository.loginUser(tUsername, tPassword);
+          await repository.loginUser(tLoginRequest);
 
           // Assert
-          verify(() => mockRemoteDataSource.loginUser(tUsername, tPassword));
+          verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
 
           verify(() => mockLocalDataSource.cacheToken(tTokenModel));
         },
@@ -126,47 +146,42 @@ void main() {
         'should return server failure when the remote call is unsuccessful',
         () async {
           // Arrange
-          when(() => mockRemoteDataSource.loginUser(any(), any()))
-              .thenThrow(ServerException());
+          when(() => mockRemoteDataSource.loginUser(any()))
+              .thenThrow(ServerException(message: tErrorMessage));
 
           // Act
-          final result = await repository.loginUser(tUsername, tPassword);
+          final result = await repository.loginUser(tLoginRequest);
 
           // Assert
-          verify(() => mockRemoteDataSource.loginUser(tUsername, tPassword));
+          verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
 
           verifyZeroInteractions(mockLocalDataSource);
 
-          expect(result, equals(Left(ServerFailure())));
+          expect(result, equals(Left(ServerFailure(message: tErrorMessage))));
         },
       );
     });
 
     runTestsOffline(() {
-      test('should return a no connection failure if the device is offline',
-          () async {
+      test('should return network failure if the device is offline', () async {
         // Arrange
-        when(() => mockRemoteDataSource.loginUser(tUsername, tPassword))
+        when(() => mockRemoteDataSource.loginUser(tLoginRequest))
             .thenAnswer((_) async => tTokenModel);
 
         // Act
-        final result = await repository.loginUser(tUsername, tPassword);
+        final result = await repository.loginUser(tLoginRequest);
 
         // Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, equals(Left(NoConnectionFailure())));
+        expect(result, equals(Left(NetworkFailure())));
       });
     });
   });
 
   group('register user', () {
     setUp(() {
-      when(() => mockLocalDataSource.cacheToken(tTokenModel))
-          .thenAnswer((_) async => {});
-
-      when(() =>
-              mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword))
+      when(() => mockRemoteDataSource.registerUser(tRegisterRequest))
           .thenAnswer((_) async => tUserModel);
     });
 
@@ -175,7 +190,7 @@ void main() {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       // Act
-      repository.registerUser(tUsername, tEmail, tPassword);
+      repository.registerUser(tRegisterRequest);
 
       // assert
       verify(() => mockNetworkInfo.isConnected);
@@ -186,14 +201,14 @@ void main() {
         'should return the user when the remote call is successful',
         () async {
           // Arrange
-          when(() => mockRemoteDataSource.registerUser(any(), any(), any()))
+          when(() => mockRemoteDataSource.registerUser(any()))
               .thenAnswer((_) async => tUserModel);
 
           // Act
-          final result = await repository.registerUser(tUsername, tEmail, tPassword);
+          final result = await repository.registerUser(tRegisterRequest);
 
           // Verify that the method has been called on the Repository
-          verify(() => mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword));
+          verify(() => mockRemoteDataSource.registerUser(tRegisterRequest));
 
           // Assert
           expect(result, equals(Right(tUser)));
@@ -204,20 +219,18 @@ void main() {
         'should return server failure when the remote call is unsuccessful',
         () async {
           // Arrange
-          when(() => mockRemoteDataSource.registerUser(any(), any(), any()))
-              .thenThrow(ServerException());
+          when(() => mockRemoteDataSource.registerUser(any()))
+              .thenThrow(ServerException(message: tErrorMessage));
 
           // Act
-          final result =
-              await repository.registerUser(tUsername, tEmail, tPassword);
+          final result = await repository.registerUser(tRegisterRequest);
 
           // Assert
-          verify(() =>
-              mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword));
+          verify(() => mockRemoteDataSource.registerUser(tRegisterRequest));
 
           verifyZeroInteractions(mockLocalDataSource);
 
-          expect(result, equals(Left(ServerFailure())));
+          expect(result, equals(Left(ServerFailure(message: tErrorMessage))));
         },
       );
     });
@@ -226,18 +239,16 @@ void main() {
       test('should return a no connection failure if the device is offline',
           () async {
         // Arrange
-        when(() =>
-                mockRemoteDataSource.registerUser(tUsername, tEmail, tPassword))
+        when(() => mockRemoteDataSource.registerUser(tRegisterRequest))
             .thenAnswer((_) async => tUserModel);
 
         // Act
-        final result =
-            await repository.registerUser(tUsername, tEmail, tPassword);
+        final result = await repository.registerUser(tRegisterRequest);
 
         // Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, equals(Left(NoConnectionFailure())));
+        expect(result, equals(Left(NetworkFailure())));
       });
     });
   });
@@ -263,8 +274,7 @@ void main() {
     test('should return cache failure when cached data is not present',
         () async {
       // Arrange
-      when(() => mockLocalDataSource.fetchToken())
-          .thenThrow(CacheException());
+      when(() => mockLocalDataSource.fetchToken()).thenThrow(CacheException());
 
       // Act
       final result = await repository.fetchToken();

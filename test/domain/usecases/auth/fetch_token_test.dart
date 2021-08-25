@@ -17,7 +17,6 @@ void main() {
     usecase = FetchToken(authRepository: mockAuthRepository);
   });
 
-
   final Token tToken = Token(access: '123', refresh: '321');
 
   test('should return cached token if available', () async {

@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockDataConnectionChecker extends Mock implements InternetConnectionChecker {}
+class MockDataConnectionChecker extends Mock
+    implements InternetConnectionChecker {}
 
 void main() {
   late NetworkInfoImpl networkInfo;
@@ -11,7 +12,9 @@ void main() {
 
   setUp(() {
     mockDataConnectionChecker = MockDataConnectionChecker();
-    networkInfo = NetworkInfoImpl(mockDataConnectionChecker);
+    networkInfo = NetworkInfoImpl(
+      connectionChecker: mockDataConnectionChecker,
+    );
   });
 
   group('check connection', () {
@@ -30,7 +33,7 @@ void main() {
 
         // Assert
         verify(() => mockDataConnectionChecker.hasConnection);
-        
+
         expect(result, tHasConnectionFuture);
       },
     );
