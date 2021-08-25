@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-abstract class Failure extends Equatable {
+class BaseException extends Equatable implements Exception {
   final String message;
-  
-  Failure({required this.message});
+
+  const BaseException({required this.message});
 
   @override
   List<Object> get props => [this.message];
