@@ -4,13 +4,11 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
-import 'package:capybara_app/data/models/refresh_model.dart';
 import 'package:capybara_app/data/models/token_model.dart';
 import 'package:capybara_app/data/models/user_model.dart';
 
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/requests/login_request.dart';
-import 'package:capybara_app/data/requests/refresh_request.dart';
 import 'package:capybara_app/data/requests/register_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -34,15 +32,11 @@ void main() {
   final tUsername = 'user';
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
-  final tRefresh = '123';
   final tTokenModel = TokenModel.fromJson(json.decode(fixture('token.json')));
   final tUserModel = UserModel.fromJson(json.decode(fixture('user.json')));
-  final tRefreshModel =
-      RefreshModel.fromJson(json.decode(fixture('refresh.json')));
   final tLoginRequest = LoginRequest(username: tUsername, password: tPassword);
   final tRegisterRequest =
       RegisterRequest(username: tUsername, email: tEmail, password: tPassword);
-  final tRefreshRequest = RefreshRequest(refresh: tRefresh);
 
   void mockHttpPostLogin200Success() {
     when(() => mockHttpClient.invoke(
@@ -60,14 +54,6 @@ void main() {
         )).thenAnswer((_) async => fixture('user.json'));
   }
 
-  void mockHttpPostRefresh200Success() {
-    when(() => mockHttpClient.invoke(
-          url: any(named: 'url'),
-          method: HttpMethods.post,
-          body: tRefreshRequest.toJson(),
-        )).thenAnswer((_) async => fixture('refresh.json'));
-  }
-
   void mockHttpPostLogin500Failure() {
     when(() => mockHttpClient.invoke(
           url: any(named: 'url'),
@@ -81,14 +67,6 @@ void main() {
           url: any(named: 'url'),
           method: HttpMethods.post,
           body: tRegisterRequest.toJson(),
-        )).thenThrow(ServerException(message: 'An exception occured'));
-  }
-
-  void mockHttpPostRefresh500Failure() {
-    when(() => mockHttpClient.invoke(
-          url: any(named: 'url'),
-          method: HttpMethods.post,
-          body: tRefreshRequest.toJson(),
         )).thenThrow(ServerException(message: 'An exception occured'));
   }
 
