@@ -2,7 +2,6 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/interceptors/error_interceptor.dart';
 import 'package:capybara_app/core/http/interceptors/token_interceptor.dart';
-import 'package:capybara_app/ui/states/auth/auth_state_reader.dart';
 import 'package:dio/dio.dart';
 
 abstract class HttpClient {
@@ -20,7 +19,6 @@ class HttpClientImpl implements HttpClient {
 
   HttpClientImpl({
     required Dio dio,
-    required AuthStateReader authStateReader,
   }) : this._dio = dio {
     this._dio.interceptors.add(TokenInterceptor());
     this._dio.interceptors.add(ErrorInterceptor(invoke: invoke));
