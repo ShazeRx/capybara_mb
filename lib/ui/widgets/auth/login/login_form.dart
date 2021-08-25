@@ -1,6 +1,7 @@
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
+import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
 import 'package:capybara_app/ui/providers/login_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Consumer<LoginProvider>(builder: (context, login, _) {
+    return Consumer<LoginProvider>(builder: (_, login, __) {
       return Column(
         children: [
           AuthFormWrapper(
@@ -48,7 +49,8 @@ class _LoginFormState extends State<LoginForm> {
           login.state == ProviderState.busy
               ? CircularProgressIndicator()
               : ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
+                    FocusScopeHelper.unfocus(context);
                     if (this._formKey.currentState!.validate()) {
                       this._formKey.currentState!.save();
                       login.onLoginSubmitted();
