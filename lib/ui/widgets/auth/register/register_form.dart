@@ -1,4 +1,5 @@
 import 'package:capybara_app/core/constants/validation_messages.dart';
+import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
@@ -30,22 +31,27 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Column(
                   children: [
                     TextFormField(
+                      key: Key(WidgetKeys.registerUsername),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Username'),
                       validator: Validator.username.validator,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerEmail),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Email'),
                       validator: Validator.email.validator,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerPassword),
                       controller: this._passwordController,
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Password'),
                       validator: Validator.password.validator,
+                      obscureText: true,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerRepeatPassword),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration:
                           defaultInputDecoration(hintText: 'Repeat password'),
@@ -55,6 +61,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         value!,
                         this._passwordController.text,
                       ),
+                      obscureText: true,
                     ),
                   ],
                 ),

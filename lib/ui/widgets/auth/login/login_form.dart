@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
@@ -29,12 +30,14 @@ class _LoginFormState extends State<LoginForm> {
               child: Column(
                 children: [
                   TextFormField(
+                    key: Key(WidgetKeys.loginUsername),
                     style: theme.inputDecorationTheme.hintStyle,
                     decoration: defaultInputDecoration(hintText: 'Username'),
                     validator: Validator.username.validator,
                     onSaved: (value) => login.loginData['username'] = value!,
                   ),
                   TextFormField(
+                    key: Key(WidgetKeys.loginPassword),
                     style: theme.inputDecorationTheme.hintStyle,
                     decoration: defaultInputDecoration(hintText: 'Password'),
                     validator: Validator.password.validator,

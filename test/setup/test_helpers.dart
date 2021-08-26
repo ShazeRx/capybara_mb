@@ -1,4 +1,5 @@
 import 'package:capybara_app/app/injection_container.dart';
+import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -44,4 +45,24 @@ void _removeRegistrationIfExists<T extends Object>() {
   if (getIt.isRegistered<T>()) {
     getIt.unregister<T>();
   }
+}
+
+Widget makeTestableWidgetWithScaffold(Widget widget) {
+  return MaterialApp(
+    home: MediaQuery(
+      data: MediaQueryData(),
+      child: Scaffold(
+        body: widget,
+      ),
+    ),
+  );
+}
+
+Widget makeTestableWidgetWithoutScaffold(Widget widget) {
+  return MaterialApp(
+    home: MediaQuery(
+      data: MediaQueryData(),
+      child: widget,
+    ),
+  );
 }
