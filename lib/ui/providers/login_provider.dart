@@ -22,7 +22,7 @@ class LoginProvider extends BaseProvider {
 
     result.fold(
       (failure) => this.showError(failure),
-      (token) => this.navigationService.navigateTo(''),
+      (token) => this.navigateTo(''),
     );
 
     this.setState(ProviderState.idle);

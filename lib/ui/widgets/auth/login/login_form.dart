@@ -49,11 +49,11 @@ class _LoginFormState extends State<LoginForm> {
           login.state == ProviderState.busy
               ? CircularProgressIndicator()
               : ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     FocusScopeHelper.unfocus(context);
                     if (this._formKey.currentState!.validate()) {
                       this._formKey.currentState!.save();
-                      login.onLoginSubmitted();
+                      await login.onLoginSubmitted();
                     }
                   },
                   child: Text(
