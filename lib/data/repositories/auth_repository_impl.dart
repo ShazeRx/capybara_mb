@@ -1,6 +1,8 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
+import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
+import 'package:capybara_app/core/errors/failures/client_failure.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
@@ -44,6 +46,8 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
+    } on ClientException catch (e) {
+      return Left(ClientFailure(message: e.message));
     }
   }
 
@@ -60,6 +64,8 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
+    } on ClientException catch (e) {
+      return Left(ClientFailure(message: e.message));
     }
   }
 
