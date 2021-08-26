@@ -19,10 +19,11 @@ void main() {
     registerFallbackValue<RegisterParams>(FakeRegisterParams());
   });
 
+  final tId = 1;
   final tUsername = 'user';
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
-  final tUser = User(email: tEmail, username: tUsername);
+  final tUser = User(id: tId, email: tEmail, username: tUsername);
   final tRegisterParams =
       RegisterParams(username: tUsername, email: tEmail, password: tPassword);
 
