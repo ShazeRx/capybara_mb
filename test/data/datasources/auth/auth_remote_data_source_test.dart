@@ -17,8 +17,6 @@ import '../../../fixtures/fixture_reader.dart';
 
 class MockHttpClient extends Mock implements HttpClient {}
 
-class FakeUri extends Fake implements Uri {}
-
 void main() {
   late AuthRemoteDataSource dataSource;
   late MockHttpClient mockHttpClient;
@@ -26,7 +24,6 @@ void main() {
   setUp(() {
     mockHttpClient = MockHttpClient();
     dataSource = AuthRemoteDataSourceImpl(client: mockHttpClient);
-    registerFallbackValue<Uri>(FakeUri());
   });
 
   final tUsername = 'user';

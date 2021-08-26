@@ -69,16 +69,17 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             VerticalSpaceHelper.verticalSpaceLarge(context),
             ElevatedButton(
-                onPressed: () async {
-                  if (this._formKey.currentState!.validate()) {
-                    this._formKey.currentState!.save();
-                    await register.onRegisterSubmitted();
-                  }
-                },
-                child: Text(
-                  'Register now!',
-                  style: theme.textTheme.bodyText2,
-                )),
+              onPressed: () async {
+                if (this._formKey.currentState!.validate()) {
+                  this._formKey.currentState!.save();
+                  await register.onRegisterSubmitted();
+                }
+              },
+              child: Text(
+                'Register now!',
+                style: theme.textTheme.bodyText2,
+              ),
+            ),
           ],
         );
       },

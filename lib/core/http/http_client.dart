@@ -45,7 +45,7 @@ class HttpClientImpl implements HttpClient {
       if (e.response != null) {
         //TODO - to think about - add handling multiple errors
         final errors = Map.from((e.response!.data)).values.toList();
-        throw ClientException(message: errors.first[0]);
+        throw ClientException(message: errors.first);
       }
       throw ServerException(message: e.message);
     }
