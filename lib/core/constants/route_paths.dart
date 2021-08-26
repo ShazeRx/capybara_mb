@@ -1,4 +1,4 @@
 class RoutePaths {
-  static const loginRoute = '/';
+  static const loginRoute = '/login';
   static const registerRoute = '/register';
 }
