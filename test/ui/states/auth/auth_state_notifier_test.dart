@@ -12,7 +12,7 @@ void main() {
   late MockAuthState mockAuthState;
   late AuthStateNotifier authStateReader;
   final tToken = Token(access: '123', refresh: '321');
-  final tUser = User(username: 'user', email: 'user@user.com');
+  final tUser = User(id: 1, email: 'user@user.com', username: 'user');
 
   mockTokenSubject() {
     when(() => mockAuthState.token$)

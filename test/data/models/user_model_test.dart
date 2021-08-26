@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../fixtures/fixture_reader.dart';
 
 void main() {
-  final tUserModel = UserModel(username: 'user', email: 'user@user.com');
+  final tUserModel = UserModel(id: 1, username: 'user', email: 'user@user.com');
 
   test('should be a subclass of User entity', () async {
     // Assert
@@ -31,6 +31,7 @@ void main() {
 
     // Act
     final expectedJsonMap = {
+      'id': 1,
       'username': 'user',
       'email': 'user@user.com',
     };

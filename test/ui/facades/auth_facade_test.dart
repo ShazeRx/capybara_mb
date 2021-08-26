@@ -49,11 +49,15 @@ void main() {
     registerFallbackValue<RegisterParams>(FakeRegisterParams());
   });
 
+  final tId = 1;
+  final tUsername = 'user';
+  final tEmail = 'user@user.com';
+  final tPassword = 'user123';
   final tToken = Token(refresh: '123', access: '321');
-  final tUser = User(username: 'user', email: 'user@user.com');
+  final tUser = User(id: tId, email: tEmail, username: tUsername);
   final tLoginParams = LoginParams(username: 'user', password: 'user123');
-  final tRegisterParams = RegisterParams(
-      username: 'user', email: 'user@user.com', password: 'user123');
+  final tRegisterParams =
+      RegisterParams(username: tUsername, email: tEmail, password: tPassword);
 
   group('fetch token', () {
     test('should call fetch token', () {

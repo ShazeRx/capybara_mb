@@ -68,6 +68,7 @@ void main() {
     });
   }
 
+  final tId = 1;
   final tUsername = 'user';
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
@@ -82,7 +83,7 @@ void main() {
 
   final tToken = tTokenModel;
 
-  final tUserModel = UserModel(username: tUsername, email: tEmail);
+  final tUserModel = UserModel(id: tId, username: tUsername, email: tEmail);
 
   final tUser = tUserModel;
 
