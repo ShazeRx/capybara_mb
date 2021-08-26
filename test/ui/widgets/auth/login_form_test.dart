@@ -18,10 +18,14 @@ void main() {
   });
 
   Future<void> pumpTestWidget(WidgetTester tester) async {
+    GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
     await tester.pumpWidget(
       ChangeNotifierProvider<LoginProvider>.value(
         value: mockLoginProvider,
-        child: makeTestableWidgetWithScaffold(LoginForm()),
+        child: makeTestableWidgetWithScaffold(LoginForm(
+          formKey: _formKey,
+        )),
       ),
     );
   }
