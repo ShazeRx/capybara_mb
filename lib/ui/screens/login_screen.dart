@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  static GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -24,8 +25,10 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   VerticalSpaceHelper.verticalSpaceSmall(context),
                   LoginHeader(),
-                  LoginForm(),
-                  LoginCreateAccountButtons(),
+                  LoginForm(formKey: _formKey),
+                  LoginCreateAccountButtons(
+                    formKey: _formKey,
+                  ),
                   //TODO - implement password recover
                   // LoginRecoverPassword(),
                   VerticalSpaceHelper.verticalSpaceSmall(context),

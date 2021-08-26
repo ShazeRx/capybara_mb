@@ -19,6 +19,13 @@ class _RegisterFormState extends State<RegisterForm> {
   final _passwordController = new TextEditingController();
 
   @override
+  void dispose() {
+    this._formKey.currentState?.reset();
+    this._passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Consumer<RegisterProvider>(
@@ -35,12 +42,14 @@ class _RegisterFormState extends State<RegisterForm> {
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Username'),
                       validator: Validator.username.validator,
+                      textInputAction: TextInputAction.next,
                     ),
                     TextFormField(
                       key: Key(WidgetKeys.registerEmail),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Email'),
                       validator: Validator.email.validator,
+                      textInputAction: TextInputAction.next,
                     ),
                     TextFormField(
                       key: Key(WidgetKeys.registerPassword),
@@ -48,6 +57,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Password'),
                       validator: Validator.password.validator,
+                      textInputAction: TextInputAction.next,
                       obscureText: true,
                     ),
                     TextFormField(
@@ -62,6 +72,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         this._passwordController.text,
                       ),
                       obscureText: true,
+                      textInputAction: TextInputAction.done,
                     ),
                   ],
                 ),

@@ -4,6 +4,10 @@ import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
 import 'package:flutter/material.dart';
 
 class LoginCreateAccountButtons extends StatelessWidget {
+  final GlobalKey<FormState> _formKey;
+
+  LoginCreateAccountButtons({required formKey}) : this._formKey = formKey;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -35,6 +39,7 @@ class LoginCreateAccountButtons extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: () {
             FocusScopeHelper.unfocus(context);
+            this._formKey.currentState?.reset();
             Navigator.of(context).pushNamed(
               RoutePaths.registerRoute,
             );

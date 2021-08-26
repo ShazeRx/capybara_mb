@@ -11,12 +11,20 @@ import 'package:provider/provider.dart';
 import '../auth_form_wrapper.dart';
 
 class LoginForm extends StatefulWidget {
+  final GlobalKey<FormState> _formKey;
+
+  LoginForm({required formKey}) : this._formKey = formKey;
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    widget._formKey.currentState?.reset();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,7 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           AuthFormWrapper(
             form: Form(
-              key: this._formKey,
+              key: widget._formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -35,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
                     decoration: defaultInputDecoration(hintText: 'Username'),
                     validator: Validator.username.validator,
                     onSaved: (value) => login.loginData['username'] = value!,
+                    textInputAction: TextInputAction.next,
                   ),
                   TextFormField(
                     key: Key(WidgetKeys.loginPassword),
@@ -43,6 +52,7 @@ class _LoginFormState extends State<LoginForm> {
                     validator: Validator.password.validator,
                     obscureText: true,
                     onSaved: (value) => login.loginData['password'] = value!,
+                    textInputAction: TextInputAction.done,
                   ),
                 ],
               ),
@@ -54,8 +64,8 @@ class _LoginFormState extends State<LoginForm> {
               : ElevatedButton(
                   onPressed: () async {
                     FocusScopeHelper.unfocus(context);
-                    if (this._formKey.currentState!.validate()) {
-                      this._formKey.currentState!.save();
+                    if (this.widget._formKey.currentState!.validate()) {
+                      this.widget._formKey.currentState!.save();
                       await login.onLoginSubmitted();
                     }
                   },
