@@ -4,10 +4,9 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
+import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/models/token_model.dart';
 import 'package:capybara_app/data/models/user_model.dart';
-
-import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/requests/login_request.dart';
 import 'package:capybara_app/data/requests/register_request.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,8 +16,6 @@ import '../../../fixtures/fixture_reader.dart';
 
 class MockHttpClient extends Mock implements HttpClient {}
 
-class FakeUri extends Fake implements Uri {}
-
 void main() {
   late AuthRemoteDataSource dataSource;
   late MockHttpClient mockHttpClient;
@@ -26,7 +23,6 @@ void main() {
   setUp(() {
     mockHttpClient = MockHttpClient();
     dataSource = AuthRemoteDataSourceImpl(client: mockHttpClient);
-    registerFallbackValue<Uri>(FakeUri());
   });
 
   final tUsername = 'user';

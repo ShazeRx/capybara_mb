@@ -2,11 +2,11 @@ import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
-import 'package:capybara_app/core/errors/failures/no_connection_failure.dart';
+import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
-import 'package:capybara_app/data/datasource/chat_local_data_source.dart';
-import 'package:capybara_app/data/datasource/chat_remote_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
 import 'package:capybara_app/domain/entities/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:dartz/dartz.dart';
@@ -28,8 +28,8 @@ class ChatRepositoryImpl implements ChatRepository {
         final messages = await remoteDataSource.fetchLast10Messages();
         localDataSource.cacheMessages(messages);
         return Right(messages);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     }
     try {
@@ -47,11 +47,11 @@ class ChatRepositoryImpl implements ChatRepository {
       try {
         return Right(
             await remoteDataSource.fetchLast10MessagesFromTimestamp(timestamp));
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     }
-    return Left(NoConnectionFailure());
+    return Left(NetworkFailure());
   }
 
   @override
@@ -59,10 +59,10 @@ class ChatRepositoryImpl implements ChatRepository {
     if (await networkInfo.isConnected) {
       try {
         return Right(await remoteDataSource.sendMessage(body));
-      } on ServerException {
-        return Left(ServerFailure());
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
       }
     }
-    return Left(NoConnectionFailure());
+    return Left(NetworkFailure());
   }
 }

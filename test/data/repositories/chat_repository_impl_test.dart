@@ -1,11 +1,11 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
-import 'package:capybara_app/core/errors/failures/no_connection_failure.dart';
+import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
-import 'package:capybara_app/data/datasource/chat_local_data_source.dart';
-import 'package:capybara_app/data/datasource/chat_remote_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
 import 'package:capybara_app/data/repositories/chat_repository_impl.dart';
 import 'package:capybara_app/domain/entities/message.dart';
 import 'package:dartz/dartz.dart';
@@ -29,6 +29,7 @@ void main() {
   messages
       .add(new Message('21.01.2021', message: messageBody, username: 'body'));
   messages.add(new Message('22.01.2021', message: 'once', username: 'told'));
+  final tErrorMessage = 'Fail';
   setUp(() {
     mockLocalDataSource = MockLocalDataSource();
     mockRemoteDataSource = MockRemoteDataSource();
@@ -72,7 +73,7 @@ void main() {
       test('should return server failure when call was unsuccesfull', () async {
         //Arrange
         when(() => mockRemoteDataSource.fetchLast10Messages())
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
         final result = await repository.fetchLast10Messages();
@@ -80,7 +81,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockLocalDataSource);
 
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
       test('should cache results', () async {
         //Arrange
@@ -165,7 +166,7 @@ void main() {
       test('should return server failure when call was unsuccessful', () async {
         //Arrange
         when(() => mockRemoteDataSource.fetchLast10MessagesFromTimestamp(any()))
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
         final result =
@@ -174,7 +175,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockLocalDataSource);
 
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
     });
     group('device is offline', () {
@@ -189,7 +190,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, Left(NoConnectionFailure()));
+        expect(result, Left(NetworkFailure()));
       });
     });
   });
@@ -227,7 +228,7 @@ void main() {
       test('should throw Server Failure when call was unsuccessful', () async {
         //Arrange
         when(() => mockRemoteDataSource.sendMessage(any()))
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
         final result = await repository.sendMessage(messageBody);
@@ -235,7 +236,7 @@ void main() {
         //Assert
         verify(() => mockRemoteDataSource.sendMessage(messageBody));
 
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
     });
     group('device is offline', () {
@@ -249,7 +250,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, Left(NoConnectionFailure()));
+        expect(result, Left(NetworkFailure()));
       });
     });
   });

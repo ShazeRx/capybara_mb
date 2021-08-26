@@ -1,11 +1,11 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
-import 'package:capybara_app/core/errors/failures/no_connection_failure.dart';
+import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
-import 'package:capybara_app/data/datasource/channel_local_data_source.dart';
-import 'package:capybara_app/data/datasource/channel_remote_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/channel_local_data_source.dart';
+import 'package:capybara_app/data/datasource/chat/channel_remote_data_source.dart';
 import 'package:capybara_app/data/models/channel_model.dart';
 import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
 import 'package:dartz/dartz.dart';
@@ -27,6 +27,7 @@ void main() {
   const String channelNameSecond = 'once';
   const String channelId = '1';
   const String userId = '1';
+  final tErrorMessage = 'Fail';
   List<ChannelModel> channels = [];
   channels.add(ChannelModel(name: channelNameFirst));
   channels.add(ChannelModel(name: channelNameSecond));
@@ -93,7 +94,7 @@ void main() {
           () async {
         //arrange
         when(() => mockRemoteDataSource.fetchChannels())
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
 
         //act
         final result = await repository.fetchChannels();
@@ -103,7 +104,7 @@ void main() {
 
         verifyZeroInteractions(mockLocalDataSource);
 
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
     });
 
@@ -176,13 +177,13 @@ void main() {
       test('should throw ServerFailure when remote call failed', () async {
         //Arrange
         when(() => mockRemoteDataSource.createChannel(any()))
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
         //Act
 
         final result = await repository.createChannel(channelNameFirst);
 
         //Assert
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
     });
     group('device is offline', () {
@@ -196,7 +197,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, equals(Left(NoConnectionFailure())));
+        expect(result, equals(Left(NetworkFailure())));
       });
     });
   });
@@ -235,7 +236,7 @@ void main() {
       test('should throw failure when server issue', () async {
         //Arrange
         when(() => mockRemoteDataSource.addToChannel(any(), any()))
-            .thenThrow(ServerException());
+            .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
         final result = await repository.addToChannel(channelId, userId);
@@ -243,7 +244,7 @@ void main() {
         //Assert
         verify(() => mockRemoteDataSource.addToChannel(channelId, userId));
 
-        expect(result, Left(ServerFailure()));
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
     });
     group('device is offline', () {
@@ -257,7 +258,7 @@ void main() {
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
 
-        expect(result, Left(NoConnectionFailure()));
+        expect(result, Left(NetworkFailure()));
       });
     });
   });
