@@ -1,8 +1,6 @@
-
 import 'package:capybara_app/core/constants/route_paths.dart';
-import 'package:capybara_app/ui/screens/login_screen.dart';
-import 'package:capybara_app/ui/screens/register_screen.dart';
-
+import 'package:capybara_app/ui/screens/auth/login_screen.dart';
+import 'package:capybara_app/ui/screens/auth/register_screen.dart';
 
 import 'package:flutter/material.dart';
 
