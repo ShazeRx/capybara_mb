@@ -12,28 +12,30 @@ import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
-  final ChatLocalDataSource localDataSource;
-  final ChatRemoteDataSource remoteDataSource;
-  final NetworkInfo networkInfo;
+  final ChatLocalDataSource _localDataSource;
+  final ChatRemoteDataSource _remoteDataSource;
+  final NetworkInfo _networkInfo;
 
   ChatRepositoryImpl(
-      {required this.localDataSource,
-      required this.remoteDataSource,
-      required this.networkInfo});
+      {required ChatLocalDataSource localDataSource,
+      required ChatRemoteDataSource remoteDataSource,
+      required NetworkInfo networkInfo}): this._localDataSource = localDataSource,
+        this._remoteDataSource = remoteDataSource,
+        this._networkInfo = networkInfo;
 
   @override
   Future<Either<Failure, List<Message>>> fetchLast10Messages() async {
-    if (await networkInfo.isConnected) {
+    if (await _networkInfo.isConnected) {
       try {
-        final messages = await remoteDataSource.fetchLast10Messages();
-        localDataSource.cacheMessages(messages);
+        final messages = await _remoteDataSource.fetchLast10Messages();
+        _localDataSource.cacheMessages(messages);
         return Right(messages);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
     }
     try {
-      final messages = await localDataSource.fetchLast10Messages();
+      final messages = await _localDataSource.fetchLast10Messages();
       return Right(messages);
     } on CacheException {
       return Left(CacheFailure());
@@ -43,10 +45,10 @@ class ChatRepositoryImpl implements ChatRepository {
   @override
   Future<Either<Failure, List<Message>>> fetchLast10MessagesFromTimestamp(
       String timestamp) async {
-    if (await networkInfo.isConnected) {
+    if (await _networkInfo.isConnected) {
       try {
         return Right(
-            await remoteDataSource.fetchLast10MessagesFromTimestamp(timestamp));
+            await _remoteDataSource.fetchLast10MessagesFromTimestamp(timestamp));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
@@ -56,9 +58,9 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<Either<Failure, void>> sendMessage(String body) async {
-    if (await networkInfo.isConnected) {
+    if (await _networkInfo.isConnected) {
       try {
-        return Right(await remoteDataSource.sendMessage(body));
+        return Right(await _remoteDataSource.sendMessage(body));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }
