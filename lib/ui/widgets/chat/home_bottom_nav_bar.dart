@@ -1,4 +1,6 @@
+import 'package:capybara_app/core/constants/svg_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -14,18 +16,28 @@ class HomeNavBar extends StatelessWidget {
     var theme = Theme.of(context);
     return BottomNavigationBar(
       showUnselectedLabels: false,
-      unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
-      selectedItemColor: theme.bottomNavigationBarTheme.selectedItemColor,
       selectedLabelStyle: theme.bottomNavigationBarTheme.selectedLabelStyle,
       currentIndex: this.selectedIndex,
       onTap: (index) => this.onChangedItemCallback(index),
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.message),
+          icon: SvgPicture.asset(
+            SvgIcons.channel,
+            height: 25,
+            color: this.selectedIndex == 0
+                ? theme.bottomNavigationBarTheme.selectedItemColor
+                : theme.bottomNavigationBarTheme.unselectedItemColor,
+          ),
           label: 'Channels',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.supervised_user_circle),
+          icon: SvgPicture.asset(
+            SvgIcons.user,
+            height: 25,
+            color: this.selectedIndex == 1
+                ? theme.bottomNavigationBarTheme.selectedItemColor
+                : theme.bottomNavigationBarTheme.unselectedItemColor,
+          ),
           label: 'Profile',
         ),
       ],

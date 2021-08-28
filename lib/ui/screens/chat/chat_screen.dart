@@ -6,12 +6,8 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routeArgs = ModalRoute.of(context)!.settings.arguments as Channel;
-    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: HomeAppBar(
-        height: height * 0.1,
-        title: routeArgs.title,
-      ),
+      appBar: HomeAppBar(title: routeArgs.title),
     );
   }
 }

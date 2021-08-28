@@ -1,6 +1,9 @@
+import 'package:capybara_app/core/constants/images.dart';
 import 'package:capybara_app/core/constants/route_paths.dart';
+import 'package:capybara_app/core/constants/svg_icons.dart';
 import 'package:capybara_app/ui/widgets/channel/channel_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ChannelListTile extends StatelessWidget {
   final String title;
@@ -16,19 +19,21 @@ class ChannelListTile extends StatelessWidget {
     var theme = Theme.of(context);
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage('https://picsum.photos/id/237/200/300'),
+        backgroundColor: theme.backgroundColor,
+        backgroundImage: AssetImage(Images.channelPlaceholder),
       ),
       title: Text(
         this.title,
         style: theme.textTheme.bodyText2,
       ),
       subtitle: Text(
-        '10 members',
+        this.members.toString() + (this.members == 1 ? ' member' : ' members'),
         style: theme.textTheme.subtitle1,
       ),
-      trailing: Icon(
-        Icons.keyboard_arrow_right,
+      trailing: SvgPicture.asset(
+        SvgIcons.arrowNext,
         color: theme.iconTheme.color,
+        height: 15,
       ),
       onTap: () {
         Navigator.of(context).pushNamed(

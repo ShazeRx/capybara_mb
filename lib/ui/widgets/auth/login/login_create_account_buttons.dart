@@ -1,7 +1,9 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
+import 'package:capybara_app/core/constants/svg_icons.dart';
 import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginCreateAccountButtons extends StatelessWidget {
   final GlobalKey<FormState> _formKey;
@@ -44,7 +46,10 @@ class LoginCreateAccountButtons extends StatelessWidget {
               RoutePaths.registerRoute,
             );
           },
-          icon: Icon(Icons.email),
+          icon: SvgPicture.asset(
+            SvgIcons.email,
+            color: theme.iconTheme.color,
+          ),
           label: Text('Email'),
           style: theme.elevatedButtonTheme.style,
         ),

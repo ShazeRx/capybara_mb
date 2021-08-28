@@ -14,7 +14,7 @@ class Channel {
 
 class ChannelList extends StatelessWidget {
   final _channels = [
-    Channel(title: 'Channel1', members: 10),
+    Channel(title: 'Channel1', members: 1),
     Channel(title: 'Channel1', members: 20),
     Channel(title: 'Channel2', members: 30),
   ];

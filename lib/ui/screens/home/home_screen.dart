@@ -10,15 +10,12 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider(
       create: (_) => getIt<HomeProvider>(),
       child: Consumer<HomeProvider>(
         builder: (_, home, __) => Scaffold(
           appBar: HomeAppBar(
             title: home.appBarTitle,
-            height: height * 0.1,
-            isChannelsScreen: true,
           ),
           body: PageView(
             controller: home.pageController,

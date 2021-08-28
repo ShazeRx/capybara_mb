@@ -4,12 +4,8 @@ import 'package:flutter/material.dart';
 class NewChannelScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: HomeAppBar(
-        title: 'New channel',
-        height: height * 0.1,
-      ),
+      appBar: HomeAppBar(title: 'New channel'),
     );
   }
 }
