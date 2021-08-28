@@ -1,6 +1,6 @@
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
-import 'package:capybara_app/ui/providers/login_provider.dart';
+import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_create_account_buttons.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_form.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_header.dart';

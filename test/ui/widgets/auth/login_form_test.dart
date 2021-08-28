@@ -1,6 +1,6 @@
 import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/ui/providers/login_provider.dart';
+import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/widgets/auth/login/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

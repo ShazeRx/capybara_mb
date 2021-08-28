@@ -5,14 +5,14 @@ import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
-import 'package:capybara_app/data/datasource/chat/channel_local_data_source.dart';
-import 'package:capybara_app/data/datasource/chat/channel_remote_data_source.dart';
-import 'package:capybara_app/data/requests/chat/add_to_channel_request.dart';
-import 'package:capybara_app/data/requests/chat/channel_request.dart';
-import 'package:capybara_app/domain/entities/channel.dart';
+import 'package:capybara_app/data/datasource/channel/channel_local_data_source.dart';
+import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
+import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
+import 'package:capybara_app/data/requests/channel/channel_request.dart';
+import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
-import 'package:capybara_app/domain/usecases/chat/add_to_channel.dart';
-import 'package:capybara_app/domain/usecases/chat/create_channel.dart';
+import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
+import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:dartz/dartz.dart';
 
 class ChannelRespositoryImpl implements ChannelRepository {
@@ -32,7 +32,7 @@ class ChannelRespositoryImpl implements ChannelRepository {
   Future<Either<Failure, void>> addToChannel(AddToChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-         await _remoteDataSource
+        await _remoteDataSource
             .addToChannel(AddToChannelRequest.fromParams(params));
         return Right(null);
       } on ServerException catch (e) {

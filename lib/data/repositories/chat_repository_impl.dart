@@ -7,7 +7,7 @@ import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
-import 'package:capybara_app/domain/entities/message.dart';
+import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:dartz/dartz.dart';
 

@@ -5,13 +5,14 @@ import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
-import 'package:capybara_app/data/models/token_model.dart';
-import 'package:capybara_app/data/models/user_model.dart';
+import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/requests/auth/login_request.dart';
 import 'package:capybara_app/data/requests/auth/register_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../fixtures/fixture_paths.dart';
 import '../../../fixtures/fixture_reader.dart';
 
 class MockHttpClient extends Mock implements HttpClient {}
@@ -28,8 +29,10 @@ void main() {
   final tUsername = 'user';
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
-  final tTokenModel = TokenModel.fromJson(json.decode(fixture('token.json')));
-  final tUserModel = UserModel.fromJson(json.decode(fixture('user.json')));
+  final tTokenModel =
+      TokenModel.fromJson(json.decode(fixture(FixturePaths.tokenJson)));
+  final tUserModel =
+      UserModel.fromJson(json.decode(fixture(FixturePaths.userJson)));
   final tLoginRequest = LoginRequest(username: tUsername, password: tPassword);
   final tRegisterRequest =
       RegisterRequest(username: tUsername, email: tEmail, password: tPassword);
@@ -39,7 +42,7 @@ void main() {
           url: any(named: 'url'),
           method: HttpMethods.post,
           body: tLoginRequest.toJson(),
-        )).thenAnswer((_) async => fixture('token.json'));
+        )).thenAnswer((_) async => fixture(FixturePaths.tokenJson));
   }
 
   void mockHttpPostRegister200Success() {
@@ -47,7 +50,7 @@ void main() {
           url: any(named: 'url'),
           method: HttpMethods.post,
           body: tRegisterRequest.toJson(),
-        )).thenAnswer((_) async => fixture('user.json'));
+        )).thenAnswer((_) async => fixture(FixturePaths.userJson));
   }
 
   void mockHttpPostLogin500Failure() {

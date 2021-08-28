@@ -1,7 +1,6 @@
 import 'dart:async';
-
-import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/subjects.dart';
 

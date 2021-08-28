@@ -4,7 +4,7 @@ import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
-import 'package:capybara_app/ui/providers/login_provider.dart';
+import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

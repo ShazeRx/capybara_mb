@@ -1,6 +1,6 @@
 import 'package:capybara_app/core/errors/failures/failure.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
-import 'package:capybara_app/domain/entities/user.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';

@@ -7,7 +7,7 @@ import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
 import 'package:capybara_app/data/repositories/chat_repository_impl.dart';
-import 'package:capybara_app/domain/entities/message.dart';
+import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

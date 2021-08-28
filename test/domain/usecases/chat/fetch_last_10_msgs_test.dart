@@ -1,4 +1,4 @@
-import 'package:capybara_app/domain/entities/message.dart';
+import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:capybara_app/domain/usecases/chat/fetch_last_10_msgs.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';

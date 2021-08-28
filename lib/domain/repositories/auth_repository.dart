@@ -1,9 +1,8 @@
 import 'package:capybara_app/core/errors/failures/failure.dart';
-import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
-
 import 'package:dartz/dartz.dart';
 
 abstract class AuthRepository {
