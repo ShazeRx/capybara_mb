@@ -8,6 +8,9 @@ import 'package:capybara_app/data/datasource/chat/channel_local_data_source.dart
 import 'package:capybara_app/data/datasource/chat/channel_remote_data_source.dart';
 import 'package:capybara_app/data/models/channel_model.dart';
 import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
+import 'package:capybara_app/data/requests/chat/add_to_channel_request.dart';
+import 'package:capybara_app/data/requests/chat/channel_request.dart';
+import 'package:capybara_app/domain/usecases/chat/create_channel.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -18,19 +21,15 @@ class MockLocalDataSource extends Mock implements ChannelLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
-void main() {
+class FakeAddToChannelRequest extends Fake implements AddToChannelRequest {}
+
+class FakeChannelRequest extends Fake implements ChannelRequest {}
+
+main() {
   late ChannelRespositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
-  const String channelNameFirst = 'somebody';
-  const String channelNameSecond = 'once';
-  const String channelId = '1';
-  const String userId = '1';
-  final tErrorMessage = 'Fail';
-  List<ChannelModel> channels = [];
-  channels.add(ChannelModel(name: channelNameFirst));
-  channels.add(ChannelModel(name: channelNameSecond));
   setUp(() {
     mockLocalDataSource = MockLocalDataSource();
     mockRemoteDataSource = MockRemoteDataSource();
@@ -39,7 +38,21 @@ void main() {
         remoteDataSource: mockRemoteDataSource,
         localDataSource: mockLocalDataSource,
         networkInfo: mockNetworkInfo);
+    registerFallbackValue<ChannelRequest>(FakeChannelRequest());
+    registerFallbackValue<AddToChannelRequest>(FakeAddToChannelRequest());
   });
+
+  const String channelNameFirst = 'somebody';
+  const String channelNameSecond = 'once';
+  const String channelId = '1';
+  const String userId = '1';
+  final tErrorMessage = 'Fail';
+  final tChannelRequest = ChannelRequest(name: channelNameFirst);
+  final tAddToChannelRequest =
+  AddToChannelRequest(channelId: channelId, userId: userId);
+  List<ChannelModel> channels = [];
+  channels.add(ChannelModel(name: channelNameFirst));
+  channels.add(ChannelModel(name: channelNameSecond));
 
   group('fetch channels', () {
     setUp(() {
@@ -148,15 +161,15 @@ void main() {
   });
   group('create channel', () {
     setUp(() {
-      when(() => mockRemoteDataSource.createChannel(channelNameFirst))
+      when(() => mockRemoteDataSource.createChannel(any()))
           .thenAnswer((_) async => channels.first);
     });
-    test('should check connection', () {
+    test('should check connection', () async {
       //arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //act
-      repository.createChannel(channelNameFirst);
+      await repository.createChannel(tChannelRequest);
 
       //assert
       verify(() => mockNetworkInfo.isConnected);
@@ -165,12 +178,12 @@ void main() {
       setUp(() {
         when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       });
-      test('should return channel if remote call was successfull', () async {
+      test('should return channel if remote call was successful', () async {
         //Act
-        final result = await repository.createChannel(channelNameFirst);
+        final result = await repository.createChannel(tChannelRequest);
 
         //Assert
-        verify(() => mockRemoteDataSource.createChannel(channelNameFirst));
+        verify(() => mockRemoteDataSource.createChannel(tChannelRequest));
 
         expect(result, Right(channels.first));
       });
@@ -180,7 +193,7 @@ void main() {
             .thenThrow(ServerException(message: tErrorMessage));
         //Act
 
-        final result = await repository.createChannel(channelNameFirst);
+        final result = await repository.createChannel(tChannelRequest);
 
         //Assert
         expect(result, Left(ServerFailure(message: tErrorMessage)));
@@ -192,7 +205,7 @@ void main() {
       });
       test('should throw no connection failure', () async {
         //Act
-        final result = await repository.createChannel(channelNameFirst);
+        final result = await repository.createChannel(tChannelRequest);
 
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
@@ -203,7 +216,7 @@ void main() {
   });
   group('add to channel', () {
     setUp(() {
-      when(() => mockRemoteDataSource.addToChannel(channelId, userId))
+      when(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest))
           .thenAnswer((_) async => channels.first);
     });
     test('should check connection', () {
@@ -211,7 +224,7 @@ void main() {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //act
-      repository.addToChannel(channelId, userId);
+      repository.addToChannel(tAddToChannelRequest);
 
       //assert
       verify(() => mockNetworkInfo.isConnected);
@@ -222,27 +235,27 @@ void main() {
       });
       test('should add to channel', () async {
         //Arrange
-        when(() => mockRemoteDataSource.addToChannel(any(), any()))
+        when(() => mockRemoteDataSource.addToChannel(any()))
             .thenAnswer((_) async => channels.first);
 
         //Act
-        final result = await repository.addToChannel(channelId, userId);
+        final result = await repository.addToChannel(tAddToChannelRequest);
 
         //Assert
-        verify(() => mockRemoteDataSource.addToChannel(channelId, userId));
+        verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
 
         expect(result, Right(channels.first));
       });
       test('should throw failure when server issue', () async {
         //Arrange
-        when(() => mockRemoteDataSource.addToChannel(any(), any()))
+        when(() => mockRemoteDataSource.addToChannel(any()))
             .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
-        final result = await repository.addToChannel(channelId, userId);
+        final result = await repository.addToChannel(tAddToChannelRequest);
 
         //Assert
-        verify(() => mockRemoteDataSource.addToChannel(channelId, userId));
+        verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
 
         expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
@@ -253,7 +266,7 @@ void main() {
       });
       test('should throw no connection failure', () async {
         //Act
-        final result = await repository.addToChannel(channelId, userId);
+        final result = await repository.addToChannel(tAddToChannelRequest);
 
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);

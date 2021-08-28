@@ -1,4 +1,4 @@
-import 'package:capybara_app/data/requests/refresh_request.dart';
+import 'package:capybara_app/data/requests/auth/refresh_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

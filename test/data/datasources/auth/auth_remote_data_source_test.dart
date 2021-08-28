@@ -7,8 +7,8 @@ import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/models/token_model.dart';
 import 'package:capybara_app/data/models/user_model.dart';
-import 'package:capybara_app/data/requests/login_request.dart';
-import 'package:capybara_app/data/requests/register_request.dart';
+import 'package:capybara_app/data/requests/auth/login_request.dart';
+import 'package:capybara_app/data/requests/auth/register_request.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

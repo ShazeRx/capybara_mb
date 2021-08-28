@@ -7,8 +7,12 @@ import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/channel_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/channel_remote_data_source.dart';
+import 'package:capybara_app/data/requests/chat/add_to_channel_request.dart';
+import 'package:capybara_app/data/requests/chat/channel_request.dart';
 import 'package:capybara_app/domain/entities/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
+import 'package:capybara_app/domain/usecases/chat/add_to_channel.dart';
+import 'package:capybara_app/domain/usecases/chat/create_channel.dart';
 import 'package:dartz/dartz.dart';
 
 class ChannelRespositoryImpl implements ChannelRepository {
@@ -25,11 +29,11 @@ class ChannelRespositoryImpl implements ChannelRepository {
         this._networkInfo = networkInfo;
 
   @override
-  Future<Either<Failure, Channel>> addToChannel(
-      String channelId, String userId) async {
+  Future<Either<Failure, void>> addToChannel(AddToChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        final channel = await _remoteDataSource.addToChannel(channelId, userId);
+        final channel = await _remoteDataSource
+            .addToChannel(AddToChannelRequest.fromParams(params));
         return Right(channel);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
@@ -39,10 +43,11 @@ class ChannelRespositoryImpl implements ChannelRepository {
   }
 
   @override
-  Future<Either<Failure, Channel>> createChannel(String name) async {
+  Future<Either<Failure, Channel>> createChannel(ChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        final channel = await _remoteDataSource.createChannel(name);
+        final channel = await _remoteDataSource
+            .createChannel(ChannelRequest.fromParams(params));
         return Right(channel);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

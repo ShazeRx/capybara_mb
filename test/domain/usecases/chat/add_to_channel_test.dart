@@ -1,39 +1,41 @@
-import 'package:capybara_app/domain/entities/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
-import 'package:capybara_app/domain/usecases/chat/create_channel.dart';
+import 'package:capybara_app/domain/usecases/chat/add_to_channel.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockChannelRespository extends Mock implements ChannelRepository {}
 
-class FakeChannelParams extends Fake implements ChannelParams {}
+class FakeChannelParams extends Fake implements AddToChannelParams {}
 
 void main() {
   late MockChannelRespository mockChannelRespository;
-  late CreateChannel usecase;
+  late AddToChannel usecase;
 
   setUp(() {
     mockChannelRespository = MockChannelRespository();
-    usecase = CreateChannel(channelRepository: mockChannelRespository);
+    usecase = AddToChannel(channelRepository: mockChannelRespository);
     registerFallbackValue(FakeChannelParams());
   });
-  const String channelName = 'somebody';
-  final Channel channel = Channel(name: channelName);
-  final tParams = ChannelParams(name: channelName);
+
+  final String channelId = '1';
+  final String userId = '1';
+  final tParams =
+      AddToChannelParams(userId: userId, channelId: channelId);
 
   test('should create channel', () async {
     //arrange
-    when(() => mockChannelRespository.createChannel(any()))
-        .thenAnswer((_) async => Right(channel));
+    when(() => mockChannelRespository.addToChannel(any()))
+        .thenAnswer((_) async => Right(null));
 
     //act
     final result = await usecase(tParams);
-    verify(() => mockChannelRespository.createChannel(tParams));
 
     //assert
+    verify(() => mockChannelRespository.addToChannel(tParams));
+
     verifyNoMoreInteractions(mockChannelRespository);
 
-    expect(result, Right(channel));
+    expect(result, Right(null));
   });
 }

@@ -3,4 +3,5 @@ class Api {
   static const loginUrl = '/auth/login/';
   static const registerUrl = '/auth/register/';
   static const refreshUrl = '/auth/refresh/';
+  static const channelUrl = '/channels/';
 }

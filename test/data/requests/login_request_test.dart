@@ -1,4 +1,4 @@
-import 'package:capybara_app/data/requests/login_request.dart';
+import 'package:capybara_app/data/requests/auth/login_request.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:flutter_test/flutter_test.dart';
 
