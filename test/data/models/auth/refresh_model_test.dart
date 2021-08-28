@@ -1,16 +1,18 @@
 import 'dart:convert';
 
-import 'package:capybara_app/data/models/refresh_model.dart';
+import 'package:capybara_app/data/models/auth/refresh_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../fixtures/fixture_reader.dart';
+import '../../../fixtures/fixture_paths.dart';
+import '../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tRefreshModel = RefreshModel(access: '321');
 
   test('should return a valid Refresh model from JSON response', () async {
     // Arrange
-    final Map<String, dynamic> jsonMap = json.decode(fixture('refresh.json'));
+    final Map<String, dynamic> jsonMap =
+        json.decode(fixture(FixturePaths.refreshJson));
 
     // Act
     final result = RefreshModel.fromJson(jsonMap);

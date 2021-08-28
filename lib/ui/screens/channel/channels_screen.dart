@@ -1,5 +1,5 @@
-import 'package:capybara_app/ui/widgets/channels/channel_list.dart';
-import 'package:capybara_app/ui/widgets/channels/new_channel_list_tile.dart';
+import 'package:capybara_app/ui/widgets/channel/channel_list.dart';
+import 'package:capybara_app/ui/widgets/channel/new_channel_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class ChannelsScreen extends StatelessWidget {

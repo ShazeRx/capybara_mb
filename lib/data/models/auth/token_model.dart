@@ -1,5 +1,4 @@
-
-import 'package:capybara_app/domain/entities/token.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
 
 class TokenModel extends Token {
   TokenModel({

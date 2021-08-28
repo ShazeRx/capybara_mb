@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
-import 'package:capybara_app/data/models/token_model.dart';
+import 'package:capybara_app/data/models/auth/token_model.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../fixtures/fixture_paths.dart';
 import '../../../fixtures/fixture_reader.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
@@ -24,7 +25,8 @@ void main() {
     );
   });
 
-  final tTokenModel = TokenModel.fromJson(json.decode(fixture('token.json')));
+  final tTokenModel =
+      TokenModel.fromJson(json.decode(fixture(FixturePaths.tokenJson)));
 
   group('fetch token', () {
     test(
@@ -32,7 +34,7 @@ void main() {
         () async {
       // Arrange
       when(() => mockSharedPreferences.getString(CachedValues.token))
-          .thenReturn(fixture('token.json'));
+          .thenReturn(fixture(FixturePaths.tokenJson));
 
       // Act
       final result = await dataSource.fetchToken();

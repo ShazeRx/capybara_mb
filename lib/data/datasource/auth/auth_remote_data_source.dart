@@ -4,10 +4,10 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
-import 'package:capybara_app/data/models/token_model.dart';
-import 'package:capybara_app/data/models/user_model.dart';
-import 'package:capybara_app/data/requests/login_request.dart';
-import 'package:capybara_app/data/requests/register_request.dart';
+import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
+import 'package:capybara_app/data/requests/auth/login_request.dart';
+import 'package:capybara_app/data/requests/auth/register_request.dart';
 
 abstract class AuthRemoteDataSource {
   /// Calls the http://? endpoint.

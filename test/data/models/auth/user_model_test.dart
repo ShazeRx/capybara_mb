@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:capybara_app/data/models/user_model.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../fixtures/fixture_reader.dart';
+import '../../../fixtures/fixture_paths.dart';
+import '../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tUserModel = UserModel(id: 1, username: 'user', email: 'user@user.com');
@@ -16,7 +17,8 @@ void main() {
 
   test('should return a valid User model from JSON response', () async {
     // Arrange
-    final Map<String, dynamic> jsonMap = json.decode(fixture('user.json'));
+    final Map<String, dynamic> jsonMap =
+        json.decode(fixture(FixturePaths.userJson));
 
     // Act
     final result = UserModel.fromJson(jsonMap);

@@ -1,4 +1,4 @@
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 
 class UserModel extends User {
   UserModel({

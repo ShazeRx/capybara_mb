@@ -1,10 +1,11 @@
+import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
-import 'package:capybara_app/ui/providers/login_provider.dart';
+import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -63,16 +64,16 @@ class _LoginFormState extends State<LoginForm> {
               ? CircularProgressIndicator()
               : ElevatedButton(
                   onPressed: () async {
-                    FocusScopeHelper.unfocus(context);
-                    if (this.widget._formKey.currentState!.validate()) {
-                      this.widget._formKey.currentState!.save();
-                      await login.onLoginSubmitted();
-                    }
+                    // FocusScopeHelper.unfocus(context);
+                    // if (this.widget._formKkey.currentState!.validate()) {
+                    //   this.widget._formKey.currentState!.save();
+                    //   await login.onLoginSubmitted();
+                    // }
+                    Navigator.of(context).pushReplacementNamed(
+                      RoutePaths.homeRoute,
+                    );
                   },
-                  child: Text(
-                    'Login',
-                    style: theme.textTheme.bodyText2,
-                  ),
+                  child: Text('Login'),
                 ),
         ],
       );

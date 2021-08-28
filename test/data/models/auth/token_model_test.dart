@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:capybara_app/data/models/token_model.dart';
-import 'package:capybara_app/domain/entities/token.dart';
+import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../fixtures/fixture_reader.dart';
+import '../../../fixtures/fixture_paths.dart';
+import '../../../fixtures/fixture_reader.dart';
 
 void main() {
   final tTokenModel = TokenModel(refresh: '123', access: '321');
@@ -16,7 +17,8 @@ void main() {
 
   test('should return a valid Token model from JSON response', () async {
     // Arrange
-    final Map<String, dynamic> jsonMap = json.decode(fixture('token.json'));
+    final Map<String, dynamic> jsonMap =
+        json.decode(fixture(FixturePaths.tokenJson));
 
     // Act
     final result = TokenModel.fromJson(jsonMap);

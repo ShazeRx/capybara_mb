@@ -1,5 +1,5 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
-import 'package:capybara_app/ui/widgets/channels/channel_list.dart';
+import 'package:capybara_app/ui/widgets/channel/channel_list.dart';
 import 'package:flutter/material.dart';
 
 class ChannelListTile extends StatelessWidget {

@@ -1,15 +1,15 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
-import 'package:capybara_app/ui/providers/register_provider.dart';
+import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../setup/test_helpers.dart';
+import '../../../setup/test_helpers.dart';
 
 class MockAuthFacade extends Mock implements AuthFacade {}
 

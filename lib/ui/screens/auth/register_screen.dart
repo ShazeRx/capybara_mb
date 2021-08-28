@@ -1,5 +1,5 @@
 import 'package:capybara_app/app/injection_container.dart';
-import 'package:capybara_app/ui/providers/register_provider.dart';
+import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:capybara_app/ui/widgets/auth/register/register_back_to_login.dart';
 import 'package:capybara_app/ui/widgets/auth/register/register_form.dart';
 import 'package:flutter/material.dart';

@@ -4,8 +4,8 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/helpers/http/http_helper.dart';
-import 'package:capybara_app/data/models/refresh_model.dart';
-import 'package:capybara_app/data/requests/refresh_request.dart';
+import 'package:capybara_app/data/models/auth/refresh_model.dart';
+import 'package:capybara_app/data/requests/auth/refresh_request.dart';
 import 'package:dio/dio.dart';
 
 class ErrorInterceptor extends InterceptorsWrapper {

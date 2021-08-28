@@ -1,5 +1,5 @@
 import 'package:capybara_app/domain/usecases/usecase.dart';
-import 'package:capybara_app/domain/entities/token.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:dartz/dartz.dart';

@@ -1,5 +1,5 @@
-import 'package:capybara_app/domain/entities/token.dart';
-import 'package:capybara_app/domain/entities/user.dart';
+import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
