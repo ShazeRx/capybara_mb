@@ -7,7 +7,6 @@ import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/channel_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/channel_remote_data_source.dart';
 import 'package:capybara_app/data/models/channel_model.dart';
-import 'package:capybara_app/data/models/null_model.dart';
 import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
 import 'package:capybara_app/data/requests/chat/add_to_channel_request.dart';
 import 'package:capybara_app/data/requests/chat/channel_request.dart';
@@ -50,7 +49,6 @@ main() {
   final tChannelRequest = ChannelRequest(name: channelNameFirst);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
-  final tNullModel=NullModel();
   List<ChannelModel> channels = [];
   channels.add(ChannelModel(name: channelNameFirst));
   channels.add(ChannelModel(name: channelNameSecond));
@@ -185,8 +183,8 @@ main() {
         //Act
         final result = await repository.createChannel(tChannelRequest);
 
-        //Assert
-        //verify(() => mockRemoteDataSource.createChannel(tChannelRequest));
+        // Assert
+        verify(() => mockRemoteDataSource.createChannel(tChannelRequest));
 
         expect(result, Right(channels.first));
       });
@@ -220,7 +218,7 @@ main() {
   group('add to channel', () {
     setUp(() {
       when(() => mockRemoteDataSource.addToChannel(any()))
-          .thenAnswer((_) async =>tNullModel );
+          .thenAnswer((_) async => {});
     });
     test('should check connection', () {
       //arrange
@@ -240,13 +238,13 @@ main() {
       test('should add to channel', () async {
         //Arrange
         when(() => mockRemoteDataSource.addToChannel(any()))
-            .thenAnswer((_) async =>tNullModel);
+            .thenAnswer((_) async => {});
 
         //Act
         final result = await repository.addToChannel(tAddToChannelRequest);
 
         //Assert
-        //verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
+        verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
 
         expect(result, Right(null));
       });
@@ -259,7 +257,7 @@ main() {
         final result = await repository.addToChannel(tAddToChannelRequest);
 
         //Assert
-       // verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
+        verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
 
         expect(result, Left(ServerFailure(message: tErrorMessage)));
       });

@@ -3,6 +3,7 @@ import 'package:capybara_app/domain/entities/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 
 class CreateChannel extends UseCase<Channel, ChannelParams> {
   final ChannelRepository _channelRepository;
@@ -16,8 +17,11 @@ class CreateChannel extends UseCase<Channel, ChannelParams> {
   }
 }
 
-class ChannelParams  {
+class ChannelParams extends Equatable {
   final String name;
 
   ChannelParams({required this.name});
+
+  @override
+  List<Object> get props => [this.name];
 }
