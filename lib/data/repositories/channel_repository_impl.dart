@@ -32,9 +32,9 @@ class ChannelRespositoryImpl implements ChannelRepository {
   Future<Either<Failure, void>> addToChannel(AddToChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        final channel = await _remoteDataSource
+         await _remoteDataSource
             .addToChannel(AddToChannelRequest.fromParams(params));
-        return Right(channel);
+        return Right(null);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       }

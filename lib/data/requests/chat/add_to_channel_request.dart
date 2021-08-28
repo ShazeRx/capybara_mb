@@ -9,7 +9,7 @@ class AddToChannelRequest extends AddToChannelParams {
         userId: params.userId, channelId: params.channelId);
   }
 
-// Map<String, dynamic> toJson() {
-//   return {"name": this.name};
-// }
+  Map<String, dynamic> toJson() {
+    return {"userId": userId, "channelId": channelId};
+  }
 }
