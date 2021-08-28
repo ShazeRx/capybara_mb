@@ -32,7 +32,7 @@ class ChannelListTile extends StatelessWidget {
       ),
       onTap: () {
         Navigator.of(context).pushNamed(
-          RoutePaths.channelRoute,
+          RoutePaths.chatRoute,
           arguments: Channel(
             title: this.title,
             members: this.members,

@@ -5,5 +5,5 @@ class RoutePaths {
   static const newChannelRoute = '/new-channel';
   static const homeRoute = '/home';
   static const userProfileRoute = '/user-profile';
-  static const channelRoute = '/channel';
+  static const chatRoute = '/chat';
 }

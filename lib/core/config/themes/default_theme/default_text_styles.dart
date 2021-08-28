@@ -34,7 +34,7 @@ class DefaultTextStyles {
 
   static const TextStyle appBarTextStyle = TextStyle(
     fontSize: 20,
-    color: DefaultColors.accentColor,
+    color: DefaultColors.textColor,
     fontFamily: 'Ubuntu',
     fontWeight: FontWeight.w400,
     letterSpacing: 0,
