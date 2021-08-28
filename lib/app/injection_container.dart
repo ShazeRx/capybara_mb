@@ -6,6 +6,7 @@ import 'package:capybara_app/data/repositories/auth_repository_impl.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
@@ -59,6 +60,7 @@ void _registerFacades() {
       fetchToken: getIt(),
       loginUser: getIt(),
       registerUser: getIt(),
+      logoutUser: getIt(),
     ),
   );
 }
@@ -89,6 +91,12 @@ void _registerUseCases() {
 
   getIt.registerLazySingleton(
     () => FetchToken(
+      authRepository: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton(
+    () => LogoutUser(
       authRepository: getIt(),
     ),
   );

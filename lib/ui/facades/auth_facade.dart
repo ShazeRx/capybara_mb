@@ -3,6 +3,7 @@ import 'package:capybara_app/domain/entities/auth/token.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
@@ -14,16 +15,19 @@ class AuthFacade {
   final FetchToken _fetchToken;
   final LoginUser _loginUser;
   final RegisterUser _registerUser;
+  final LogoutUser _logoutUser;
 
   AuthFacade({
     required AuthState authState,
     required FetchToken fetchToken,
     required LoginUser loginUser,
     required RegisterUser registerUser,
+    required LogoutUser logoutUser,
   })  : this._authState = authState,
         this._fetchToken = fetchToken,
         this._loginUser = loginUser,
-        this._registerUser = registerUser;
+        this._registerUser = registerUser,
+        this._logoutUser = logoutUser;
 
   Future<Either<Failure, Token>> fetchToken() async {
     final result = await this._fetchToken(NoParams());
@@ -40,6 +44,15 @@ class AuthFacade {
   Future<Either<Failure, User>> registerUser(RegisterParams params) async {
     final result = await this._registerUser(params);
     this._authState.setUser(result.getValueOrNull<User>());
+    return result;
+  }
+
+  Future<Either<Failure, Unit>> logoutUser() async {
+    final result = await this._logoutUser(NoParams());
+    if (result.isRight()) {
+      this._authState.setToken(null);
+      this._authState.setUser(null);
+    }
     return result;
   }
 }

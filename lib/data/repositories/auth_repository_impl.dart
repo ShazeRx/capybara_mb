@@ -78,4 +78,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(CacheFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> logoutUser() async {
+    try {
+      final result = await this._localDataSource.removeToken();
+      return Right(result);
+    } on CacheException {
+      return Left(CacheFailure());
+    }
+  }
 }

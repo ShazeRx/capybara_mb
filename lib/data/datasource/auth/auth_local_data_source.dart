@@ -4,6 +4,7 @@ import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 
 import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
@@ -13,6 +14,8 @@ abstract class AuthLocalDataSource {
   Future<TokenModel> fetchToken();
 
   Future<void> cacheToken(TokenModel token);
+
+  Future<Unit> removeToken();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -40,5 +43,16 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
           CachedValues.token,
           json.encode(token.toJson()),
         );
+  }
+
+  @override
+  Future<Unit> removeToken() {
+    final jsonString = this._sharedPreferences.getString(CachedValues.token);
+
+    if (jsonString == null) throw CacheException();
+
+    this._sharedPreferences.remove(CachedValues.token);
+
+    return Future.value(unit);
   }
 }

@@ -1,8 +1,10 @@
+import 'package:capybara_app/core/errors/failures/cache_failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/domain/entities/auth/token.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
@@ -19,6 +21,8 @@ class MockLoginUser extends Mock implements LoginUser {}
 
 class MockRegisterUser extends Mock implements RegisterUser {}
 
+class MockLogoutUser extends Mock implements LogoutUser {}
+
 class FakeLoginParams extends Fake implements LoginParams {}
 
 class FakeNoParams extends Fake implements NoParams {}
@@ -30,6 +34,7 @@ void main() {
   late MockFetchToken mockFetchToken;
   late MockLoginUser mockLoginUser;
   late MockRegisterUser mockRegisterUser;
+  late MockLogoutUser mockLogoutUser;
   late AuthFacade authFacade;
 
   setUp(() {
@@ -37,11 +42,13 @@ void main() {
     mockFetchToken = MockFetchToken();
     mockLoginUser = MockLoginUser();
     mockRegisterUser = MockRegisterUser();
+    mockLogoutUser = MockLogoutUser();
     authFacade = AuthFacade(
       authState: mockAuthState,
       fetchToken: mockFetchToken,
       loginUser: mockLoginUser,
       registerUser: mockRegisterUser,
+      logoutUser: mockLogoutUser,
     );
 
     registerFallbackValue<LoginParams>(FakeLoginParams());
@@ -164,6 +171,57 @@ void main() {
 
       // Assert
       verify(() => mockAuthState.setUser(null));
+    });
+  });
+
+  group('logout user', () {
+    test('should call logout user', () {
+      // Arrange
+      when(() => mockLogoutUser(any())).thenAnswer((_) async => Right(unit));
+
+      // Act
+      authFacade.logoutUser();
+
+      // Assert
+      verify(() => mockLogoutUser(NoParams()));
+    });
+
+    test('should set token as null value in state when call is successful',
+        () async {
+      // Arrange
+      when(() => mockLogoutUser(any())).thenAnswer((_) async => Right(unit));
+
+      // Act
+      await authFacade.logoutUser();
+
+      // Assert
+      verify(() => mockAuthState.setToken(null));
+    });
+
+    test('should set user as null value in state when call is successful',
+        () async {
+      // Arrange
+      when(() => mockLogoutUser(any())).thenAnswer((_) async => Right(unit));
+
+      // Act
+      await authFacade.logoutUser();
+
+      // Assert
+      verify(() => mockAuthState.setUser(null));
+    });
+
+    test(
+        'should not perform any operation on state when call is not successful',
+        () async {
+      // Arrange
+      when(() => mockLogoutUser(any()))
+          .thenAnswer((_) async => Left(CacheFailure()));
+
+      // Act
+      await authFacade.logoutUser();
+
+      // Assert
+      verifyZeroInteractions(mockAuthState);
     });
   });
 }
