@@ -4,13 +4,24 @@ import 'default_colors.dart';
 import 'default_text_styles.dart';
 
 ThemeData get defaultTheme => ThemeData(
+      appBarTheme: AppBarTheme(
+        backgroundColor: DefaultColors.buttonColor,
+        iconTheme: IconThemeData(
+          color: DefaultColors.textColor,
+        ),
+        titleTextStyle: DefaultTextStyles.appBarTextStyle,
+      ),
+      cardColor: DefaultColors.accentColor,
+      buttonColor: DefaultColors.buttonColor,
       scaffoldBackgroundColor: DefaultColors.backgroundColor,
+      backgroundColor: DefaultColors.backgroundColor,
       fontFamily: 'Ubuntu',
       errorColor: DefaultColors.errorColor,
       textTheme: TextTheme(
         bodyText2: DefaultTextStyles.paragraphTextStyle,
         headline1: DefaultTextStyles.headline1TextStyle,
         headline2: DefaultTextStyles.headline2TextStyle,
+        subtitle1: DefaultTextStyles.subtitleTextStyle,
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: InputBorder.none,
@@ -44,5 +55,14 @@ ThemeData get defaultTheme => ThemeData(
             ),
           ),
         ),
+      ),
+      iconTheme: IconThemeData(
+        color: DefaultColors.textColor,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: DefaultColors.buttonColor,
+        unselectedItemColor: DefaultColors.accentColor,
+        selectedItemColor: DefaultColors.textColor,
+        selectedLabelStyle: DefaultTextStyles.bottomNavigationBarTextStyle,
       ),
     );
