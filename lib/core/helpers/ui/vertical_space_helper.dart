@@ -12,8 +12,4 @@ class VerticalSpaceHelper {
 
   static Widget verticalSpaceLarge(BuildContext context) =>
       SizedBox(height: _deviceHeight(context) * 0.05);
-
-  // static double deviceHeightPercentage(BuildContext context,
-  //         {double percentage = 1}) =>
-  //     _deviceHeight(context) * percentage;
 }

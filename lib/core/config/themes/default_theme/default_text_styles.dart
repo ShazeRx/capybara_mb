@@ -31,4 +31,31 @@ class DefaultTextStyles {
     letterSpacing: 0,
     decoration: TextDecoration.none,
   );
+
+  static const TextStyle appBarTextStyle = TextStyle(
+    fontSize: 20,
+    color: DefaultColors.accentColor,
+    fontFamily: 'Ubuntu',
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    decoration: TextDecoration.none,
+  );
+
+  static const TextStyle bottomNavigationBarTextStyle = TextStyle(
+    fontSize: 12,
+    color: DefaultColors.textColor,
+    fontFamily: 'Ubuntu',
+    fontWeight: FontWeight.w400,
+    letterSpacing: 0,
+    decoration: TextDecoration.none,
+  );
+
+  static const TextStyle subtitleTextStyle = TextStyle(
+    fontSize: 12,
+    color: DefaultColors.textColor,
+    fontFamily: 'Ubuntu',
+    fontWeight: FontWeight.w300,
+    letterSpacing: 0,
+    decoration: TextDecoration.none,
+  );
 }

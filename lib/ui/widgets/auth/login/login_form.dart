@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
@@ -10,12 +11,20 @@ import 'package:provider/provider.dart';
 import '../auth_form_wrapper.dart';
 
 class LoginForm extends StatefulWidget {
+  final GlobalKey<FormState> _formKey;
+
+  LoginForm({required formKey}) : this._formKey = formKey;
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    widget._formKey.currentState?.reset();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +34,25 @@ class _LoginFormState extends State<LoginForm> {
         children: [
           AuthFormWrapper(
             form: Form(
-              key: this._formKey,
+              key: widget._formKey,
               child: Column(
                 children: [
                   TextFormField(
+                    key: Key(WidgetKeys.loginUsername),
                     style: theme.inputDecorationTheme.hintStyle,
                     decoration: defaultInputDecoration(hintText: 'Username'),
                     validator: Validator.username.validator,
                     onSaved: (value) => login.loginData['username'] = value!,
+                    textInputAction: TextInputAction.next,
                   ),
                   TextFormField(
+                    key: Key(WidgetKeys.loginPassword),
                     style: theme.inputDecorationTheme.hintStyle,
                     decoration: defaultInputDecoration(hintText: 'Password'),
                     validator: Validator.password.validator,
                     obscureText: true,
                     onSaved: (value) => login.loginData['password'] = value!,
+                    textInputAction: TextInputAction.done,
                   ),
                 ],
               ),
@@ -51,8 +64,8 @@ class _LoginFormState extends State<LoginForm> {
               : ElevatedButton(
                   onPressed: () async {
                     FocusScopeHelper.unfocus(context);
-                    if (this._formKey.currentState!.validate()) {
-                      this._formKey.currentState!.save();
+                    if (this.widget._formKey.currentState!.validate()) {
+                      this.widget._formKey.currentState!.save();
                       await login.onLoginSubmitted();
                     }
                   },

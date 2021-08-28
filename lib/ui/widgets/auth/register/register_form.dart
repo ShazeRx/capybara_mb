@@ -1,4 +1,5 @@
 import 'package:capybara_app/core/constants/validation_messages.dart';
+import 'package:capybara_app/core/constants/widget_keys.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
@@ -18,6 +19,13 @@ class _RegisterFormState extends State<RegisterForm> {
   final _passwordController = new TextEditingController();
 
   @override
+  void dispose() {
+    this._formKey.currentState?.reset();
+    this._passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Consumer<RegisterProvider>(
@@ -30,22 +38,30 @@ class _RegisterFormState extends State<RegisterForm> {
                 child: Column(
                   children: [
                     TextFormField(
+                      key: Key(WidgetKeys.registerUsername),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Username'),
                       validator: Validator.username.validator,
+                      textInputAction: TextInputAction.next,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerEmail),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Email'),
                       validator: Validator.email.validator,
+                      textInputAction: TextInputAction.next,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerPassword),
                       controller: this._passwordController,
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration: defaultInputDecoration(hintText: 'Password'),
                       validator: Validator.password.validator,
+                      textInputAction: TextInputAction.next,
+                      obscureText: true,
                     ),
                     TextFormField(
+                      key: Key(WidgetKeys.registerRepeatPassword),
                       style: theme.inputDecorationTheme.hintStyle,
                       decoration:
                           defaultInputDecoration(hintText: 'Repeat password'),
@@ -55,6 +71,8 @@ class _RegisterFormState extends State<RegisterForm> {
                         value!,
                         this._passwordController.text,
                       ),
+                      obscureText: true,
+                      textInputAction: TextInputAction.done,
                     ),
                   ],
                 ),
@@ -62,16 +80,17 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             VerticalSpaceHelper.verticalSpaceLarge(context),
             ElevatedButton(
-                onPressed: () async {
-                  if (this._formKey.currentState!.validate()) {
-                    this._formKey.currentState!.save();
-                    await register.onRegisterSubmitted();
-                  }
-                },
-                child: Text(
-                  'Register now!',
-                  style: theme.textTheme.bodyText2,
-                )),
+              onPressed: () async {
+                if (this._formKey.currentState!.validate()) {
+                  this._formKey.currentState!.save();
+                  await register.onRegisterSubmitted();
+                }
+              },
+              child: Text(
+                'Register now!',
+                style: theme.textTheme.bodyText2,
+              ),
+            ),
           ],
         );
       },

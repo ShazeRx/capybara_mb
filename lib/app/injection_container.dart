@@ -8,8 +8,9 @@ import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
-import 'package:capybara_app/ui/providers/login_provider.dart';
-import 'package:capybara_app/ui/providers/register_provider.dart';
+import 'package:capybara_app/ui/providers/home/home_provider.dart';
+import 'package:capybara_app/ui/providers/auth/login_provider.dart';
+import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
 
@@ -45,10 +46,14 @@ void _registerProviders() {
       authFacade: getIt(),
     ),
   );
+
+  getIt.registerFactory(
+    () => HomeProvider(),
+  );
 }
 
 void _registerFacades() {
-  getIt.registerFactory(
+  getIt.registerLazySingleton(
     () => AuthFacade(
       authState: getIt(),
       fetchToken: getIt(),
