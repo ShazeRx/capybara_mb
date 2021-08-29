@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/failure_messages.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
@@ -302,7 +303,8 @@ void main() {
 
       verify(() => mockLocalDataSource.removeToken());
 
-      expect(result, equals(Left(CacheFailure())));
+      expect(result,
+          equals(Left(CacheFailure(message: FailureMessages.logoutFailure))));
     });
 
     test('should return unit when token is present in cache', () async {

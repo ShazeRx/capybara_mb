@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/failure_messages.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
@@ -85,7 +86,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await this._localDataSource.removeToken();
       return Right(result);
     } on CacheException {
-      return Left(CacheFailure(message: 'Could not logout a user'));
+      return Left(CacheFailure(message: FailureMessages.logoutFailure));
     }
   }
 }
