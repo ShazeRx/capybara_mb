@@ -85,7 +85,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await this._localDataSource.removeToken();
       return Right(result);
     } on CacheException {
-      return Left(CacheFailure());
+      return Left(CacheFailure(message: 'Could not logout a user'));
     }
   }
 }
