@@ -1,5 +1,6 @@
 import 'package:capybara_app/core/constants/validation_messages.dart';
 import 'package:capybara_app/core/constants/widget_keys.dart';
+import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
@@ -79,18 +80,20 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
             ),
             VerticalSpaceHelper.verticalSpaceLarge(context),
-            ElevatedButton(
-              onPressed: () async {
-                if (this._formKey.currentState!.validate()) {
-                  this._formKey.currentState!.save();
-                  await register.onRegisterSubmitted();
-                }
-              },
-              child: Text(
-                'Register now!',
-                style: theme.textTheme.bodyText2,
-              ),
-            ),
+            register.state == ProviderState.busy
+                ? CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () async {
+                      if (this._formKey.currentState!.validate()) {
+                        this._formKey.currentState!.save();
+                        await register.onRegisterSubmitted();
+                      }
+                    },
+                    child: Text(
+                      'Register now!',
+                      style: theme.textTheme.bodyText2,
+                    ),
+                  ),
           ],
         );
       },
