@@ -5,4 +5,5 @@ class SvgIcons {
   static const plus = 'assets/icons/plus-icon.svg';
   static const channel = 'assets/icons/channel-icon.svg';
   static const user = 'assets/icons/user-icon.svg';
+  static const logout = 'assets/icons/logout-icon.svg';
 }
