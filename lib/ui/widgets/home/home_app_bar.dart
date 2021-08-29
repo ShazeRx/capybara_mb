@@ -41,6 +41,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
               icon: Icon(Icons.arrow_back_ios),
             )
           : null,
+      titleSpacing: 0,
       title: Row(
         children: [
           if (!Navigator.canPop(context))
