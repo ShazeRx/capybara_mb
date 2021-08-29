@@ -12,6 +12,7 @@ import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
+import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
 
@@ -50,6 +51,12 @@ void _registerProviders() {
 
   getIt.registerFactory(
     () => HomeProvider(),
+  );
+
+  getIt.registerFactory(
+    () => UserProfileProvider(
+      authFacade: getIt(),
+    ),
   );
 }
 

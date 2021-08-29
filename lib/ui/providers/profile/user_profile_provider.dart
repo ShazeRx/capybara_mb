@@ -7,7 +7,7 @@ class UserProfileProvider extends BaseProvider {
   late AuthFacade _authFacade;
 
   UserProfileProvider({
-    required authFacade,
+    required AuthFacade authFacade,
   }) : this._authFacade = authFacade;
 
   onLogoutPressed() async {
