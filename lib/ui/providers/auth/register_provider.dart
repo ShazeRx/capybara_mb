@@ -26,7 +26,7 @@ class RegisterProvider extends BaseProvider {
     result.fold(
       (failure) => this.showError(failure),
       (user) => {
-        this.navigateTo(RoutePaths.loginRoute),
+        this.backToPreviousScreen(),
         //TODO - add file with translations
         this.showSuccess(
             'Successful registration, a confirmation link has been sent to your email address'),

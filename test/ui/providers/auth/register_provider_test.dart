@@ -39,13 +39,19 @@ void main() {
   final tPassword = 'user123';
   final tUser = User(id: tId, email: tEmail, username: tUsername);
 
+  void mockBackToPreviousScreen() {
+    when(() => mockNavigationService.back()).thenAnswer((_) => true);
+  }
+
   void mockRegisterSuccess() {
     when(() => mockAuthFacade.registerUser(any())).thenAnswer(
       (_) async => Right(tUser),
     );
+
+    mockBackToPreviousScreen();
   }
 
-  void mockRegisterfailure() {
+  void mockRegisterFailure() {
     when(() => mockAuthFacade.registerUser(any())).thenAnswer(
       (_) async => Left(ServerFailure(message: 'Server failure')),
     );
@@ -99,7 +105,7 @@ void main() {
     test('should change provider state to idle after unsuccessful register',
         () async {
       // Arrange
-      mockRegisterfailure();
+      mockRegisterFailure();
 
       // Act
       await provider.onRegisterSubmitted();
@@ -138,7 +144,7 @@ void main() {
     test('should show snackbar with error after unsuccessful register',
         () async {
       // Arrange
-      mockRegisterfailure();
+      mockRegisterFailure();
 
       // Act
       await provider.onRegisterSubmitted();
@@ -161,7 +167,7 @@ void main() {
           mockSnackbarService.showSnackbar(message: any(named: 'message')));
     });
 
-    test('should navigate to login screen after successful register', () async {
+    test('should back to login screen after successful register', () async {
       // Arrange
       mockRegisterSuccess();
 
@@ -169,7 +175,7 @@ void main() {
       await provider.onRegisterSubmitted();
 
       // Assert
-      verify(() => mockNavigationService.replaceWith(RoutePaths.loginRoute));
+      verify(() => mockNavigationService.back());
     });
   });
 }

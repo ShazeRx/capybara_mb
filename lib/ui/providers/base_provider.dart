@@ -6,9 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class BaseProvider with ChangeNotifier {
-  DialogService dialogService = getIt<DialogService>();
-  NavigationService navigationService = getIt<NavigationService>();
-  SnackbarService snackbarService = getIt<SnackbarService>();
+  DialogService _dialogService = getIt<DialogService>();
+  NavigationService _navigationService = getIt<NavigationService>();
+  SnackbarService _snackbarService = getIt<SnackbarService>();
 
   ProviderState _state = ProviderState.idle;
 
@@ -22,22 +22,26 @@ class BaseProvider with ChangeNotifier {
   //TODO - add different snackbars
 
   void showSuccess(String success) {
-    this.snackbarService.showSnackbar(message: success);
+    this._snackbarService.showSnackbar(message: success);
   }
 
   void showInfo(String info) {
-    this.snackbarService.showSnackbar(message: info);
+    this._snackbarService.showSnackbar(message: info);
   }
 
   void showWarning(String warning) {
-    this.snackbarService.showSnackbar(message: warning);
+    this._snackbarService.showSnackbar(message: warning);
   }
 
   void showError(Failure failure) {
-    this.snackbarService.showSnackbar(message: failure.message);
+    this._snackbarService.showSnackbar(message: failure.message);
   }
 
   void navigateTo(String route) {
-    this.navigationService.replaceWith(route);
+    this._navigationService.clearStackAndShow(route);
+  }
+
+  void backToPreviousScreen() {
+    this._navigationService.back();
   }
 }
