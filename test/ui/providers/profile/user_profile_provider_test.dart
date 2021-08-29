@@ -120,7 +120,7 @@ void main() {
       await provider.onLogoutPressed();
 
       // Assert
-      verify(() => mockNavigationService.navigateTo(RoutePaths.loginRoute));
+      verify(() => mockNavigationService.replaceWith(RoutePaths.loginRoute));
     });
   });
 }

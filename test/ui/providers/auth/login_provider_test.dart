@@ -141,7 +141,7 @@ void main() {
       await provider.onLoginSubmitted();
 
       // Assert
-      verify(() => mockNavigationService.navigateTo(RoutePaths.homeRoute));
+      verify(() => mockNavigationService.replaceWith(RoutePaths.homeRoute));
     });
   });
 }

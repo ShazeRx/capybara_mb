@@ -169,7 +169,7 @@ void main() {
       await provider.onRegisterSubmitted();
 
       // Assert
-      verify(() => mockNavigationService.navigateTo(RoutePaths.loginRoute));
+      verify(() => mockNavigationService.replaceWith(RoutePaths.loginRoute));
     });
   });
 }

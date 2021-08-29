@@ -38,6 +38,6 @@ class BaseProvider with ChangeNotifier {
   }
 
   void navigateTo(String route) {
-    this.navigationService.navigateTo(route);
+    this.navigationService.replaceWith(route);
   }
 }
