@@ -7,4 +7,5 @@ class SvgIcons {
   static const user = 'assets/icons/user-icon.svg';
   static const logout = 'assets/icons/logout-icon.svg';
   static const capybara = 'assets/icons/capybara-icon.svg';
+  static const check = 'assets/icons/check-icon.svg';
 }

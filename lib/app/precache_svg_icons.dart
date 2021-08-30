@@ -36,6 +36,10 @@ precacheSvgIcons() async {
         ExactAssetPicture(SvgPicture.svgStringDecoder, SvgIcons.user),
         null,
       ),
+      precachePicture(
+        ExactAssetPicture(SvgPicture.svgStringDecoder, SvgIcons.check),
+        null,
+      ),
     ],
   );
 }
