@@ -14,7 +14,7 @@ class SnackbarManagerImpl implements SnackbarManager {
   late SnackbarService _snackbarService;
 
   SnackbarManagerImpl({
-    required snackbarService,
+    required SnackbarService snackbarService,
   }) : this._snackbarService = snackbarService;
 
   //TODO - add different snackbars

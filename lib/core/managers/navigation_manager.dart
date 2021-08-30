@@ -12,7 +12,7 @@ class NavigationManagerImpl implements NavigationManager {
   late NavigationService _navigationService;
 
   NavigationManagerImpl({
-    required navigationService,
+    required NavigationService navigationService,
   }) : this._navigationService = navigationService;
 
   void navigateTo(String route, [dynamic arguments]) {
