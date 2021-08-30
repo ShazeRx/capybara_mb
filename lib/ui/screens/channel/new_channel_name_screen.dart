@@ -25,12 +25,10 @@ class NewChannelNameScreen extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.only(top: height * 0.2),
               width: width * 0.6,
-              child: Form(
-                child: TextFormField(
-                  controller: newChannelName.channelNameController,
-                  style: theme.inputDecorationTheme.hintStyle,
-                  decoration: defaultInputDecoration(hintText: 'Name'),
-                ),
+              child: TextFormField(
+                controller: newChannelName.channelNameController,
+                style: theme.inputDecorationTheme.hintStyle,
+                decoration: defaultInputDecoration(hintText: 'Name'),
               ),
             ),
           ),

@@ -19,11 +19,7 @@ class NewChannelMembersScreen extends StatelessWidget {
             title: 'New channel members',
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                MemberList(),
-              ],
-            ),
+            child: MemberList(),
           ),
           floatingActionButton: FloatingActionButton(
             child: SvgPicture.asset(
