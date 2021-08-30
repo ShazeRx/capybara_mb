@@ -91,8 +91,8 @@ void _registerStates() {
       authState: getIt(),
     ),
   );
-  getIt.registerLazySingleton(
-    () => AuthState(),
+  getIt.registerLazySingleton<AuthState>(
+    () => AuthStateImpl(),
   );
 }
 

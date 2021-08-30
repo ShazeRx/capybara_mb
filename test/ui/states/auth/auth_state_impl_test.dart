@@ -4,10 +4,10 @@ import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  late AuthState authState;
+  late AuthStateImpl authState;
 
   setUp(() {
-    authState = AuthState();
+    authState = AuthStateImpl();
   });
 
   final tToken = Token(access: '123', refresh: '321');
