@@ -1,4 +1,4 @@
-import 'package:capybara_app/ui/widgets/channel/channel_list_tile.dart';
+import 'package:capybara_app/ui/widgets/channel/list/channel_list_tile.dart';
 import 'package:flutter/material.dart';
 
 // Temporarily

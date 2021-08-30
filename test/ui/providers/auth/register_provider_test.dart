@@ -1,4 +1,3 @@
-import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';

@@ -9,6 +9,8 @@ import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
+import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
+import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
@@ -57,6 +59,14 @@ void _registerProviders() {
     () => UserProfileProvider(
       authFacade: getIt(),
     ),
+  );
+
+  getIt.registerFactory(
+    () => NewChannelMembersProvider(),
+  );
+
+  getIt.registerFactory(
+    () => NewChannelNameProvider(),
   );
 }
 

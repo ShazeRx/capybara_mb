@@ -16,11 +16,10 @@ class NewChannelListTile extends StatelessWidget {
       title: Text(
         'Add channel',
         style: theme.textTheme.bodyText2,
-        // softWrap: false,
       ),
       onTap: () {
         Navigator.of(context).pushNamed(
-          RoutePaths.newChannelRoute,
+          RoutePaths.newChannelMembersRoute,
         );
       },
     );
