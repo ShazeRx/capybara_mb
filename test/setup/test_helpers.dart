@@ -1,44 +1,45 @@
 import 'package:capybara_app/app/injection_container.dart';
+import 'package:capybara_app/core/managers/navigation_manager.dart';
+import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:stacked_services/stacked_services.dart';
 
-class MockSnackbarService extends Mock implements SnackbarService {}
+class MockSnackbarManager extends Mock implements SnackbarManager {}
 
-class MockDialogService extends Mock implements DialogService {}
+// class MockDialogManager extends Mock implements DialogManager {}
 
-class MockNavigationService extends Mock implements NavigationService {}
+class MockNavigationManager extends Mock implements NavigationManager {}
 
-MockDialogService mockDialogService = MockDialogService();
-MockNavigationService mockNavigationService = MockNavigationService();
-MockSnackbarService mockSnackbarService = MockSnackbarService();
+// MockDialogManager mockDialogManager = MockDialogManager();
+MockNavigationManager mockNavigationManager = MockNavigationManager();
+MockSnackbarManager mockSnackbarManager = MockSnackbarManager();
 
-void registerThirdPartyServices() {
-  _registerMockNavigationService();
-  _registerMockDialogService();
-  _registerMockSnackbarService();
+void registerManagers() {
+  _registerMockNavigationManager();
+  // _registerMockDialogManager();
+  _registerMockSnackbarManager();
 }
 
-void unregisterThirdPartyServices() {
-  getIt.unregister<NavigationService>();
-  getIt.unregister<DialogService>();
-  getIt.unregister<SnackbarService>();
+void unregisterManagers() {
+  getIt.unregister<NavigationManager>();
+  // getIt.unregister<DialogManager>();
+  getIt.unregister<SnackbarManager>();
 }
 
-void _registerMockNavigationService() {
-  _removeRegistrationIfExists<NavigationService>();
-  getIt.registerSingleton<NavigationService>(mockNavigationService);
+void _registerMockNavigationManager() {
+  _removeRegistrationIfExists<NavigationManager>();
+  getIt.registerSingleton<NavigationManager>(mockNavigationManager);
 }
 
-void _registerMockDialogService() {
-  _removeRegistrationIfExists<DialogService>();
-  getIt.registerSingleton<DialogService>(mockDialogService);
-  when(() => mockDialogService.showDialog()).thenAnswer((_) => Future.value());
-}
+// void _registerMockDialogManager() {
+//   _removeRegistrationIfExists<DialogManager>();
+//   getIt.registerSingleton<DialogManager>(mockDialogManager);
+//   when(() => mockDialogManager.showDialog()).thenAnswer((_) => Future.value());
+// }
 
-void _registerMockSnackbarService() {
-  _removeRegistrationIfExists<SnackbarService>();
-  getIt.registerSingleton<SnackbarService>(mockSnackbarService);
+void _registerMockSnackbarManager() {
+  _removeRegistrationIfExists<SnackbarManager>();
+  getIt.registerSingleton<SnackbarManager>(mockSnackbarManager);
 }
 
 void _removeRegistrationIfExists<T extends Object>() {

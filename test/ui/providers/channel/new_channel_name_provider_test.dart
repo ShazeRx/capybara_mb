@@ -8,11 +8,11 @@ void main() {
   late NewChannelNameProvider provider;
 
   setUp(() {
-    registerThirdPartyServices();
+    registerManagers();
     provider = NewChannelNameProvider();
   });
 
-  tearDown(() => unregisterThirdPartyServices());
+  tearDown(() => unregisterManagers());
 
   group('on add channel clicked', () {
     test('should show error when channel name is empty', () async {
@@ -23,8 +23,7 @@ void main() {
       provider.onAddChannelClicked([]);
 
       // Assert
-      verify(() => mockSnackbarService.showSnackbar(
-          message: 'Channel name should not be empty'));
+      verify(() => mockSnackbarManager.showError(any()));
     });
   });
 }

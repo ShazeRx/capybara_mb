@@ -17,14 +17,14 @@ void main() {
   late UserProfileProvider provider;
 
   setUp(() {
-    registerThirdPartyServices();
+    registerManagers();
     mockAuthFacade = MockAuthFacade();
     provider = UserProfileProvider(
       authFacade: mockAuthFacade,
     );
   });
 
-  tearDown(() => unregisterThirdPartyServices());
+  tearDown(() => unregisterManagers());
 
   void mockLogoutFailure() {
     when(() => mockAuthFacade.logoutUser())
@@ -96,20 +96,7 @@ void main() {
       await provider.onLogoutPressed();
 
       // Assert
-      verify(() =>
-          mockSnackbarService.showSnackbar(message: any(named: 'message')));
-    });
-
-    test('should show snackbar with error after unsuccessful logout', () async {
-      // Arrange
-      mockLogoutFailure();
-
-      // Act
-      await provider.onLogoutPressed();
-
-      // Assert
-      verify(() =>
-          mockSnackbarService.showSnackbar(message: any(named: 'message')));
+      verify(() => mockSnackbarManager.showError(any()));
     });
 
     test('should navigate to login screen after successful logout', () async {
@@ -120,8 +107,7 @@ void main() {
       await provider.onLogoutPressed();
 
       // Assert
-      verify(
-          () => mockNavigationService.clearStackAndShow(RoutePaths.loginRoute));
+      verify(() => mockNavigationManager.navigateTo((RoutePaths.loginRoute)));
     });
   });
 }

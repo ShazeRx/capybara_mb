@@ -10,11 +10,11 @@ void main() {
   late NewChannelMembersProvider provider;
 
   setUp(() {
-    registerThirdPartyServices();
+    registerManagers();
     provider = NewChannelMembersProvider();
   });
 
-  tearDown(() => unregisterThirdPartyServices());
+  tearDown(() => unregisterManagers());
 
   final tUser = User(id: 1, username: 'user', email: 'user@user.com');
 
@@ -51,8 +51,7 @@ void main() {
       provider.onAddChannelMembersClicked();
 
       // Assert
-      verify(() => mockSnackbarService.showSnackbar(
-          message: 'You must select at least one member'));
+      verify(() => mockSnackbarManager.showError(any()));
     });
 
     test(
@@ -65,8 +64,8 @@ void main() {
       provider.onAddChannelMembersClicked();
 
       // Assert
-      verify(() => mockNavigationService
-          .navigateTo(RoutePaths.newChannelNameRoute, arguments: [tUser]));
+      verify(() => mockNavigationManager
+          .pushRouteOnStack(RoutePaths.newChannelNameRoute, [tUser]));
     });
   });
 }

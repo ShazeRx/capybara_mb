@@ -1,4 +1,6 @@
 import 'package:capybara_app/core/http/http_client.dart';
+import 'package:capybara_app/core/managers/navigation_manager.dart';
+import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
@@ -34,6 +36,7 @@ Future<void> registerDependencies() async {
   _registerRepositories();
   _registerDataSources();
   _registerCoreFeatures();
+  _registerManagers();
   await _registerExternalDependencies();
   _registerThirdPartyServices();
 }
@@ -152,6 +155,20 @@ void _registerCoreFeatures() {
   getIt.registerLazySingleton<HttpClient>(
     () => HttpClientImpl(
       dio: getIt(),
+    ),
+  );
+}
+
+void _registerManagers() {
+  getIt.registerLazySingleton<SnackbarManager>(
+    () => SnackbarManagerImpl(
+      snackbarService: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton<NavigationManager>(
+    () => NavigationManagerImpl(
+      navigationService: getIt(),
     ),
   );
 }

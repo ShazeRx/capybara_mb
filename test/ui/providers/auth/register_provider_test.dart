@@ -19,7 +19,7 @@ void main() {
   late MockAuthFacade mockAuthFacade;
 
   setUp(() {
-    registerThirdPartyServices();
+    registerManagers();
 
     mockAuthFacade = MockAuthFacade();
 
@@ -30,7 +30,7 @@ void main() {
     registerFallbackValue<RegisterParams>(FakeParams());
   });
 
-  tearDown(() => unregisterThirdPartyServices());
+  tearDown(() => unregisterManagers());
 
   final tId = 1;
   final tUsername = 'user';
@@ -38,16 +38,10 @@ void main() {
   final tPassword = 'user123';
   final tUser = User(id: tId, email: tEmail, username: tUsername);
 
-  void mockBackToPreviousScreen() {
-    when(() => mockNavigationService.back()).thenAnswer((_) => true);
-  }
-
   void mockRegisterSuccess() {
     when(() => mockAuthFacade.registerUser(any())).thenAnswer(
       (_) async => Right(tUser),
     );
-
-    mockBackToPreviousScreen();
   }
 
   void mockRegisterFailure() {
@@ -149,8 +143,7 @@ void main() {
       await provider.onRegisterSubmitted();
 
       // Assert
-      verify(() =>
-          mockSnackbarService.showSnackbar(message: any(named: 'message')));
+      verify(() => mockSnackbarManager.showError(any()));
     });
 
     test('should show snackbar with information about email confirmation',
@@ -162,8 +155,7 @@ void main() {
       await provider.onRegisterSubmitted();
 
       // Assert
-      verify(() =>
-          mockSnackbarService.showSnackbar(message: any(named: 'message')));
+      verify(() => mockSnackbarManager.showSuccess(any()));
     });
 
     test('should back to login screen after successful register', () async {
@@ -174,7 +166,7 @@ void main() {
       await provider.onRegisterSubmitted();
 
       // Assert
-      verify(() => mockNavigationService.back());
+      verify(() => mockNavigationManager.backToPreviousScreen());
     });
   });
 }

@@ -20,7 +20,7 @@ void main() {
   late MockAuthFacade mockAuthFacade;
 
   setUp(() {
-    registerThirdPartyServices();
+    registerManagers();
 
     mockAuthFacade = MockAuthFacade();
 
@@ -30,7 +30,7 @@ void main() {
     registerFallbackValue<LoginParams>(FakeParams());
   });
 
-  tearDown(() => unregisterThirdPartyServices());
+  tearDown(() => unregisterManagers());
 
   final tUsername = 'user';
   final tPassword = 'user123';
@@ -129,8 +129,7 @@ void main() {
       await provider.onLoginSubmitted();
 
       // Assert
-      verify(() =>
-          mockSnackbarService.showSnackbar(message: any(named: 'message')));
+      verify(() => mockSnackbarManager.showError(any()));
     });
 
     test('should navigate to home screen after successful login', () async {
@@ -141,8 +140,7 @@ void main() {
       await provider.onLoginSubmitted();
 
       // Assert
-      verify(
-          () => mockNavigationService.clearStackAndShow(RoutePaths.homeRoute));
+      verify(() => mockNavigationManager.navigateTo(RoutePaths.homeRoute));
     });
   });
 }
