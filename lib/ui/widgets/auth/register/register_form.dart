@@ -5,11 +5,11 @@ import 'package:capybara_app/core/enums/validator.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/helpers/ui/focus_scope_helper.dart';
 import 'package:capybara_app/core/helpers/ui/vertical_space_helper.dart';
+import 'package:capybara_app/core/widgets/form_wrapper.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
-import '../auth_form_wrapper.dart';
 
 class RegisterForm extends StatefulWidget {
   @override
@@ -34,7 +34,7 @@ class _RegisterFormState extends State<RegisterForm> {
       builder: (_, register, __) {
         return Column(
           children: [
-            AuthFormWrapper(
+            FormWrapper(
               form: Form(
                 key: this._formKey,
                 child: Column(
