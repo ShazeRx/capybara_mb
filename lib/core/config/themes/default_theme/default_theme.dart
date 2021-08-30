@@ -11,6 +11,7 @@ ThemeData get defaultTheme => ThemeData(
         ),
         titleTextStyle: DefaultTextStyles.appBarTextStyle,
       ),
+      accentColor: DefaultColors.accentColor,
       cardColor: DefaultColors.accentColor,
       buttonColor: DefaultColors.buttonColor,
       scaffoldBackgroundColor: DefaultColors.backgroundColor,
@@ -64,5 +65,9 @@ ThemeData get defaultTheme => ThemeData(
         unselectedItemColor: DefaultColors.accentColor,
         selectedItemColor: DefaultColors.textColor,
         selectedLabelStyle: DefaultTextStyles.bottomNavigationBarTextStyle,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: DefaultColors.accentColor,
+        foregroundColor: DefaultColors.textColor,
       ),
     );
