@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
@@ -21,8 +22,8 @@ class LoginProvider extends BaseProvider {
     final result = await this._authFacade.loginUser(this.getLoginParams());
 
     result.fold(
-      (failure) => this.showError(failure),
-      (token) => this.navigateTo(''),
+      (failure) => this.showError(failure.message),
+      (token) => this.navigateTo(RoutePaths.homeRoute),
     );
 
     this.setState(ProviderState.idle);

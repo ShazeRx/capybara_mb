@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/domain/entities/auth/token.dart';
@@ -130,6 +131,18 @@ void main() {
       // Assert
       verify(() =>
           mockSnackbarService.showSnackbar(message: any(named: 'message')));
+    });
+
+    test('should navigate to home screen after successful login', () async {
+      // Arrange
+      mockLoginSuccess();
+
+      // Act
+      await provider.onLoginSubmitted();
+
+      // Assert
+      verify(
+          () => mockNavigationService.clearStackAndShow(RoutePaths.homeRoute));
     });
   });
 }

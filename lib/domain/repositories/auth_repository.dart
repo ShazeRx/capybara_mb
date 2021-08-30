@@ -11,4 +11,6 @@ abstract class AuthRepository {
   Future<Either<Failure, User>> registerUser(RegisterParams params);
 
   Future<Either<Failure, Token>> fetchToken();
+
+  Future<Either<Failure, Unit>> logoutUser();
 }

@@ -9,17 +9,20 @@ class DefaultTextStyles {
     fontSize: 20,
     color: DefaultColors.textColor,
     fontFamily: 'Ubuntu',
+    fontWeight: FontWeight.w300,
     letterSpacing: 0,
   );
   static const TextStyle headline1TextStyle = TextStyle(
     fontSize: 45,
     color: DefaultColors.textColor,
     fontFamily: 'Roboto',
+    fontWeight: FontWeight.w400,
     letterSpacing: 0,
   );
   static const TextStyle headline2TextStyle = TextStyle(
     fontSize: 20,
     color: DefaultColors.textColor,
+    fontWeight: FontWeight.w300,
     fontFamily: 'Roboto',
     letterSpacing: 0,
   );
@@ -34,7 +37,7 @@ class DefaultTextStyles {
 
   static const TextStyle appBarTextStyle = TextStyle(
     fontSize: 20,
-    color: DefaultColors.accentColor,
+    color: DefaultColors.textColor,
     fontFamily: 'Ubuntu',
     fontWeight: FontWeight.w400,
     letterSpacing: 0,

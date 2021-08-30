@@ -1,14 +1,13 @@
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class BaseProvider with ChangeNotifier {
-  DialogService dialogService = getIt<DialogService>();
-  NavigationService navigationService = getIt<NavigationService>();
-  SnackbarService snackbarService = getIt<SnackbarService>();
+  DialogService _dialogService = getIt<DialogService>();
+  NavigationService _navigationService = getIt<NavigationService>();
+  SnackbarService _snackbarService = getIt<SnackbarService>();
 
   ProviderState _state = ProviderState.idle;
 
@@ -22,22 +21,30 @@ class BaseProvider with ChangeNotifier {
   //TODO - add different snackbars
 
   void showSuccess(String success) {
-    this.snackbarService.showSnackbar(message: success);
+    this._snackbarService.showSnackbar(message: success);
   }
 
   void showInfo(String info) {
-    this.snackbarService.showSnackbar(message: info);
+    this._snackbarService.showSnackbar(message: info);
   }
 
   void showWarning(String warning) {
-    this.snackbarService.showSnackbar(message: warning);
+    this._snackbarService.showSnackbar(message: warning);
   }
 
-  void showError(Failure failure) {
-    this.snackbarService.showSnackbar(message: failure.message);
+  void showError(String message) {
+    this._snackbarService.showSnackbar(message: message);
   }
 
-  void navigateTo(String route) {
-    this.navigationService.navigateTo(route);
+  void navigateTo(String route, [dynamic arguments]) {
+    this._navigationService.clearStackAndShow(route, arguments: arguments);
+  }
+
+  void pushRouteOnStack(String route, [dynamic arguments]) {
+    this._navigationService.navigateTo(route, arguments: arguments);
+  }
+
+  void backToPreviousScreen() {
+    this._navigationService.back();
   }
 }

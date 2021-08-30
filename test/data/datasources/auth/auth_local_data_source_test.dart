@@ -4,6 +4,7 @@ import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
 import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:dartz/dartz.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -76,6 +77,39 @@ void main() {
             CachedValues.token,
             expectedJsonString,
           ));
+    });
+  });
+
+  group('logout user', () {
+    test(
+        'should return unit and remove token from shared preferences when there is one in the cache',
+        () async {
+      // Arrange
+      when(() => mockSharedPreferences.getString(CachedValues.token))
+          .thenReturn(fixture(FixturePaths.tokenJson));
+      when(() => mockSharedPreferences.remove(CachedValues.token))
+          .thenAnswer((_) async => true);
+
+      // Act
+      final result = await dataSource.removeToken();
+
+      // Assert
+      verify(() => mockSharedPreferences.getString(CachedValues.token));
+
+      verify(() => mockSharedPreferences.remove(CachedValues.token));
+
+      expect(result, unit);
+    });
+
+    test('should throw a CacheException where there is not cached token', () {
+      // Arrange
+      when(() => mockSharedPreferences.getString(any())).thenReturn(null);
+
+      // Act
+      final call = dataSource.fetchToken;
+
+      // Assert
+      expect(() => call(), throwsA(TypeMatcher<CacheException>()));
     });
   });
 }

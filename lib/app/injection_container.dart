@@ -6,11 +6,15 @@ import 'package:capybara_app/data/repositories/auth_repository_impl.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
+import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
+import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
+import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
+import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
 
@@ -50,6 +54,20 @@ void _registerProviders() {
   getIt.registerFactory(
     () => HomeProvider(),
   );
+
+  getIt.registerFactory(
+    () => UserProfileProvider(
+      authFacade: getIt(),
+    ),
+  );
+
+  getIt.registerFactory(
+    () => NewChannelMembersProvider(),
+  );
+
+  getIt.registerFactory(
+    () => NewChannelNameProvider(),
+  );
 }
 
 void _registerFacades() {
@@ -59,6 +77,7 @@ void _registerFacades() {
       fetchToken: getIt(),
       loginUser: getIt(),
       registerUser: getIt(),
+      logoutUser: getIt(),
     ),
   );
 }
@@ -89,6 +108,12 @@ void _registerUseCases() {
 
   getIt.registerLazySingleton(
     () => FetchToken(
+      authRepository: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton(
+    () => LogoutUser(
       authRepository: getIt(),
     ),
   );

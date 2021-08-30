@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
@@ -40,7 +42,7 @@ class HttpClientImpl implements HttpClient {
             data: body,
             queryParameters: queryParameters,
           );
-      return response.data;
+      return json.encode(response.data);
     } on DioError catch (e) {
       if (e.response != null) {
         //TODO - to think about - add handling multiple errors

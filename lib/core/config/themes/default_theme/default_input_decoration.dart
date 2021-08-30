@@ -8,6 +8,6 @@ InputDecoration defaultInputDecoration({required String hintText}) =>
       labelStyle: defaultTheme.inputDecorationTheme.labelStyle,
       enabledBorder: defaultTheme.inputDecorationTheme.enabledBorder,
       focusedBorder: defaultTheme.inputDecorationTheme.focusedBorder,
-      border: InputBorder.none,
+      border: defaultTheme.inputDecorationTheme.border,
       errorBorder: defaultTheme.inputDecorationTheme.errorBorder,
     );

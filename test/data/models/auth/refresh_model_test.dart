@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:capybara_app/data/models/auth/refresh_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import '../../../fixtures/fixture_paths.dart';
 import '../../../fixtures/fixture_reader.dart';
 

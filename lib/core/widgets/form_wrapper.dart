@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class AuthFormWrapper extends StatelessWidget {
+class FormWrapper extends StatelessWidget {
   final Form form;
-  const AuthFormWrapper({required this.form});
+  const FormWrapper({required this.form});
 
   @override
   Widget build(BuildContext context) {

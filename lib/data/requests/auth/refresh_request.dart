@@ -1,4 +1,6 @@
-class RefreshRequest {
+import 'package:equatable/equatable.dart';
+
+class RefreshRequest extends Equatable {
   final String refresh;
 
   RefreshRequest({required this.refresh});
@@ -12,4 +14,7 @@ class RefreshRequest {
       refresh: params.refresh,
     );
   }
+
+  @override
+  List<Object> get props => [this.refresh];
 }

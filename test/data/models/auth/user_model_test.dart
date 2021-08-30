@@ -1,7 +1,9 @@
 import 'dart:convert';
+
 import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import '../../../fixtures/fixture_paths.dart';
 import '../../../fixtures/fixture_reader.dart';
 

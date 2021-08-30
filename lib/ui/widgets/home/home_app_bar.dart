@@ -1,24 +1,22 @@
+import 'package:capybara_app/core/constants/svg_icons.dart';
 import 'package:capybara_app/core/helpers/ui/horizontal_space_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
-  final double height;
   final List<Widget>? actions;
-  final bool isChannelsScreen;
 
   HomeAppBar({
     required this.title,
-    required this.height,
     this.actions,
-    this.isChannelsScreen = false,
   });
 
   @override
   _HomeAppBarState createState() => _HomeAppBarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(this.height);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
@@ -36,13 +34,25 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return AppBar(
+      leading: Navigator.canPop(context)
+          ? IconButton(
+              onPressed: () => Navigator.of(context).pop(),
+              //TODO - find a way to add svg here
+              icon: Icon(Icons.arrow_back_ios),
+            )
+          : null,
+      titleSpacing: 0,
       title: Row(
         children: [
-          if (widget.isChannelsScreen)
-            Icon(
-              Icons.supervised_user_circle,
+          if (!Navigator.canPop(context))
+            HorizontalSpaceHelper.horizontalSpaceLarge(context),
+          if (!Navigator.canPop(context))
+            SvgPicture.asset(
+              SvgIcons.user,
+              color: theme.iconTheme.color,
+              height: 30,
             ),
-          if (widget.isChannelsScreen)
+          if (!Navigator.canPop(context))
             HorizontalSpaceHelper.horizontalSpaceLarge(context),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +67,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                 child: const Text(
                   'No connection',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: FontWeight.w300,
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:capybara_app/core/constants/failure_messages.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
@@ -286,6 +287,40 @@ void main() {
       verify(() => mockLocalDataSource.fetchToken());
 
       expect(result, equals(Left(CacheFailure())));
+    });
+  });
+
+  group('logout user', () {
+    test('should throw cache failure token is not present in cache', () async {
+      // Arrange
+      when(() => mockLocalDataSource.removeToken()).thenThrow(CacheException());
+
+      // Act
+      final result = await repository.logoutUser();
+
+      // Assert
+      verifyZeroInteractions(mockRemoteDataSource);
+
+      verify(() => mockLocalDataSource.removeToken());
+
+      expect(result,
+          equals(Left(CacheFailure(message: FailureMessages.logoutFailure))));
+    });
+
+    test('should return unit when token is present in cache', () async {
+      // Arrange
+      when(() => mockLocalDataSource.removeToken())
+          .thenAnswer((_) async => unit);
+
+      // Act
+      final result = await repository.logoutUser();
+
+      // Assert
+      verifyZeroInteractions(mockRemoteDataSource);
+
+      verify(() => mockLocalDataSource.removeToken());
+
+      expect(result, equals(Right(unit)));
     });
   });
 }
