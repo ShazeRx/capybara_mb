@@ -35,7 +35,7 @@ ThemeData get defaultTheme => ThemeData(
         ),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
-            color: DefaultColors.textColor,
+            color: DefaultColors.accentColor,
           ),
         ),
         errorBorder: UnderlineInputBorder(
