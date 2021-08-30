@@ -22,7 +22,7 @@ class LoginProvider extends BaseProvider {
     final result = await this._authFacade.loginUser(this.getLoginParams());
 
     result.fold(
-      (failure) => this.showError(failure),
+      (failure) => this.showError(failure.message),
       (token) => this.navigateTo(RoutePaths.homeRoute),
     );
 

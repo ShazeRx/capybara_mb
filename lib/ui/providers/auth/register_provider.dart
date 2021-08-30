@@ -1,4 +1,3 @@
-import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
@@ -24,7 +23,7 @@ class RegisterProvider extends BaseProvider {
         await this._authFacade.registerUser(this.getRegisterParams());
 
     result.fold(
-      (failure) => this.showError(failure),
+      (failure) => this.showError(failure.message),
       (user) => {
         this.backToPreviousScreen(),
         //TODO - add file with translations

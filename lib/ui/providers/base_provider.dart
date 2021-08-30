@@ -1,6 +1,5 @@
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -33,12 +32,16 @@ class BaseProvider with ChangeNotifier {
     this._snackbarService.showSnackbar(message: warning);
   }
 
-  void showError(Failure failure) {
-    this._snackbarService.showSnackbar(message: failure.message);
+  void showError(String message) {
+    this._snackbarService.showSnackbar(message: message);
   }
 
-  void navigateTo(String route) {
-    this._navigationService.clearStackAndShow(route);
+  void navigateTo(String route, [dynamic arguments]) {
+    this._navigationService.clearStackAndShow(route, arguments: arguments);
+  }
+
+  void pushRouteOnStack(String route, [dynamic arguments]) {
+    this._navigationService.navigateTo(route, arguments: arguments);
   }
 
   void backToPreviousScreen() {
