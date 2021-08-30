@@ -16,7 +16,7 @@ class UserProfileProvider extends BaseProvider {
     final result = await this._authFacade.logoutUser();
 
     result.fold(
-      (failure) => this.showError(failure),
+      (failure) => this.showError(failure.message),
       (unit) => this.navigateTo(RoutePaths.loginRoute),
     );
 
