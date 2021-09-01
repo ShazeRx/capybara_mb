@@ -1,4 +1,4 @@
-import 'package:stacked_services/stacked_services.dart';
+import 'package:get/get.dart';
 
 abstract class NavigationManager {
   void navigateTo(String route, [dynamic arguments]);
@@ -9,21 +9,15 @@ abstract class NavigationManager {
 }
 
 class NavigationManagerImpl implements NavigationManager {
-  late NavigationService _navigationService;
-
-  NavigationManagerImpl({
-    required NavigationService navigationService,
-  }) : this._navigationService = navigationService;
-
   void navigateTo(String route, [dynamic arguments]) {
-    this._navigationService.clearStackAndShow(route, arguments: arguments);
+    Get.offNamed(route, arguments: arguments);
   }
 
   void pushRouteOnStack(String route, [dynamic arguments]) {
-    this._navigationService.navigateTo(route, arguments: arguments);
+    Get.toNamed(route, arguments: arguments);
   }
 
   void backToPreviousScreen() {
-    this._navigationService.back();
+    Get.back();
   }
 }
