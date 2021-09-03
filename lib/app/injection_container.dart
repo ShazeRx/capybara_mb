@@ -24,7 +24,6 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -38,7 +37,6 @@ Future<void> registerDependencies() async {
   _registerCoreFeatures();
   _registerManagers();
   await _registerExternalDependencies();
-  _registerThirdPartyServices();
 }
 
 void _registerProviders() {
@@ -93,8 +91,8 @@ void _registerStates() {
       authState: getIt(),
     ),
   );
-  getIt.registerLazySingleton(
-    () => AuthState(),
+  getIt.registerLazySingleton<AuthState>(
+    () => AuthStateImpl(),
   );
 }
 
@@ -163,15 +161,11 @@ void _registerCoreFeatures() {
 
 void _registerManagers() {
   getIt.registerLazySingleton<SnackbarManager>(
-    () => SnackbarManagerImpl(
-      snackbarService: getIt(),
-    ),
+    () => SnackbarManagerImpl(),
   );
 
   getIt.registerLazySingleton<NavigationManager>(
-    () => NavigationManagerImpl(
-      navigationService: getIt(),
-    ),
+    () => NavigationManagerImpl(),
   );
 }
 
@@ -180,10 +174,4 @@ Future<void> _registerExternalDependencies() async {
   getIt.registerLazySingleton(() => sharedPreferences);
   getIt.registerLazySingleton(() => Dio());
   getIt.registerLazySingleton(() => InternetConnectionChecker());
-}
-
-void _registerThirdPartyServices() {
-  getIt.registerLazySingleton(() => DialogService());
-  getIt.registerLazySingleton(() => SnackbarService());
-  getIt.registerLazySingleton(() => NavigationService());
 }

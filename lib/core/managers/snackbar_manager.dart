@@ -1,4 +1,6 @@
-import 'package:stacked_services/stacked_services.dart';
+import 'package:capybara_app/core/config/themes/default_theme/default_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 abstract class SnackbarManager {
   void showSuccess(String success);
@@ -11,27 +13,42 @@ abstract class SnackbarManager {
 }
 
 class SnackbarManagerImpl implements SnackbarManager {
-  late SnackbarService _snackbarService;
-
-  SnackbarManagerImpl({
-    required SnackbarService snackbarService,
-  }) : this._snackbarService = snackbarService;
-
   //TODO - add different snackbars
 
   void showSuccess(String success) {
-    this._snackbarService.showSnackbar(message: success);
+    Get.snackbar(
+      'Success',
+      success,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: DefaultColors.successColor,
+    );
   }
 
   void showInfo(String info) {
-    this._snackbarService.showSnackbar(message: info);
+    Get.snackbar(
+      'Info',
+      info,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: DefaultColors.infoColor,
+    );
   }
 
   void showWarning(String warning) {
-    this._snackbarService.showSnackbar(message: warning);
+    Get.snackbar(
+      'Warning',
+      warning,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: DefaultColors.warningColor,
+      colorText: Colors.black87,
+    );
   }
 
   void showError(String error) {
-    this._snackbarService.showSnackbar(message: error);
+    Get.snackbar(
+      'Error',
+      error,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: DefaultColors.errorColor,
+    );
   }
 }
