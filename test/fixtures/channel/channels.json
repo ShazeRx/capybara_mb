@@ -1,8 +1,32 @@
 [
   {
-    "name": "somebody"
+    "name": "somebody",
+    "users": [
+      {
+        "id": 0,
+        "username": "some0",
+        "email": "some0@body.pl"
+      },
+      {
+        "id": 1,
+        "username": "some1",
+        "email": "some1@body.pl"
+      }
+    ]
   },
   {
-    "name": "once"
+    "name": "once",
+    "users": [
+      {
+        "id": 2,
+        "username": "some2",
+        "email": "some2@body.pl"
+      },
+      {
+        "id": 3,
+        "username": "some3",
+        "email": "some3@body.pl"
+      }
+    ]
   }
 ]

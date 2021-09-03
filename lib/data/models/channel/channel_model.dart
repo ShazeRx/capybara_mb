@@ -1,16 +1,23 @@
 import 'dart:convert';
 
+import 'package:capybara_app/data/models/auth/user_model.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 
 class ChannelModel extends Channel {
-  ChannelModel({required String name}) : super(name: name);
+  ChannelModel({required String name, required List<User> users})
+      : super(name: name, users: users);
 
   Map<String, dynamic> toJson() {
-    return {"name": this.name};
+    final usersJsonList =
+        this.users.map((e) => UserModel.fromUserEntity(e).toJson()).toList();
+    return {'name': this.name, 'users': usersJsonList};
   }
 
   factory ChannelModel.fromJson(Map<String, dynamic> json) {
-    return ChannelModel(name: json["name"]);
+    final usersModelList =
+        (json['users'] as List).map((e) => UserModel.fromJson(e)).toList();
+    return ChannelModel(name: json["name"], users: usersModelList);
   }
 
   static List<ChannelModel> fromJsonToList(List<dynamic> json) {

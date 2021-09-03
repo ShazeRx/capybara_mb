@@ -1,3 +1,4 @@
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
@@ -19,8 +20,12 @@ void main() {
     registerFallbackValue(FakeChannelParams());
   });
   const String channelName = 'somebody';
-  final Channel channel = Channel(name: channelName);
-  final tParams = ChannelParams(name: channelName);
+  final users = List.generate(
+      2,
+      (index) =>
+          User(id: index, username: 'some$index', email: 'some$index@body.pl'));
+  final Channel channel = Channel(name: channelName,users:users);
+  final tParams = ChannelParams(name: channelName,users: users);
 
   test('should create channel', () async {
     //arrange

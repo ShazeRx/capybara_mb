@@ -11,7 +11,7 @@ class AddToChannel extends UseCase<void, AddToChannelParams> {
       : this._channelRepository = channelRepository;
 
   @override
-  Future<Either<Failure, void>> call(params) async {
+  Future<Either<Failure, Unit>> call(params) async {
     return await _channelRepository.addToChannel(params);
   }
 }

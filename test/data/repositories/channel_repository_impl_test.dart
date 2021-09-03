@@ -6,6 +6,7 @@ import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/channel/channel_local_data_source.dart';
 import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/models/channel/channel_model.dart';
 import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
 import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
@@ -46,12 +47,18 @@ main() {
   const String channelId = '1';
   const String userId = '1';
   final tErrorMessage = 'Fail';
-  final tChannelRequest = ChannelRequest(name: channelNameFirst);
+  List<ChannelModel> channels = [];
+  final users = List.generate(
+      4,
+      (index) => UserModel(
+          id: index, username: 'some$index', email: 'some$index@body.pl'));
+  final tChannelRequest = ChannelRequest(name: channelNameFirst, users: users);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
-  List<ChannelModel> channels = [];
-  channels.add(ChannelModel(name: channelNameFirst));
-  channels.add(ChannelModel(name: channelNameSecond));
+  channels.add(ChannelModel(
+      name: channelNameFirst, users: users.getRange(0, 2).toList()));
+  channels.add(ChannelModel(
+      name: channelNameSecond, users: users.getRange(0, 2).toList()));
 
   group('fetch channels', () {
     setUp(() {
@@ -218,7 +225,7 @@ main() {
   group('add to channel', () {
     setUp(() {
       when(() => mockRemoteDataSource.addToChannel(any()))
-          .thenAnswer((_) async => {});
+          .thenAnswer((_) async => unit);
     });
     test('should check connection', () {
       //arrange
@@ -238,7 +245,7 @@ main() {
       test('should add to channel', () async {
         //Arrange
         when(() => mockRemoteDataSource.addToChannel(any()))
-            .thenAnswer((_) async => {});
+            .thenAnswer((_) async => unit);
 
         //Act
         final result = await repository.addToChannel(tAddToChannelRequest);
@@ -246,7 +253,7 @@ main() {
         //Assert
         verify(() => mockRemoteDataSource.addToChannel(tAddToChannelRequest));
 
-        expect(result, Right(null));
+        expect(result, Right(unit));
       });
       test('should throw failure when server issue', () async {
         //Arrange

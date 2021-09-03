@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/models/channel/channel_model.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,22 +9,29 @@ import '../../../fixtures/fixture_paths.dart';
 import '../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final ChannelModel channel = ChannelModel(name: 'somebody');
   const String channelNameFirst = 'somebody';
   const String channelNameSecond = 'once';
 
   List<ChannelModel> channels = [];
-  channels.add(ChannelModel(name: channelNameFirst));
-  channels.add(ChannelModel(name: channelNameSecond));
+  final users = List.generate(
+      4,
+      (index) => UserModel(
+          id: index, username: 'some$index', email: 'some$index@body.pl'));
+  channels.add(ChannelModel(
+      name: channelNameFirst, users: users.getRange(0, 2).toList()));
+  channels.add(ChannelModel(
+      name: channelNameSecond, users: users.getRange(2, 4).toList()));
   final Map<String, dynamic> jsonMap =
       json.decode(fixture(FixturePaths.channelJson));
   test('should be a subclass of Channel entity', () {
     // assert
-    expect(channel, isA<Channel>());
+    //TODO - Need to think about better way to declare fixtures which will be
+    // valid with actual code, imo dynamic fixtures in code are better
+    expect(channels[0], isA<Channel>());
   });
   test('should parse to json', () async {
     //act
-    final result = channel.toJson();
+    final result = channels[0].toJson();
 
     //assert
     expect(result, jsonMap);
@@ -33,7 +41,7 @@ void main() {
     final result = ChannelModel.fromJson(jsonMap);
 
     //assert
-    expect(result, channel);
+    expect(result, channels[0]);
   });
   test('should parse list to json', () {
     //Arrange

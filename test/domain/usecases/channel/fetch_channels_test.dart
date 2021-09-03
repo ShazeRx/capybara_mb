@@ -1,3 +1,4 @@
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
@@ -19,8 +20,12 @@ void main() {
   const String channelNameFirst = 'somebody';
   const String channelNameSecond = 'once';
   List<Channel> channels = [];
-  channels.add(Channel(name: channelNameFirst));
-  channels.add(Channel(name: channelNameSecond));
+  final users = List.generate(
+      2,
+          (index) =>
+          User(id: index, username: 'some$index', email: 'some$index@body.pl'));
+  channels.add(Channel(name: channelNameFirst,users: users));
+  channels.add(Channel(name: channelNameSecond,users: users));
 
   test('should fetch channels', () async {
     //arrange

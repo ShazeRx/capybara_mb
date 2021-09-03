@@ -27,6 +27,7 @@ class ErrorInterceptor extends InterceptorsWrapper {
   Future<RefreshModel?> _refreshToken() async {
     final currentToken = await HttpHelper.getCurrentToken();
     final payload = RefreshRequest(refresh: currentToken.refresh).toJson();
+    //TODO: this need to be changed, if refresh request will return 401 then whole app will get into endless loop
     final response = await this._invoke(
       url: Api.refreshUrl,
       method: HttpMethods.post,

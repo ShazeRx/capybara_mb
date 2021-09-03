@@ -7,7 +7,7 @@ import 'package:dartz/dartz.dart';
 abstract class ChannelRepository {
   Future<Either<Failure, Channel>> createChannel(ChannelParams params);
 
-  Future<Either<Failure, void>> addToChannel(AddToChannelParams params);
+  Future<Either<Failure, Unit>> addToChannel(AddToChannelParams params);
 
   Future<Either<Failure, List<Channel>>> fetchChannels();
 }

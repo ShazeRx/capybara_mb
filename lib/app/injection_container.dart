@@ -69,7 +69,9 @@ void _registerProviders() {
   );
 
   getIt.registerFactory(
-    () => NewChannelNameProvider(),
+    () => NewChannelNameProvider(
+      channelFacade: getIt(),
+    ),
   );
 }
 

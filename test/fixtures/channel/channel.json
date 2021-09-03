@@ -1,3 +1,15 @@
 {
-  "name": "somebody"
+  "name": "somebody",
+  "users": [
+    {
+      "id": 0,
+      "username": "some0",
+      "email": "some0@body.pl"
+    },
+    {
+      "id": 1,
+      "username": "some1",
+      "email": "some1@body.pl"
+    }
+  ]
 }

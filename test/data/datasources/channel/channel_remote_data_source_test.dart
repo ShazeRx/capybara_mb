@@ -5,6 +5,7 @@ import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/models/channel/channel_model.dart';
 import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
 import 'package:capybara_app/data/requests/channel/channel_request.dart';
@@ -28,9 +29,15 @@ void main() {
   const String channelId = '1';
   const String userId = '1';
   List<ChannelModel> channels = [];
-  channels.add(ChannelModel(name: channelNameFirst));
-  channels.add(ChannelModel(name: channelNameSecond));
-  final tChannelRequest = ChannelRequest(name: channelNameFirst);
+  final users = List.generate(
+      4,
+      (index) => UserModel(
+          id: index, username: 'some$index', email: 'some$index@body.pl'));
+  channels.add(ChannelModel(
+      name: channelNameFirst, users: users.getRange(0, 2).toList()));
+  channels.add(ChannelModel(
+      name: channelNameSecond, users: users.getRange(2, 4).toList()));
+  final tChannelRequest = ChannelRequest(name: channelNameFirst, users: users);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
   final tChannelModel =

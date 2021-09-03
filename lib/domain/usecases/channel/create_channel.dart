@@ -1,4 +1,5 @@
 import 'package:capybara_app/core/errors/failures/failure.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
@@ -19,9 +20,10 @@ class CreateChannel extends UseCase<Channel, ChannelParams> {
 
 class ChannelParams extends Equatable {
   final String name;
+  final List<User> users;
 
-  ChannelParams({required this.name});
+  ChannelParams({required this.name, required this.users});
 
   @override
-  List<Object> get props => [this.name];
+  List<Object> get props => [this.name,this.users];
 }

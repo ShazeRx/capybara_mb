@@ -25,7 +25,7 @@ void main() {
   test('should create channel', () async {
     //arrange
     when(() => mockChannelRespository.addToChannel(any()))
-        .thenAnswer((_) async => Right(null));
+        .thenAnswer((_) async => Right(unit));
 
     //act
     final result = await usecase(tParams);
@@ -35,6 +35,6 @@ void main() {
 
     verifyNoMoreInteractions(mockChannelRespository);
 
-    expect(result, Right(null));
+    expect(result, Right(unit));
   });
 }
