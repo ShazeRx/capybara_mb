@@ -7,6 +7,8 @@ import 'package:capybara_app/core/http/interceptors/error_interceptor.dart';
 import 'package:capybara_app/core/http/interceptors/token_interceptor.dart';
 import 'package:dio/dio.dart';
 
+import 'interceptors/logging_interceptor.dart';
+
 abstract class HttpClient {
   Future<dynamic> invoke({
     required String url,
@@ -25,6 +27,7 @@ class HttpClientImpl implements HttpClient {
   }) : this._dio = dio {
     this._dio.interceptors.add(TokenInterceptor());
     this._dio.interceptors.add(ErrorInterceptor(invoke: invoke));
+    this._dio.interceptors.add(LoggingInterceptor());  //Only for debugging purpose
   }
 
   @override
@@ -49,6 +52,8 @@ class HttpClientImpl implements HttpClient {
         final errors = Map.from((e.response!.data)).values.toList();
         throw ClientException(message: errors.first);
       }
+      //TODO: if Socket error occur then no message is given to user,and app
+      // keeps showing loading icon
       throw ServerException(message: e.message);
     }
   }

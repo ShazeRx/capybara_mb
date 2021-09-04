@@ -15,12 +15,12 @@ import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:dartz/dartz.dart';
 
-class ChannelRespositoryImpl implements ChannelRepository {
+class ChannelRepositoryImpl implements ChannelRepository {
   final ChannelLocalDataSource _localDataSource;
   final ChannelRemoteDataSource _remoteDataSource;
   final NetworkInfo _networkInfo;
 
-  ChannelRespositoryImpl(
+  ChannelRepositoryImpl(
       {required ChannelLocalDataSource localDataSource,
       required ChannelRemoteDataSource remoteDataSource,
       required NetworkInfo networkInfo})

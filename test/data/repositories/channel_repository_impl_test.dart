@@ -26,7 +26,7 @@ class FakeAddToChannelRequest extends Fake implements AddToChannelRequest {}
 class FakeChannelRequest extends Fake implements ChannelRequest {}
 
 main() {
-  late ChannelRespositoryImpl repository;
+  late ChannelRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
@@ -34,7 +34,7 @@ main() {
     mockLocalDataSource = MockLocalDataSource();
     mockRemoteDataSource = MockRemoteDataSource();
     mockNetworkInfo = MockNetworkInfo();
-    repository = ChannelRespositoryImpl(
+    repository = ChannelRepositoryImpl(
         remoteDataSource: mockRemoteDataSource,
         localDataSource: mockLocalDataSource,
         networkInfo: mockNetworkInfo);

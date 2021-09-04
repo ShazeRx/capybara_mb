@@ -4,13 +4,21 @@ import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
+import 'package:capybara_app/data/datasource/channel/channel_local_data_source.dart';
+import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
 import 'package:capybara_app/data/repositories/auth_repository_impl.dart';
+import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
+import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
+import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
+import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
+import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
+import 'package:capybara_app/ui/facades/channel_facade.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
@@ -19,6 +27,7 @@ import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
+import 'package:capybara_app/ui/states/channel/channel_state.dart';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -83,9 +92,17 @@ void _registerFacades() {
       logoutUser: getIt(),
     ),
   );
+  getIt.registerLazySingleton(
+    () => ChannelFacade(
+        addToChannel: getIt(),
+        channelsState: getIt(),
+        createChannel: getIt(),
+        fetchChannels: getIt()),
+  );
 }
 
 void _registerStates() {
+  //Auth
   getIt.registerLazySingleton(
     () => AuthStateNotifier(
       authState: getIt(),
@@ -94,9 +111,13 @@ void _registerStates() {
   getIt.registerLazySingleton<AuthState>(
     () => AuthStateImpl(),
   );
+
+  //Channels
+  getIt.registerLazySingleton<ChannelsState>(() => ChannelsStateImpl());
 }
 
 void _registerUseCases() {
+  //Auth
   getIt.registerLazySingleton(
     () => LoginUser(
       authRepository: getIt(),
@@ -120,18 +141,31 @@ void _registerUseCases() {
       authRepository: getIt(),
     ),
   );
+
+  // //Channel
+  getIt.registerLazySingleton(() => AddToChannel(channelRepository: getIt()));
+  getIt.registerLazySingleton(() => CreateChannel(channelRepository: getIt()));
+  getIt.registerLazySingleton(() => FetchChannels(channelRepository: getIt()));
 }
 
 void _registerRepositories() {
+  //Auth
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
         remoteDataSource: getIt(),
         localDataSource: getIt(),
         networkInfo: getIt()),
   );
+
+  //Channel
+  getIt.registerLazySingleton<ChannelRepository>(() => ChannelRepositoryImpl(
+      remoteDataSource: getIt(),
+      localDataSource: getIt(),
+      networkInfo: getIt()));
 }
 
 void _registerDataSources() {
+  //Auth
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       client: getIt(),
@@ -140,6 +174,15 @@ void _registerDataSources() {
 
   getIt.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(
+      sharedPreferences: getIt(),
+    ),
+  );
+
+  //Channel
+  getIt.registerLazySingleton<ChannelRemoteDataSource>(
+      () => ChannelRemoteDataSourceImpl(client: getIt()));
+  getIt.registerLazySingleton<ChannelLocalDataSource>(
+    () => ChannelLocalDataSourceImpl(
       sharedPreferences: getIt(),
     ),
   );
