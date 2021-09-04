@@ -16,7 +16,7 @@ class ChannelModel extends Channel {
 
   factory ChannelModel.fromJson(Map<String, dynamic> json) {
     final usersModelList =
-        (json['users'] as List).map((e) => UserModel.fromJson(e)).toList();
+        (json['users_list'] as List).map((e) => UserModel.fromJson(e)).toList();
     return ChannelModel(name: json["name"], users: usersModelList);
   }
 
