@@ -9,6 +9,7 @@ import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/models/channel/channel_model.dart';
 import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
 import 'package:capybara_app/data/requests/channel/channel_request.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -37,7 +38,7 @@ void main() {
       name: channelNameFirst, users: users.getRange(0, 2).toList()));
   channels.add(ChannelModel(
       name: channelNameSecond, users: users.getRange(2, 4).toList()));
-  final tChannelRequest = ChannelRequest(name: channelNameFirst, users: users);
+  final tChannelRequest = CreateChannelRequest(name: channelNameFirst, users: [0,1]);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
   final tChannelModel =
@@ -139,7 +140,7 @@ void main() {
       when(() => mockHttpClient.invoke(
           url: any(named: 'url'),
           method: HttpMethods.post,
-          body: tAddToChannelRequest.toJson())).thenAnswer((_) async => {});
+          body: tAddToChannelRequest.toJson())).thenAnswer((_) async => Unit);
     });
 
     test('should add to channel', () async {

@@ -23,7 +23,7 @@ class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 class FakeAddToChannelRequest extends Fake implements AddToChannelRequest {}
 
-class FakeChannelRequest extends Fake implements ChannelRequest {}
+class FakeChannelRequest extends Fake implements CreateChannelRequest {}
 
 main() {
   late ChannelRepositoryImpl repository;
@@ -38,7 +38,7 @@ main() {
         remoteDataSource: mockRemoteDataSource,
         localDataSource: mockLocalDataSource,
         networkInfo: mockNetworkInfo);
-    registerFallbackValue<ChannelRequest>(FakeChannelRequest());
+    registerFallbackValue<CreateChannelRequest>(FakeChannelRequest());
     registerFallbackValue<AddToChannelRequest>(FakeAddToChannelRequest());
   });
 
@@ -52,7 +52,7 @@ main() {
       4,
       (index) => UserModel(
           id: index, username: 'some$index', email: 'some$index@body.pl'));
-  final tChannelRequest = ChannelRequest(name: channelNameFirst, users: users);
+  final tChannelRequest = CreateChannelRequest(name: channelNameFirst, users: [0,1]);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
   channels.add(ChannelModel(

@@ -8,7 +8,7 @@ import 'package:mocktail/mocktail.dart';
 
 class MockChannelRespository extends Mock implements ChannelRepository {}
 
-class FakeChannelParams extends Fake implements ChannelParams {}
+class FakeChannelParams extends Fake implements CreateChannelParams {}
 
 void main() {
   late MockChannelRespository mockChannelRespository;
@@ -20,12 +20,10 @@ void main() {
     registerFallbackValue(FakeChannelParams());
   });
   const String channelName = 'somebody';
-  final users = List.generate(
-      2,
-      (index) =>
-          User(id: index, username: 'some$index', email: 'some$index@body.pl'));
-  final Channel channel = Channel(name: channelName,users:users);
-  final tParams = ChannelParams(name: channelName,users: users);
+  final usersIds = Iterable<int>.generate(2).toList();
+  final userList=List<User>.generate(usersIds.length,(e)=>User(id:usersIds[e],username:'some$e',email:'some$e@body.pl'));
+  final Channel channel = Channel(name: channelName,users:userList);
+  final tParams = CreateChannelParams(name: channelName,users: usersIds);
 
   test('should create channel', () async {
     //arrange

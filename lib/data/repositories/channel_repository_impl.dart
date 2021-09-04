@@ -43,11 +43,11 @@ class ChannelRepositoryImpl implements ChannelRepository {
   }
 
   @override
-  Future<Either<Failure, Channel>> createChannel(ChannelParams params) async {
+  Future<Either<Failure, Channel>> createChannel(CreateChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
         final channel = await _remoteDataSource
-            .createChannel(ChannelRequest.fromParams(params));
+            .createChannel(CreateChannelRequest.fromParams(params));
         return Right(channel);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));

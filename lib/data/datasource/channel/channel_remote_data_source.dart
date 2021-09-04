@@ -8,7 +8,7 @@ import 'package:capybara_app/data/requests/channel/channel_request.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ChannelRemoteDataSource {
-  Future<ChannelModel> createChannel(ChannelRequest request);
+  Future<ChannelModel> createChannel(CreateChannelRequest request);
 
   Future<Unit> addToChannel(AddToChannelRequest request);
 
@@ -23,12 +23,13 @@ class ChannelRemoteDataSourceImpl implements ChannelRemoteDataSource {
 
   @override
   Future<Unit> addToChannel(AddToChannelRequest request) async {
-    return await this._client.invoke(
+     await this._client.invoke(
         url: Api.channelUrl, method: HttpMethods.post, body: request.toJson());
+     return Future.value(unit);
   }
 
   @override
-  Future<ChannelModel> createChannel(ChannelRequest request) async {
+  Future<ChannelModel> createChannel(CreateChannelRequest request) async {
     final response = await this._client.invoke(
         url: Api.channelUrl, method: HttpMethods.post, body: request.toJson());
     return ChannelModel.fromJson(json.decode(response));

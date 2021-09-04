@@ -1,5 +1,4 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
-import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,28 +15,28 @@ void main() {
 
   tearDown(() => unregisterManagers());
 
-  final tUser = User(id: 1, username: 'user', email: 'user@user.com');
+  final tUserId = 1;
 
   group('on user list tile clicked', () {
     test(
         'should add user to selected user tiles if user not exists in the list',
         () async {
       // Act
-      provider.onUserListTileClicked(tUser);
+      provider.onUserListTileClicked(tUserId);
       final result = provider.selectedUserTiles;
 
       // Verify
-      expect(result, equals([tUser]));
+      expect(result, equals([tUserId]));
     });
 
     test(
         'should remove user from selected user tiles if user exists in the list',
         () async {
       // Arrange
-      provider.onUserListTileClicked(tUser);
+      provider.onUserListTileClicked(tUserId);
 
       // Act
-      provider.onUserListTileClicked(tUser);
+      provider.onUserListTileClicked(tUserId);
       final result = provider.selectedUserTiles;
 
       // Assert
@@ -58,14 +57,14 @@ void main() {
         'should navigate to new channel name screen with selected members as arguments when at least one member is selected',
         () {
       // Arrange
-      provider.onUserListTileClicked(tUser);
+      provider.onUserListTileClicked(tUserId);
 
       // Act
       provider.onAddChannelMembersClicked();
 
       // Assert
       verify(() => mockNavigationManager
-          .pushRouteOnStack(RoutePaths.newChannelNameRoute, [tUser]));
+          .pushRouteOnStack(RoutePaths.newChannelNameRoute, [tUserId]));
     });
   });
 }

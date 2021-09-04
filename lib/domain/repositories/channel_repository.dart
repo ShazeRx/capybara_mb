@@ -5,7 +5,7 @@ import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ChannelRepository {
-  Future<Either<Failure, Channel>> createChannel(ChannelParams params);
+  Future<Either<Failure, Channel>> createChannel(CreateChannelParams params);
 
   Future<Either<Failure, Unit>> addToChannel(AddToChannelParams params);
 

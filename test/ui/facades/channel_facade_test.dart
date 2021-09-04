@@ -18,7 +18,7 @@ class MockFetchChannels extends Mock implements FetchChannels {}
 
 class MockChannelsState extends Mock implements ChannelsState {}
 
-class FakeChannelParams extends Fake implements ChannelParams {}
+class FakeChannelParams extends Fake implements CreateChannelParams {}
 
 void main() {
   late MockCreateChannel mockCreateChannel;
@@ -37,7 +37,7 @@ void main() {
         fetchChannels: mockFetchChannels,
         createChannel: mockCreateChannel,
         channelsState: mockChannelsState);
-    registerFallbackValue<ChannelParams>(FakeChannelParams());
+    registerFallbackValue<CreateChannelParams>(FakeChannelParams());
   });
   final users = List.generate(
       4,
@@ -47,7 +47,7 @@ void main() {
   final channelName = 'some';
   final channel = Channel(name: channelName, users: users);
   final channelList=[channel];
-  final channelParams = ChannelParams(name: channelName, users: users);
+  final channelParams = CreateChannelParams(name: channelName, users: users.map((e) => e.id).toList());
   final addToChannelParams = AddToChannelParams(userId: '1', channelId: '1');
   group('create channel', () {
     test('should call create channel', () async {

@@ -1,7 +1,6 @@
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/config/themes/default_theme/default_input_decoration.dart';
 import 'package:capybara_app/core/constants/svg_icons.dart';
-import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/widgets/home/home_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,8 @@ import 'package:provider/provider.dart';
 class NewChannelNameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final memberList = ModalRoute.of(context)!.settings.arguments as List<User>;
+    final memberListIds =
+        ModalRoute.of(context)!.settings.arguments as List<int>;
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     var theme = Theme.of(context);
@@ -38,7 +38,7 @@ class NewChannelNameScreen extends StatelessWidget {
               color: theme.iconTheme.color,
             ),
             onPressed: () {
-              newChannelName.onAddChannelClicked(memberList);
+              newChannelName.onAddChannelClicked(memberListIds);
             },
           ),
         ),

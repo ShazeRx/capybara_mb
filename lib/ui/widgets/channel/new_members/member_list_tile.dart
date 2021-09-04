@@ -34,9 +34,9 @@ class MemberListTile extends StatelessWidget {
           height: 15,
         ),
         onTap: () {
-          newChannel.onUserListTileClicked(user);
+          newChannel.onUserListTileClicked(user.id);
         },
-        selected: newChannel.selectedUserTiles.contains(user),
+        selected: newChannel.selectedUserTiles.contains(user.id),
         selectedTileColor: theme.accentColor,
       ),
     );

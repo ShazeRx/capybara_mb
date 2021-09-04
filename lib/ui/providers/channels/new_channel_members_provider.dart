@@ -1,16 +1,15 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
-import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/ui/providers/base_provider.dart';
 
 class NewChannelMembersProvider extends BaseProvider {
-  List<User> _selectedUserTiles = [];
+  List<int> _selectedUserTiles = [];
 
-  List<User> get selectedUserTiles => [...this._selectedUserTiles];
+  List<int> get selectedUserTiles => [...this._selectedUserTiles];
 
-  void onUserListTileClicked(User user) {
-    this._selectedUserTiles.contains(user)
-        ? this._selectedUserTiles.remove(user)
-        : this._selectedUserTiles.add(user);
+  void onUserListTileClicked(int userId) {
+    this._selectedUserTiles.contains(userId)
+        ? this._selectedUserTiles.remove(userId)
+        : this._selectedUserTiles.add(userId);
 
     notifyListeners();
   }

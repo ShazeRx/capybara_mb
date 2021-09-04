@@ -29,7 +29,7 @@ class ChannelFacade {
     return result;
   }
 
-  Future<Either<Failure, Channel>> createChannel(ChannelParams params) async {
+  Future<Either<Failure, Channel>> createChannel(CreateChannelParams params) async {
     final result = await this._createChannel(params);
     return result;
   }
