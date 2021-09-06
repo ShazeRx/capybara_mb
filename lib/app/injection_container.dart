@@ -19,6 +19,7 @@ import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/facades/channel_facade.dart';
+import 'package:capybara_app/ui/providers/channels/channel_provider.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
@@ -28,6 +29,7 @@ import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
 import 'package:capybara_app/ui/states/auth/auth_state.dart';
 import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
 import 'package:capybara_app/ui/states/channel/channel_state.dart';
+import 'package:capybara_app/ui/states/channel/channel_state_notifier.dart';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -80,6 +82,7 @@ void _registerProviders() {
       channelFacade: getIt(),
     ),
   );
+  getIt.registerLazySingleton(() => ChannelProvider(channelFacade: getIt()));
 }
 
 void _registerFacades() {
@@ -113,6 +116,11 @@ void _registerStates() {
   );
 
   //Channels
+  getIt.registerLazySingleton(
+    () => ChannelStateNotifier(
+      channelsState: getIt(),
+    ),
+  );
   getIt.registerLazySingleton<ChannelsState>(() => ChannelsStateImpl());
 }
 

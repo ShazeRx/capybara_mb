@@ -12,7 +12,7 @@ abstract class ChannelsState implements Disposable {
 
 class ChannelsStateImpl implements ChannelsState {
   BehaviorSubject<List<Channel>?> _channels =
-      new BehaviorSubject<List<Channel>?>();
+      new BehaviorSubject<List<Channel>>();
 
   BehaviorSubject<List<Channel>?> get channels => _channels;
 
