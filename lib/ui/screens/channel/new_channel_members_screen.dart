@@ -13,8 +13,8 @@ class NewChannelMembersScreen extends StatelessWidget {
     var theme = Theme.of(context);
     return ChangeNotifierProvider(
       create: (_) => getIt<NewChannelMembersProvider>(),
-      child: Consumer<NewChannelMembersProvider>(
-        builder: (_, newChannel, __) => Scaffold(
+      child: Consumer<NewChannelMembersProvider>(builder: (_, newChannel, __) {
+        return Scaffold(
           appBar: HomeAppBar(
             title: 'New channel members',
           ),
@@ -30,8 +30,8 @@ class NewChannelMembersScreen extends StatelessWidget {
               newChannel.onAddChannelMembersClicked();
             },
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:capybara_app/data/datasource/channel/channel_local_data_source.d
 import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
 import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
 import 'package:capybara_app/data/requests/channel/channel_request.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
@@ -58,6 +59,7 @@ class ChannelRepositoryImpl implements ChannelRepository {
 
   @override
   Future<Either<Failure, List<Channel>>> fetchChannels() async {
+
     if (await _networkInfo.isConnected) {
       try {
         final remoteChannels = await _remoteDataSource.fetchChannels();
@@ -74,5 +76,19 @@ class ChannelRepositoryImpl implements ChannelRepository {
         return Left(CacheFailure());
       }
     }
+  }
+
+  @override
+  Future<Either<Failure, List<User>>> fetchUsers() async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final userList = await _remoteDataSource
+            .fetchUsers();
+        return Right(userList);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      }
+    }
+    return Left(NetworkFailure());
   }
 }

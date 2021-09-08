@@ -7,14 +7,16 @@ class ChannelProvider extends BaseProvider {
   final ChannelFacade _channelFacade;
 
   ChannelProvider({required ChannelFacade channelFacade})
-      : this._channelFacade = channelFacade;
+      : this._channelFacade = channelFacade {
+    this.setState(ProviderState.busy);
+    fetchChannels();
+  }
 
   fetchChannels() async {
     this.setState(ProviderState.busy);
     final result = await this._channelFacade.fetchChannels();
     result.fold((failure) => this.showError("Failed to fetch channels"),
-        (channels) => null);
+            (channels) => null);
     this.setState(ProviderState.idle);
   }
-
 }

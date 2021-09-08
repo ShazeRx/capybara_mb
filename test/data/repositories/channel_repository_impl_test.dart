@@ -11,6 +11,8 @@ import 'package:capybara_app/data/models/channel/channel_model.dart';
 import 'package:capybara_app/data/repositories/channel_repository_impl.dart';
 import 'package:capybara_app/data/requests/channel/add_to_channel_request.dart';
 import 'package:capybara_app/data/requests/channel/channel_request.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -52,7 +54,8 @@ main() {
       4,
       (index) => UserModel(
           id: index, username: 'some$index', email: 'some$index@body.pl'));
-  final tChannelRequest = CreateChannelRequest(name: channelNameFirst, users: [0,1]);
+  final tChannelRequest =
+      CreateChannelRequest(name: channelNameFirst, users: [0, 1]);
   final tAddToChannelRequest =
       AddToChannelRequest(channelId: channelId, userId: userId);
   channels.add(ChannelModel(
@@ -281,6 +284,60 @@ main() {
         verifyZeroInteractions(mockRemoteDataSource);
 
         expect(result, Left(NetworkFailure()));
+      });
+    });
+  });
+  group('fetch users', () {
+    setUp(() {
+      when(() => mockRemoteDataSource.fetchUsers())
+          .thenAnswer((_) async => users);
+    });
+    test('should check connection', () {
+      //arrange
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
+      //act
+      repository.fetchUsers();
+
+      //assert
+      verify(() => mockNetworkInfo.isConnected);
+    });
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+      test('should return user list', () async {
+        //Act
+        final result = await repository.fetchUsers();
+
+        //Assert
+        verify(() => mockRemoteDataSource.fetchUsers());
+
+        expect(result, Right(users));
+      });
+      test('should return server failure', () async {
+        //Arrange
+        when(() => mockRemoteDataSource.fetchUsers()).thenThrow(ServerException(message: tErrorMessage));
+
+        //Act
+        final result = await repository.fetchUsers();
+
+        //Assert
+        verify(() => mockRemoteDataSource.fetchUsers());
+
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
+      });
+    });
+    group('device is offline', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+      test('should return network failure',() async {
+        //Act
+        final result = await repository.fetchUsers();
+
+        //Assert
+        expect(result,Left(NetworkFailure()));
       });
     });
   });

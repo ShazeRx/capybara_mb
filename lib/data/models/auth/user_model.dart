@@ -30,4 +30,8 @@ class UserModel extends User {
       'email': this.email,
     };
   }
+
+  static List<UserModel> fromJsonToList(List<dynamic> userListJson) {
+    return userListJson.map((e) => UserModel.fromJson(e)).toList();
+  }
 }

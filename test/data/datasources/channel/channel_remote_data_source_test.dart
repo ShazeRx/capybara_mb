@@ -32,20 +32,23 @@ void main() {
   List<ChannelModel> channels = [];
   final users = List.generate(
       4,
-      (index) => UserModel(
-          id: index, username: 'some$index', email: 'some$index@body.pl'));
+          (index) =>
+          UserModel(
+              id: index, username: 'some$index', email: 'some$index@body.pl'));
   channels.add(ChannelModel(
       name: channelNameFirst, users: users.getRange(0, 2).toList()));
   channels.add(ChannelModel(
       name: channelNameSecond, users: users.getRange(2, 4).toList()));
-  final tChannelRequest = CreateChannelRequest(name: channelNameFirst, users: [0,1]);
+  final tChannelRequest = CreateChannelRequest(
+      name: channelNameFirst, users: [0, 1]);
   final tAddToChannelRequest =
-      AddToChannelRequest(channelId: channelId, userId: userId);
+  AddToChannelRequest(channelId: channelId, userId: userId);
   final tChannelModel =
-      ChannelModel.fromJson(json.decode(fixture(FixturePaths.channelJson)));
+  ChannelModel.fromJson(json.decode(fixture(FixturePaths.channelJson)));
   group('create channel', () {
     setUp(() {
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'),
               method: HttpMethods.post,
               body: tChannelRequest.toJson()))
@@ -56,15 +59,17 @@ void main() {
       final result = await dataSource.createChannel(tChannelRequest);
 
       //Assert
-      verify(() => mockHttpClient.invoke(
-          url: Api.channelUrl,
-          method: HttpMethods.post,
-          body: tChannelRequest.toJson()));
+      verify(() =>
+          mockHttpClient.invoke(
+              url: Api.channelUrl,
+              method: HttpMethods.post,
+              body: tChannelRequest.toJson()));
       expect(result, tChannelModel);
     });
     test('should throw ServerException', () {
       //Arrange
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'),
               method: HttpMethods.post,
               body: tChannelRequest.toJson()))
@@ -75,11 +80,13 @@ void main() {
 
       //Assert
       expect(
-          () => call(tChannelRequest), throwsA(TypeMatcher<ServerException>()));
+              () => call(tChannelRequest),
+          throwsA(TypeMatcher<ServerException>()));
     });
     test('should throw ClientException', () {
       //Arrange
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'),
               method: HttpMethods.post,
               body: tChannelRequest.toJson()))
@@ -90,15 +97,17 @@ void main() {
 
       //Assert
       expect(
-          () => call(tChannelRequest), throwsA(TypeMatcher<ClientException>()));
+              () => call(tChannelRequest),
+          throwsA(TypeMatcher<ClientException>()));
     });
   });
 
   group('fetch channel', () {
     setUp(() {
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'), method: HttpMethods.get))
-          .thenAnswer((_) async => fixture((FixturePaths.channelsJson)));
+          .thenAnswer((_) async => fixture(FixturePaths.channelsJson));
     });
     test('should return channels', () async {
       //Act
@@ -112,9 +121,11 @@ void main() {
     });
     test('should throw ServerException', () {
       //Arrange
-      when(() => mockHttpClient.invoke(
-          url: any(named: 'url'),
-          method: HttpMethods.get)).thenThrow(ServerException(message: 'Fail'));
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.get)).thenThrow(
+          ServerException(message: 'Fail'));
 
       //Act
       final call = dataSource.fetchChannels;
@@ -124,9 +135,11 @@ void main() {
     });
     test('should throw ClientException', () {
       //Arrange
-      when(() => mockHttpClient.invoke(
-          url: any(named: 'url'),
-          method: HttpMethods.get)).thenThrow(ClientException(message: 'Fail'));
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.get)).thenThrow(
+          ClientException(message: 'Fail'));
 
       //Act
       final call = dataSource.fetchChannels;
@@ -137,10 +150,12 @@ void main() {
   });
   group('add to channel', () {
     setUp(() {
-      when(() => mockHttpClient.invoke(
-          url: any(named: 'url'),
-          method: HttpMethods.post,
-          body: tAddToChannelRequest.toJson())).thenAnswer((_) async => Unit);
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.post,
+              body: tAddToChannelRequest.toJson())).thenAnswer((
+          _) async => Unit);
     });
 
     test('should add to channel', () async {
@@ -150,7 +165,8 @@ void main() {
 
     test('should throw ServerException', () async {
       //Arrange
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'),
               method: HttpMethods.post,
               body: tAddToChannelRequest.toJson()))
@@ -165,7 +181,8 @@ void main() {
     });
     test('should throw ClientException', () async {
       //Arrange
-      when(() => mockHttpClient.invoke(
+      when(() =>
+          mockHttpClient.invoke(
               url: any(named: 'url'),
               method: HttpMethods.post,
               body: tAddToChannelRequest.toJson()))
@@ -177,6 +194,55 @@ void main() {
       //Assert
       expect(() => call(tAddToChannelRequest),
           throwsA(TypeMatcher<ClientException>()));
+    });
+  });
+  group('fetch users', () {
+    test('should throw server exception', () {
+      //Arrange
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.get))
+          .thenThrow(ServerException(message: 'Fail'));
+
+      //Act
+      final call = dataSource.fetchUsers;
+
+      //Assert
+      expect(() => call(),
+          throwsA(TypeMatcher<ServerException>()));
+    });
+    test('should throw client exception', () {
+      //Arrange
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.get))
+          .thenThrow(ClientException(message: 'Fail'));
+
+      //Act
+      final call = dataSource.fetchUsers;
+
+      //Assert
+      expect(() => call(),
+          throwsA(TypeMatcher<ClientException>()));
+    });
+    test('should fetch users', () async {
+      //Arrange
+      when(() =>
+          mockHttpClient.invoke(
+              url: any(named: 'url'),
+              method: HttpMethods.get))
+          .thenAnswer((invocation) async =>fixture((FixturePaths.usersJson)));
+
+      //Act
+      final result = await dataSource.fetchUsers();
+
+      //Assert
+      verify(() =>
+          mockHttpClient.invoke(url: Api.usersUrl, method: HttpMethods.get));
+
+      expect(result, users);
     });
   });
 }

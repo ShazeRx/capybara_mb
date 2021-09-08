@@ -1,4 +1,5 @@
 import 'package:capybara_app/core/errors/failures/failure.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
 import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
@@ -10,4 +11,6 @@ abstract class ChannelRepository {
   Future<Either<Failure, Unit>> addToChannel(AddToChannelParams params);
 
   Future<Either<Failure, List<Channel>>> fetchChannels();
+
+  Future<Either<Failure, List<User>>> fetchUsers();
 }

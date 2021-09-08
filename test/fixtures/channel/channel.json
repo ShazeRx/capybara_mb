@@ -1,6 +1,6 @@
 {
   "name": "somebody",
-  "users": [
+  "users_list": [
     {
       "id": 0,
       "username": "some0",

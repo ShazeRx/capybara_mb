@@ -74,7 +74,7 @@ void _registerProviders() {
   );
 
   getIt.registerFactory(
-    () => NewChannelMembersProvider(),
+    () => NewChannelMembersProvider(channelFacade: getIt()),
   );
 
   getIt.registerFactory(
@@ -82,7 +82,7 @@ void _registerProviders() {
       channelFacade: getIt(),
     ),
   );
-  getIt.registerLazySingleton(() => ChannelProvider(channelFacade: getIt()));
+  getIt.registerFactory(() => ChannelProvider(channelFacade: getIt()));
 }
 
 void _registerFacades() {
@@ -100,7 +100,8 @@ void _registerFacades() {
         addToChannel: getIt(),
         channelsState: getIt(),
         createChannel: getIt(),
-        fetchChannels: getIt()),
+        fetchChannels: getIt(),
+        channelRepository: getIt()),
   );
 }
 

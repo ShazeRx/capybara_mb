@@ -11,6 +11,7 @@ class ChannelModel extends Channel {
   Map<String, dynamic> toJson() {
     final usersJsonList =
         this.users.map((e) => UserModel.fromUserEntity(e).toJson()).toList();
+
     return {'name': this.name, 'users': usersJsonList};
   }
 
