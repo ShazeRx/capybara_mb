@@ -27,7 +27,10 @@ class HttpClientImpl implements HttpClient {
   }) : this._dio = dio {
     this._dio.interceptors.add(TokenInterceptor());
     this._dio.interceptors.add(ErrorInterceptor(invoke: invoke));
-    this._dio.interceptors.add(LoggingInterceptor());  //Only for debugging purpose
+    this
+        ._dio
+        .interceptors
+        .add(LoggingInterceptor()); //Only for debugging purpose
   }
 
   @override
@@ -40,7 +43,7 @@ class HttpClientImpl implements HttpClient {
   }) async {
     try {
       final response = await this._dio.request(
-            Api.baseUrl + url,
+            this._getUrl(url),
             options: this._getOptions(method, options),
             data: body,
             queryParameters: queryParameters,
@@ -52,8 +55,6 @@ class HttpClientImpl implements HttpClient {
         final errors = Map.from((e.response!.data)).values.toList();
         throw ClientException(message: errors.first);
       }
-      //TODO: if Socket error occur then no message is given to user,and app
-      // keeps showing loading icon
       throw ServerException(message: e.message);
     }
   }
@@ -65,5 +66,13 @@ class HttpClientImpl implements HttpClient {
     }
 
     return Options(method: method);
+  }
+
+  String _getUrl(String url) {
+    if (url.contains(Api.baseUrl)) {
+      return url;
+    }
+
+    return Api.baseUrl + url;
   }
 }
