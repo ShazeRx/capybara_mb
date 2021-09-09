@@ -5,9 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends StatefulWidget {
+  @override
+  _UserProfileScreenState createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var theme = Theme.of(context);
     return ChangeNotifierProvider(
       create: (_) => getIt<UserProfileProvider>(),
@@ -29,4 +36,7 @@ class UserProfileScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
