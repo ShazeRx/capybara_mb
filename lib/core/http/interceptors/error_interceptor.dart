@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/constants/api.dart';
-import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/helpers/token/token_helper.dart';
@@ -22,7 +21,7 @@ class ErrorInterceptor extends InterceptorsWrapper {
     if (error.response?.statusCode == 401) {
       try {
         await this._refreshToken();
-        return this._retry(error.requestOptions);
+        return await this._retry(error.requestOptions);
       } on CacheException {}
     }
 
@@ -48,12 +47,12 @@ class ErrorInterceptor extends InterceptorsWrapper {
     }
   }
 
-  Future<dynamic> _retry(RequestOptions requestOptions) {
+  Future<dynamic> _retry(RequestOptions requestOptions) async {
     final options = new Options(
       method: requestOptions.method,
       headers: requestOptions.headers,
     );
-    return this._invoke(
+    return await this._invoke(
       url: requestOptions.path,
       method: requestOptions.method,
       options: options,
