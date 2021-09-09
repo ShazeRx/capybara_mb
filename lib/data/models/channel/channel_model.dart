@@ -12,7 +12,7 @@ class ChannelModel extends Channel {
     final usersJsonList =
         this.users.map((e) => UserModel.fromUserEntity(e).toJson()).toList();
 
-    return {'name': this.name, 'users': usersJsonList};
+    return {'name': this.name, 'users_list': usersJsonList};
   }
 
   factory ChannelModel.fromJson(Map<String, dynamic> json) {

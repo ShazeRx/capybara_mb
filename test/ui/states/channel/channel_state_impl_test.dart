@@ -26,7 +26,7 @@ void main() {
       channelsStateImpl.setChannels(channels);
 
       //Act
-      final result = channelsStateImpl.channels.value;
+      final result = channelsStateImpl.channels$.value;
 
       //Assert
       expect(result, channels);
@@ -38,10 +38,10 @@ void main() {
       channelsStateImpl.setUsers(users);
 
       //Act
-      final result = channelsStateImpl.users.value;
+      final result = channelsStateImpl.users$.value;
 
       //Assert
-      expect(result, channels);
+      expect(result, users);
     });
   });
 }

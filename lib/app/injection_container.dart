@@ -17,6 +17,7 @@ import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
+import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
 import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/facades/channel_facade.dart';
 import 'package:capybara_app/ui/providers/channels/channel_provider.dart';
@@ -95,14 +96,12 @@ void _registerFacades() {
       logoutUser: getIt(),
     ),
   );
-  getIt.registerLazySingleton(
-    () => ChannelFacade(
-        addToChannel: getIt(),
-        channelsState: getIt(),
-        createChannel: getIt(),
-        fetchChannels: getIt(),
-        channelRepository: getIt()),
-  );
+  getIt.registerLazySingleton(() => ChannelFacade(
+      addToChannel: getIt(),
+      channelsState: getIt(),
+      createChannel: getIt(),
+      fetchChannels: getIt(),
+      fetchUsers: getIt()));
 }
 
 void _registerStates() {
@@ -155,6 +154,8 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => AddToChannel(channelRepository: getIt()));
   getIt.registerLazySingleton(() => CreateChannel(channelRepository: getIt()));
   getIt.registerLazySingleton(() => FetchChannels(channelRepository: getIt()));
+  getIt.registerLazySingleton(() => FetchUsers(channelRepository: getIt()));
+
 }
 
 void _registerRepositories() {

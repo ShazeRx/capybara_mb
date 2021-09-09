@@ -1,18 +1,15 @@
-import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/entities/channel/channel.dart';
-import 'package:capybara_app/domain/repositories/channel_repository.dart';
 import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
+import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/facades/channel_facade.dart';
 import 'package:capybara_app/ui/states/channel/channel_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import '../../domain/usecases/channel/add_to_channel_test.dart';
 
 class MockCreateChannel extends Mock implements CreateChannel {}
 
@@ -22,7 +19,7 @@ class MockFetchChannels extends Mock implements FetchChannels {}
 
 class MockChannelsState extends Mock implements ChannelsState {}
 
-class MockChannelRepository extends Mock implements ChannelRepository {}
+class MockFetchUsers extends Mock implements FetchUsers {}
 
 class FakeChannelParams extends Fake implements CreateChannelParams {}
 
@@ -31,7 +28,7 @@ void main() {
   late MockAddToChannel mockAddToChannel;
   late MockFetchChannels mockFetchChannels;
   late MockChannelsState mockChannelsState;
-  late MockChannelRepository mockChannelRepository;
+  late MockFetchUsers mockFetchUsers;
   late ChannelFacade channelFacade;
 
   setUp(() {
@@ -39,14 +36,14 @@ void main() {
     mockAddToChannel = MockAddToChannel();
     mockFetchChannels = MockFetchChannels();
     mockChannelsState = MockChannelsState();
-    mockChannelRepository = MockChannelRepository();
+    mockFetchUsers = MockFetchUsers();
 
     channelFacade = ChannelFacade(
         addToChannel: mockAddToChannel,
         fetchChannels: mockFetchChannels,
         createChannel: mockCreateChannel,
         channelsState: mockChannelsState,
-        channelRepository: mockChannelRepository);
+        fetchUsers: mockFetchUsers);
     registerFallbackValue<CreateChannelParams>(FakeChannelParams());
   });
   final users = List.generate(
@@ -98,17 +95,17 @@ void main() {
       verify(() => mockAddToChannel(addToChannelParams));
     });
   });
-  // group('fetch users', () {
-  //   test('should call fetch users', () async {
-  //     //Arrange
-  //     when(() => mockChannelRepository.fetchUsers(NoParams()))
-  //         .thenAnswer((_) async => Right(users));
-  //
-  //     //Act
-  //     await channelFacade.fetchUsers();
-  //
-  //     //Assert
-  //     verify(() => mockChannelRepository.fetchUsers(NoParams()));
-  //   });
-  // });
+  group('fetch users', () {
+    test('should call fetch users', () async {
+      //Arrange
+      when(() => mockFetchUsers(NoParams()))
+          .thenAnswer((_) async => Right(users));
+
+      //Act
+      await channelFacade.fetchUsers();
+
+      //Assert
+      verify(() => mockFetchUsers(NoParams()));
+    });
+  });
 }

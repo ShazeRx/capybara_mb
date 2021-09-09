@@ -112,7 +112,6 @@ void main() {
 
       //Act
       provider = NewChannelMembersProvider(channelFacade: mockChannelFacade);
-      provider.fetchUsers();
       //Assert
       verify(() => mockChannelFacade.fetchUsers()).called(1);
       //TODO: need to check this test!!

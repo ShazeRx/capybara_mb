@@ -20,14 +20,14 @@ class ChannelStateNotifier with ChangeNotifier {
   }
 
   _addChannelListener() {
-    this._channelsState.channels.listen((value) {
+    this._channelsState.channels$.stream.listen((value) {
       this._channels = value!;
       notifyListeners();
     });
   }
 
   _addUserListener() {
-    this._channelsState.users.listen((value) {
+    this._channelsState.users$.stream.listen((value) {
       this._users = value!;
       notifyListeners();
     });
