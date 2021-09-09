@@ -1,6 +1,8 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
+import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
+import 'package:capybara_app/core/errors/failures/client_failure.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
@@ -19,7 +21,8 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(
       {required ChatLocalDataSource localDataSource,
       required ChatRemoteDataSource remoteDataSource,
-      required NetworkInfo networkInfo}): this._localDataSource = localDataSource,
+      required NetworkInfo networkInfo})
+      : this._localDataSource = localDataSource,
         this._remoteDataSource = remoteDataSource,
         this._networkInfo = networkInfo;
 
@@ -32,6 +35,8 @@ class ChatRepositoryImpl implements ChatRepository {
         return Right(messages);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     try {
@@ -47,10 +52,12 @@ class ChatRepositoryImpl implements ChatRepository {
       String timestamp) async {
     if (await _networkInfo.isConnected) {
       try {
-        return Right(
-            await _remoteDataSource.fetchLast10MessagesFromTimestamp(timestamp));
+        return Right(await _remoteDataSource
+            .fetchLast10MessagesFromTimestamp(timestamp));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     return Left(NetworkFailure());
@@ -63,6 +70,8 @@ class ChatRepositoryImpl implements ChatRepository {
         return Right(await _remoteDataSource.sendMessage(body));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     return Left(NetworkFailure());

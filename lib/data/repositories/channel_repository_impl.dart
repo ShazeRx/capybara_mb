@@ -1,6 +1,8 @@
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
+import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
+import 'package:capybara_app/core/errors/failures/client_failure.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:capybara_app/core/errors/failures/network_failure.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
@@ -33,18 +35,21 @@ class ChannelRepositoryImpl implements ChannelRepository {
   Future<Either<Failure, Unit>> addToChannel(AddToChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        final result =await _remoteDataSource
+        final result = await _remoteDataSource
             .addToChannel(AddToChannelRequest.fromParams(params));
         return Right(result);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     return Left(NetworkFailure());
   }
 
   @override
-  Future<Either<Failure, Channel>> createChannel(CreateChannelParams params) async {
+  Future<Either<Failure, Channel>> createChannel(
+      CreateChannelParams params) async {
     if (await _networkInfo.isConnected) {
       try {
         final channel = await _remoteDataSource
@@ -52,6 +57,8 @@ class ChannelRepositoryImpl implements ChannelRepository {
         return Right(channel);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     return Left(NetworkFailure());
@@ -59,7 +66,6 @@ class ChannelRepositoryImpl implements ChannelRepository {
 
   @override
   Future<Either<Failure, List<Channel>>> fetchChannels() async {
-
     if (await _networkInfo.isConnected) {
       try {
         final remoteChannels = await _remoteDataSource.fetchChannels();
@@ -67,6 +73,8 @@ class ChannelRepositoryImpl implements ChannelRepository {
         return Right(remoteChannels);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     } else {
       try {
@@ -82,11 +90,12 @@ class ChannelRepositoryImpl implements ChannelRepository {
   Future<Either<Failure, List<User>>> fetchUsers() async {
     if (await _networkInfo.isConnected) {
       try {
-        final userList = await _remoteDataSource
-            .fetchUsers();
+        final userList = await _remoteDataSource.fetchUsers();
         return Right(userList);
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
       }
     }
     return Left(NetworkFailure());
