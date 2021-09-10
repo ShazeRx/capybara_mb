@@ -6,25 +6,25 @@ import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class ChannelsState implements Disposable {
-  BehaviorSubject<List<Channel>?> get channels$;
+  BehaviorSubject<List<Channel>> get channels$;
 
-  BehaviorSubject<List<User>?> get users$;
+  BehaviorSubject<List<User>> get users$;
 
-  void setChannels(List<Channel>? channels);
+  void setChannels(List<Channel> channels);
 
-  void setUsers(List<User>? users);
+  void setUsers(List<User> users);
 }
 
 class ChannelsStateImpl implements ChannelsState {
-  BehaviorSubject<List<Channel>?> _channels =
+  BehaviorSubject<List<Channel>> _channels =
       new BehaviorSubject<List<Channel>>();
-  BehaviorSubject<List<User>?> _users = new BehaviorSubject<List<User>>();
+  BehaviorSubject<List<User>> _users = new BehaviorSubject<List<User>>();
 
-  BehaviorSubject<List<Channel>?> get channels$ => _channels;
+  BehaviorSubject<List<Channel>> get channels$ => _channels;
 
-  BehaviorSubject<List<User>?> get users$ => _users;
+  BehaviorSubject<List<User>> get users$ => _users;
 
-  void setChannels(List<Channel>? channels) {
+  void setChannels(List<Channel> channels) {
     this._channels.add(channels);
   }
 
@@ -35,7 +35,7 @@ class ChannelsStateImpl implements ChannelsState {
   }
 
   @override
-  void setUsers(List<User>? users) {
+  void setUsers(List<User> users) {
     this._users.add(users);
   }
 
