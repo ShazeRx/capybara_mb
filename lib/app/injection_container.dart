@@ -1,3 +1,4 @@
+import 'package:capybara_app/app/capybara_app_provider.dart';
 import 'package:capybara_app/core/http/http_client.dart';
 import 'package:capybara_app/core/managers/navigation_manager.dart';
 import 'package:capybara_app/core/managers/snackbar_manager.dart';
@@ -84,6 +85,12 @@ void _registerProviders() {
     ),
   );
   getIt.registerFactory(() => ChannelProvider(channelFacade: getIt()));
+
+  getIt.registerFactory(
+    () => CapybaraAppProvider(
+      authFacade: getIt(),
+    ),
+  );
 }
 
 void _registerFacades() {
@@ -155,7 +162,6 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => CreateChannel(channelRepository: getIt()));
   getIt.registerLazySingleton(() => FetchChannels(channelRepository: getIt()));
   getIt.registerLazySingleton(() => FetchUsers(channelRepository: getIt()));
-
 }
 
 void _registerRepositories() {
