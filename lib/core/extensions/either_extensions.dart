@@ -5,8 +5,8 @@ extension EitherResult<T> on Either<Failure, T> {
   T? getValueOrNull<T>() {
     T? result;
     this.fold(
-      (failure) => null,
-      (value) => result = cast<T>(value),
+          (failure) => null,
+          (value) => result = cast<T>(value),
     );
     return result;
   }
@@ -14,9 +14,17 @@ extension EitherResult<T> on Either<Failure, T> {
   Failure? getFailureOrNull() {
     Failure? result;
     this.fold(
-      (failure) => result = failure,
-      (value) => null,
+          (failure) => result = failure,
+          (value) => null,
     );
+    return result;
+  }
+
+  List<T> getListValuesOrEmptyList<T>() {
+    List<T> result=[];
+    this.fold(
+            (failure) => null,
+            (value) => result =value as List<T>);
     return result;
   }
 }

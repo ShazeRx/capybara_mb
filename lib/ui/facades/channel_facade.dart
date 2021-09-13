@@ -32,7 +32,7 @@ class ChannelFacade {
 
   Future<Either<Failure, List<Channel>>> fetchChannels() async {
     final result = await this._fetchChannels(NoParams());
-    this._channelsState.setChannels(result.getValueOrNull<List<Channel>>());
+    this._channelsState.setChannels(result.getListValuesOrEmptyList<Channel>());
     return result;
   }
 
@@ -47,7 +47,7 @@ class ChannelFacade {
 
   Future<Either<Failure, List<User>>> fetchUsers() async {
     final result = await this._fetchUsers(NoParams());
-    this._channelsState.setUsers(result.getValueOrNull<List<User>>());
+    this._channelsState.setUsers(result.getListValuesOrEmptyList<User>());
     return result;
   }
 }
