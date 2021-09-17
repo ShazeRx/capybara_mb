@@ -3,26 +3,16 @@ import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
+import 'message_params.dart';
 
 class FetchLast10MsgsFromTimestamp
-    implements UseCase<List<Message>, FetchMsgParams> {
+    implements UseCase<List<Message>, MessageParams> {
   final ChatRepository chatRepository;
 
   FetchLast10MsgsFromTimestamp({required this.chatRepository});
 
   @override
-  Future<Either<Failure, List<Message>>> call(FetchMsgParams params) async {
-    return await chatRepository
-        .fetchLast10MessagesFromTimestamp(params.timestamp);
+  Future<Either<Failure, List<Message>>> call(MessageParams params) async {
+    return await chatRepository.fetchLast10MessagesFromTimestamp(params);
   }
-}
-
-class FetchMsgParams extends Equatable {
-  final String timestamp;
-
-  FetchMsgParams({required this.timestamp});
-
-  @override
-  List<Object?> get props => [this.timestamp];
 }

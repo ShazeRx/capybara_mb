@@ -7,16 +7,24 @@ import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
 import 'package:capybara_app/data/repositories/chat_repository_impl.dart';
+import 'package:capybara_app/domain/entities/chat/chat_stream.dart';
 import 'package:capybara_app/domain/entities/chat/message.dart';
+import 'package:capybara_app/domain/usecases/chat/join_chat_session.dart';
+import 'package:capybara_app/domain/usecases/chat/message_params.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MockRemoteDataSource extends Mock implements ChatRemoteDataSource {}
 
 class MockLocalDataSource extends Mock implements ChatLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
+
+class MockSocket extends Mock implements WebSocketChannel {}
+
+class FakeMessageParams extends Fake implements MessageParams {}
 
 void main() {
   late ChatRepositoryImpl repository;
@@ -27,8 +35,13 @@ void main() {
   final messageBody = 'some';
   final timestamp = '21.01.2021';
   messages
-      .add(new Message('21.01.2021', message: messageBody, username: 'body'));
-  messages.add(new Message('22.01.2021', message: 'once', username: 'told'));
+      .add(new Message(timestamp, message: messageBody, username: 'body'));
+  messages.add(new Message(timestamp, message: 'once', username: 'told'));
+  final chatSession = ChatStream(streamChannel: MockSocket());
+  final messageParams = MessageParams(
+      body: messageBody,
+      chatStream: chatSession,
+      messageType: SendMessageType());
   final tErrorMessage = 'Fail';
   setUp(() {
     mockLocalDataSource = MockLocalDataSource();
@@ -38,11 +51,12 @@ void main() {
         remoteDataSource: mockRemoteDataSource,
         localDataSource: mockLocalDataSource,
         networkInfo: mockNetworkInfo);
+    registerFallbackValue(FakeMessageParams());
   });
 
   group('fetch last 10 messages', () {
     setUp(() {
-      when(() => mockRemoteDataSource.fetchLast10Messages())
+      when(() => mockRemoteDataSource.sendMessage(any()))
           .thenAnswer((_) async => messages);
       when(() => mockLocalDataSource.cacheMessages(any()))
           .thenAnswer((_) async => null);
@@ -52,7 +66,7 @@ void main() {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //Act
-      await repository.fetchLast10Messages();
+      await repository.fetchLast10Messages(messageParams);
 
       //Assert
       verify(() => mockNetworkInfo.isConnected);
@@ -63,20 +77,20 @@ void main() {
       });
       test('should return messages', () async {
         //Act
-        final result = await repository.fetchLast10Messages();
+        final result = await repository.fetchLast10Messages(messageParams);
 
         //Assert
-        verify(() => mockRemoteDataSource.fetchLast10Messages());
+        verify(() => mockRemoteDataSource.sendMessage(messageParams));
 
         expect(result, Right(messages));
       });
       test('should return server failure when call was unsuccesfull', () async {
         //Arrange
-        when(() => mockRemoteDataSource.fetchLast10Messages())
+        when(() => mockRemoteDataSource.sendMessage(any()))
             .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
-        final result = await repository.fetchLast10Messages();
+        final result = await repository.fetchLast10Messages(messageParams);
 
         //Assert
         verifyZeroInteractions(mockLocalDataSource);
@@ -89,7 +103,7 @@ void main() {
             .thenAnswer((_) async => null);
 
         //Act
-        await repository.fetchLast10Messages();
+        await repository.fetchLast10Messages(messageParams);
 
         //Assert
         verify(() => mockLocalDataSource.cacheMessages(messages));
@@ -105,7 +119,7 @@ void main() {
             .thenAnswer((_) async => messages);
 
         //Act
-        final result = await repository.fetchLast10Messages();
+        final result = await repository.fetchLast10Messages(messageParams);
 
         //Assert
         verify(() => mockLocalDataSource.fetchLast10Messages());
@@ -120,7 +134,7 @@ void main() {
             .thenThrow(CacheException());
 
         //Act
-        final result = await repository.fetchLast10Messages();
+        final result = await repository.fetchLast10Messages(messageParams);
 
         //Assert
         verify(() => mockLocalDataSource.fetchLast10Messages());
@@ -133,7 +147,7 @@ void main() {
   });
   group('fetch last 10 messages from timestamp ', () {
     setUp(() {
-      when(() => mockRemoteDataSource.fetchLast10MessagesFromTimestamp(any()))
+      when(() => mockRemoteDataSource.sendMessage(any()))
           .thenAnswer((_) async => messages);
     });
     test('should check network connection', () async {
@@ -141,7 +155,7 @@ void main() {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //Act
-      await repository.fetchLast10MessagesFromTimestamp(timestamp);
+      await repository.fetchLast10MessagesFromTimestamp(messageParams);
 
       //Assert
 
@@ -149,28 +163,27 @@ void main() {
     });
     group('device is online', () {
       setUp(() {
-        when(() => mockRemoteDataSource.fetchLast10MessagesFromTimestamp(any()))
+        when(() => mockRemoteDataSource.sendMessage(any()))
             .thenAnswer((_) async => messages);
         when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       });
       test('should return messages', () async {
         //Act
         final result =
-            await repository.fetchLast10MessagesFromTimestamp(timestamp);
+            await repository.fetchLast10MessagesFromTimestamp(messageParams);
 
         //Assert
-        verify(() =>
-            mockRemoteDataSource.fetchLast10MessagesFromTimestamp(timestamp));
+        verify(() => mockRemoteDataSource.sendMessage(messageParams));
         expect(result, Right(messages));
       });
       test('should return server failure when call was unsuccessful', () async {
         //Arrange
-        when(() => mockRemoteDataSource.fetchLast10MessagesFromTimestamp(any()))
+        when(() => mockRemoteDataSource.sendMessage(any()))
             .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
         final result =
-            await repository.fetchLast10MessagesFromTimestamp(timestamp);
+            await repository.fetchLast10MessagesFromTimestamp(messageParams);
 
         //Assert
         verifyZeroInteractions(mockLocalDataSource);
@@ -185,7 +198,7 @@ void main() {
       test('should throw no connection failure', () async {
         //Act
         final result =
-            await repository.fetchLast10MessagesFromTimestamp(timestamp);
+            await repository.fetchLast10MessagesFromTimestamp(messageParams);
 
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);
@@ -194,15 +207,15 @@ void main() {
       });
     });
   });
-  group('sendMessage', () {
+  group('send message', () {
     test('should check network connection', () async {
       //Arrange
       when(() => mockRemoteDataSource.sendMessage(any()))
-          .thenAnswer((_) async => null);
+          .thenAnswer((_) async => messages);
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
 
       //Act
-      await repository.sendMessage(messageBody);
+      await repository.sendMessage(messageParams);
 
       //Assert
 
@@ -214,16 +227,16 @@ void main() {
       });
       test('should send message', () async {
         //Arrange
-        when(() => mockRemoteDataSource.sendMessage(messageBody))
-            .thenAnswer((_) async => null);
+        when(() => mockRemoteDataSource.sendMessage(any()))
+            .thenAnswer((_) async => messages);
 
         //Act
-        final result = await repository.sendMessage(messageBody);
+        final result = await repository.sendMessage(messageParams);
 
         //Arrange
-        verify(() => mockRemoteDataSource.sendMessage(messageBody));
+        verify(() => mockRemoteDataSource.sendMessage(messageParams));
 
-        expect(result, Right(null));
+        expect(result, Right(messages));
       });
       test('should throw Server Failure when call was unsuccessful', () async {
         //Arrange
@@ -231,10 +244,10 @@ void main() {
             .thenThrow(ServerException(message: tErrorMessage));
 
         //Act
-        final result = await repository.sendMessage(messageBody);
+        final result = await repository.sendMessage(messageParams);
 
         //Assert
-        verify(() => mockRemoteDataSource.sendMessage(messageBody));
+        verify(() => mockRemoteDataSource.sendMessage(messageParams));
 
         expect(result, Left(ServerFailure(message: tErrorMessage)));
       });
@@ -245,7 +258,71 @@ void main() {
       });
       test('should throw no connection failure', () async {
         //Act
-        final result = await repository.sendMessage(messageBody);
+        final result = await repository.sendMessage(messageParams);
+
+        //Assert
+        verifyZeroInteractions(mockRemoteDataSource);
+
+        expect(result, Left(NetworkFailure()));
+      });
+    });
+  });
+
+  group('join channel session', () {
+    final tChannelId = 1;
+    final tJoinToChannelParams =
+        JoinChannelSessionParams(channelId: tChannelId);
+    final chatSession = ChatStream(streamChannel: MockSocket());
+    test('should check network connection', () async {
+      //Arrange
+      when(() => mockRemoteDataSource.joinChatSession(any()))
+          .thenAnswer((_) async => chatSession);
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
+      //Act
+      await repository.joinChatSession(tJoinToChannelParams);
+
+      //Assert
+      verify(() => mockNetworkInfo.isConnected);
+    });
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+      test('should join chat session', () async {
+        //Arrange
+        when(() => mockRemoteDataSource.joinChatSession(any()))
+            .thenAnswer((_) async => chatSession);
+
+        //Act
+        final result = await repository.joinChatSession(tJoinToChannelParams);
+
+        //Arrange
+        verify(() => mockRemoteDataSource.joinChatSession(tChannelId));
+
+        expect(result, Right(chatSession));
+      });
+      test('should throw Server Failure when call was unsuccessful', () async {
+        //Arrange
+        when(() => mockRemoteDataSource.joinChatSession(any()))
+            .thenThrow(ServerException(message: tErrorMessage));
+
+        //Act
+        final result = await repository.joinChatSession(tJoinToChannelParams);
+
+        //Assert
+        verify(() => mockRemoteDataSource.joinChatSession(tChannelId));
+
+        expect(result, Left(ServerFailure(message: tErrorMessage)));
+      });
+    });
+    group('device is offline', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+      test('should throw no connection failure', () async {
+        //Act
+        final result = await repository.joinChatSession(tJoinToChannelParams);
 
         //Assert
         verifyZeroInteractions(mockRemoteDataSource);

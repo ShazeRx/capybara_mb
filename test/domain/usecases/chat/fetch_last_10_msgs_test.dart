@@ -1,18 +1,24 @@
+import 'package:capybara_app/domain/entities/chat/chat_stream.dart';
 import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
 import 'package:capybara_app/domain/usecases/chat/fetch_last_10_msgs.dart';
-import 'package:capybara_app/domain/usecases/usecase.dart';
+import 'package:capybara_app/domain/usecases/chat/message_params.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MockChatRepository extends Mock implements ChatRepository {}
+
+class MockSocket extends Mock implements WebSocketChannel {}
 
 void main() {
   late MockChatRepository mockChatRepository;
   late FetchLast10Msgs usecase;
-  final Message message = Message(null, message: 'some', username: 'username');
-  final List<Message> messages = [message];
+  final chatSession = ChatStream(streamChannel: MockSocket());
+  final messageList=[Message('21.02.1234', message: 'some', username: 'body')];
+  final messageParams = MessageParams(
+      body: null, chatStream: chatSession, messageType: SendMessageType());
   setUp(() {
     mockChatRepository = MockChatRepository();
     usecase = FetchLast10Msgs(chatRepository: mockChatRepository);
@@ -20,17 +26,17 @@ void main() {
 
   test('should return last 10 messages', () async {
     //Arrange
-    when(() => mockChatRepository.fetchLast10Messages())
-        .thenAnswer((_) async => Right(messages));
+    when(() => mockChatRepository.fetchLast10Messages(messageParams))
+        .thenAnswer((_) async => Right(messageList));
 
     //Act
-    final result = await usecase(NoParams());
+    final result = await usecase(messageParams);
 
     //Assert
-    verify(() => mockChatRepository.fetchLast10Messages());
+    verify(() => mockChatRepository.fetchLast10Messages(messageParams));
 
     verifyNoMoreInteractions(mockChatRepository);
 
-    expect(result, Right(messages));
+    expect(result, Right(messageList));
   });
 }

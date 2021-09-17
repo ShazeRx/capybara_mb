@@ -9,8 +9,11 @@ import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/core/network/network_info.dart';
 import 'package:capybara_app/data/datasource/chat/chat_local_data_source.dart';
 import 'package:capybara_app/data/datasource/chat/chat_remote_data_source.dart';
+import 'package:capybara_app/domain/entities/chat/chat_stream.dart';
 import 'package:capybara_app/domain/entities/chat/message.dart';
 import 'package:capybara_app/domain/repositories/chat_repository.dart';
+import 'package:capybara_app/domain/usecases/chat/join_chat_session.dart';
+import 'package:capybara_app/domain/usecases/chat/message_params.dart';
 import 'package:dartz/dartz.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -27,10 +30,10 @@ class ChatRepositoryImpl implements ChatRepository {
         this._networkInfo = networkInfo;
 
   @override
-  Future<Either<Failure, List<Message>>> fetchLast10Messages() async {
+  Future<Either<Failure, List<Message>>> fetchLast10Messages(MessageParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        final messages = await _remoteDataSource.fetchLast10Messages();
+        final messages = await _remoteDataSource.sendMessage(params);
         _localDataSource.cacheMessages(messages);
         return Right(messages);
       } on ServerException catch (e) {
@@ -49,11 +52,11 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<Either<Failure, List<Message>>> fetchLast10MessagesFromTimestamp(
-      String timestamp) async {
+      MessageParams params) async {
     if (await _networkInfo.isConnected) {
       try {
         return Right(await _remoteDataSource
-            .fetchLast10MessagesFromTimestamp(timestamp));
+            .sendMessage(params));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       } on ClientException catch (e) {
@@ -64,10 +67,25 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Either<Failure, void>> sendMessage(String body) async {
+  Future<Either<Failure, List<Message>>> sendMessage(MessageParams params) async {
     if (await _networkInfo.isConnected) {
       try {
-        return Right(await _remoteDataSource.sendMessage(body));
+        return Right(await _remoteDataSource.sendMessage(params));
+      } on ServerException catch (e) {
+        return Left(ServerFailure(message: e.message));
+      } on ClientException catch (e) {
+        return Left(ClientFailure(message: e.message));
+      }
+    }
+    return Left(NetworkFailure());
+  }
+
+  @override
+  Future<Either<Failure, ChatStream>> joinChatSession(
+      JoinChannelSessionParams params) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        return Right(await _remoteDataSource.joinChatSession(params.channelId));
       } on ServerException catch (e) {
         return Left(ServerFailure(message: e.message));
       } on ClientException catch (e) {
