@@ -45,6 +45,7 @@ dependencies:
   flutter_svg: ^0.22.0
   pretty_dio_logger: ^1.2.0-beta-1
   web_socket_channel: ^2.1.0
+  sprintf: ^6.0.0
 
 dev_dependencies:
   flutter_test:
