@@ -1,9 +1,13 @@
+import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
-import 'package:capybara_app/core/helpers/token/token_helper.dart';
+import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
 import 'package:dio/dio.dart';
 
 class TokenInterceptor extends InterceptorsWrapper {
+  final InterceptorUtilities _interceptorUtilities =
+      getIt<InterceptorUtilities>();
+
   @override
   void onRequest(
     RequestOptions options,
@@ -16,7 +20,7 @@ class TokenInterceptor extends InterceptorsWrapper {
         currentUrl == baseUrl + Api.refreshUrl;
     try {
       if (!isLoginRequest) {
-        final currentToken = await TokenHelper.getCurrentToken();
+        final currentToken = await _interceptorUtilities.getCurrentToken();
         options.headers['Authorization'] = 'Bearer ${currentToken.access}';
       }
     } on CacheException {}

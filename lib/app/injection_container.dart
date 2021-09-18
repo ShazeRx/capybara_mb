@@ -1,5 +1,6 @@
 import 'package:capybara_app/app/capybara_app_provider.dart';
 import 'package:capybara_app/core/http/http_client.dart';
+import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
 import 'package:capybara_app/core/managers/navigation_manager.dart';
 import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:capybara_app/core/network/network_info.dart';
@@ -212,6 +213,12 @@ void _registerDataSources() {
 }
 
 void _registerCoreFeatures() {
+  getIt.registerLazySingleton<InterceptorUtilities>(
+    () => InterceptorUtilitiesImpl(
+      sharedPreferences: getIt(),
+    ),
+  );
+
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       connectionChecker: getIt(),
