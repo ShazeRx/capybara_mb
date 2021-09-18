@@ -7,12 +7,13 @@ import 'package:capybara_app/data/models/auth/token_model.dart';
 import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/requests/auth/login_request.dart';
 import 'package:capybara_app/data/requests/auth/register_request.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class AuthRemoteDataSource {
   /// Calls the http://? endpoint.
   ///
   /// Throws a [ServerException] for all error codes.
-  Future<TokenModel> loginUser(LoginRequest request);
+  Future<Tuple2<TokenModel, UserModel>> loginUser(LoginRequest request);
 
   /// Calls the http://? endpoint.
   ///
@@ -28,13 +29,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) : this._client = client;
 
   @override
-  Future<TokenModel> loginUser(LoginRequest request) async {
+  Future<Tuple2<TokenModel, UserModel>> loginUser(LoginRequest request) async {
     final response = await this._client.invoke(
           url: Api.loginUrl,
           method: HttpMethods.post,
           body: request.toJson(),
         );
-    return TokenModel.fromJson(json.decode(response));
+
+    final tokenModel = TokenModel.fromJson(json.decode(response));
+
+    final userModel = UserModel.fromJson(json.decode(response));
+
+    return Tuple2(tokenModel, userModel);
   }
 
   @override

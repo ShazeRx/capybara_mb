@@ -4,6 +4,7 @@ import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
 import 'package:capybara_app/data/models/auth/token_model.dart';
+import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:dartz/dartz.dart';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -27,7 +28,10 @@ void main() {
   });
 
   final tTokenModel =
-      TokenModel.fromJson(json.decode(fixture(FixturePaths.tokenJson)));
+      TokenModel.fromJson(json.decode(fixture(FixturePaths.loginJson)));
+
+  final tUserModel =
+      UserModel.fromJson(json.decode(fixture(FixturePaths.userJson)));
 
   group('fetch token', () {
     test(
@@ -35,7 +39,7 @@ void main() {
         () async {
       // Arrange
       when(() => mockSharedPreferences.getString(CachedValues.token))
-          .thenReturn(fixture(FixturePaths.tokenJson));
+          .thenReturn(fixture(FixturePaths.loginJson));
 
       // Act
       final result = await dataSource.fetchToken();
@@ -86,7 +90,7 @@ void main() {
         () async {
       // Arrange
       when(() => mockSharedPreferences.getString(CachedValues.token))
-          .thenReturn(fixture(FixturePaths.tokenJson));
+          .thenReturn(fixture(FixturePaths.loginJson));
       when(() => mockSharedPreferences.remove(CachedValues.token))
           .thenAnswer((_) async => true);
 
@@ -110,6 +114,25 @@ void main() {
 
       // Assert
       expect(() => call(), throwsA(TypeMatcher<CacheException>()));
+    });
+  });
+
+  group('cache user', () {
+    test('should call shared preferences to cache the data', () {
+      // Arrange
+      when(() => mockSharedPreferences.setString(any(), any()))
+          .thenAnswer((_) async => true);
+
+      // Act
+      dataSource.cacheUser(tUserModel);
+
+      final expectedJsonString = json.encode(tUserModel.toJson());
+
+      // Assert
+      verify(() => mockSharedPreferences.setString(
+            CachedValues.user,
+            expectedJsonString,
+          ));
     });
   });
 }

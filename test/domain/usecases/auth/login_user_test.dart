@@ -1,4 +1,5 @@
 import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
 import 'package:dartz/dartz.dart';
@@ -23,14 +24,15 @@ void main() {
   final tUsername = 'user';
   final tPassword = 'user123';
   final Token tToken = Token(access: '123', refresh: '321');
+  final User tUser = User(id: 1, email: 'user@user.com', username: 'user');
   final tLoginParams = LoginParams(username: tUsername, password: tPassword);
 
-  test('should get a token from the repository', () async {
+  test('should get a tuple with token and user from the repository', () async {
     // Arrange
     // When loginUser is called with any arguments, always answer with
     // the Right "side" of Either containing a test Token object.
     when(() => mockAuthRepository.loginUser(any()))
-        .thenAnswer((_) async => Right(tToken));
+        .thenAnswer((_) async => Right(Tuple2(tToken, tUser)));
 
     // Act
     final result = await usecase(
@@ -41,7 +43,7 @@ void main() {
     );
 
     // Assert
-    expect(result, Right(tToken));
+    expect(result, Right(Tuple2(tToken, tUser)));
 
     // Verify that the method has been called on the Repository
     verify(() => mockAuthRepository.loginUser(tLoginParams));

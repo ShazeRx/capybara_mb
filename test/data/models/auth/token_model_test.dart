@@ -18,7 +18,7 @@ void main() {
   test('should return a valid Token model from JSON response', () async {
     // Arrange
     final Map<String, dynamic> jsonMap =
-        json.decode(fixture(FixturePaths.tokenJson));
+        json.decode(fixture(FixturePaths.loginJson));
 
     // Act
     final result = TokenModel.fromJson(jsonMap);

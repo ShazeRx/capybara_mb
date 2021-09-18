@@ -58,6 +58,7 @@ void _registerProviders() {
     () => LoginProvider(
       loginUser: getIt(),
       tokenState: getIt(),
+      userState: getIt(),
     ),
   );
 
