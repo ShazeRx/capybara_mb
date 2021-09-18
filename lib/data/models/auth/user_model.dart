@@ -25,9 +25,11 @@ class UserModel extends User {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': this.id,
-      'username': this.username,
-      'email': this.email,
+      'user': {
+        'id': this.id,
+        'username': this.username,
+        'email': this.email,
+      }
     };
   }
 

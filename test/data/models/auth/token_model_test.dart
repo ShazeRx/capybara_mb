@@ -18,7 +18,7 @@ void main() {
   test('should return a valid Token model from JSON response', () async {
     // Arrange
     final Map<String, dynamic> jsonMap =
-        json.decode(fixture(FixturePaths.loginJson));
+        json.decode(fixture(FixturePaths.tokenJson));
 
     // Act
     final result = TokenModel.fromJson(jsonMap);
@@ -33,8 +33,10 @@ void main() {
 
     // Act
     final expectedJsonMap = {
-      'refresh': '123',
-      'access': '321',
+      'token': {
+        'refresh': '123',
+        'access': '321',
+      }
     };
 
     // Assert

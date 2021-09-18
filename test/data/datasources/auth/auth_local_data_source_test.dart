@@ -39,7 +39,7 @@ void main() {
         () async {
       // Arrange
       when(() => mockSharedPreferences.getString(CachedValues.token))
-          .thenReturn(fixture(FixturePaths.loginJson));
+          .thenReturn(fixture(FixturePaths.tokenJson));
 
       // Act
       final result = await dataSource.fetchToken();

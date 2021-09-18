@@ -15,8 +15,10 @@ class TokenModel extends Token {
 
   Map<String, dynamic> toJson() {
     return {
-      'refresh': this.refresh,
-      'access': this.access,
+      'token': {
+        'refresh': this.refresh,
+        'access': this.access,
+      }
     };
   }
 }

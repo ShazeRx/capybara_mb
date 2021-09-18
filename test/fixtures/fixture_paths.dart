@@ -6,4 +6,5 @@ class FixturePaths {
   static const channelsJson = 'channel/channels.json';
   static const messageJson = 'chat/message.json';
   static const loginJson = 'auth/login.json';
+  static const tokenJson = 'auth/token.json';
 }
