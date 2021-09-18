@@ -1,37 +1,47 @@
 import 'package:capybara_app/app/capybara_app_provider.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/usecases/auth/fetch_token.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
-import 'package:capybara_app/ui/facades/auth_facade.dart';
+import 'package:capybara_app/ui/states/auth/token_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../setup/test_helpers.dart';
 
-class MockAuthFacade extends Mock implements AuthFacade {}
+class MockFetchToken extends Mock implements FetchToken {}
+
+class MockTokenState extends Mock implements TokenState {}
+
+class FakeNoParams extends Fake implements NoParams {}
 
 void main() {
-  late MockAuthFacade mockAuthFacade;
+  late MockFetchToken mockFetchToken;
+  late MockTokenState mockTokenState;
   late CapybaraAppProvider provider;
 
   final tToken = Token(access: '123', refresh: '321');
 
-  mockFetchToken() {
-    when(() => mockAuthFacade.fetchToken())
+  mockFetchTokenCall() {
+    when(() => mockFetchToken(NoParams()))
         .thenAnswer((_) async => Right(tToken));
   }
 
   setUp(() {
     registerManagers();
 
-    mockAuthFacade = MockAuthFacade();
+    mockFetchToken = MockFetchToken();
+    mockTokenState = MockTokenState();
 
-    mockFetchToken();
+    mockFetchTokenCall();
 
     provider = CapybaraAppProvider(
-      authFacade: mockAuthFacade,
+      fetchToken: mockFetchToken,
+      tokenState: mockTokenState,
     );
+
+    registerFallbackValue<NoParams>(FakeNoParams());
   });
 
   tearDown(() {
@@ -39,9 +49,9 @@ void main() {
   });
 
   group('fetch token', () {
-    test('should call facade fetch token in provider constructor', () {
+    test('should call fetch token usecase in provider constructor', () {
       //Assert
-      verify(() => mockAuthFacade.fetchToken());
+      verify(() => mockFetchToken(NoParams()));
     });
 
     test('should change provider state to busy while calling fetch token', () {
@@ -62,5 +72,11 @@ void main() {
       //Assert
       expect(result, ProviderState.idle);
     });
+  });
+
+  test('should set token result in state when token is present in cache',
+      () async {
+    // Assert
+    verify(() => mockTokenState.setToken(tToken));
   });
 }

@@ -7,12 +7,12 @@ import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/core/helpers/token/token_helper.dart';
 import 'package:capybara_app/data/models/auth/refresh_model.dart';
 import 'package:capybara_app/data/requests/auth/refresh_request.dart';
-import 'package:capybara_app/ui/states/auth/auth_state.dart';
+import 'package:capybara_app/ui/states/auth/token_state.dart';
 import 'package:dio/dio.dart';
 
 class ErrorInterceptor extends InterceptorsWrapper {
   final Function _invoke;
-  final AuthState _authState = getIt<AuthState>();
+  final TokenState _tokenState = getIt<TokenState>();
 
   ErrorInterceptor({required invoke}) : this._invoke = invoke;
 
@@ -42,7 +42,7 @@ class ErrorInterceptor extends InterceptorsWrapper {
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
         TokenHelper.removeTokenFromCache();
-        this._authState.setToken(null);
+        this._tokenState.setToken(null);
       }
     }
   }

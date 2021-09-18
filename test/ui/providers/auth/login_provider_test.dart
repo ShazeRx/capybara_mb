@@ -3,29 +3,34 @@ import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/domain/entities/auth/token.dart';
 import 'package:capybara_app/domain/usecases/auth/login_user.dart';
-import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
+import 'package:capybara_app/ui/states/auth/token_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../setup/test_helpers.dart';
 
-class MockAuthFacade extends Mock implements AuthFacade {}
+class MockLoginUser extends Mock implements LoginUser {}
+
+class MockTokenState extends Mock implements TokenState {}
 
 class FakeParams extends Fake implements LoginParams {}
 
 void main() {
   late LoginProvider provider;
-  late MockAuthFacade mockAuthFacade;
+  late MockLoginUser mockLoginUser;
+  late MockTokenState mockTokenState;
 
   setUp(() {
     registerManagers();
 
-    mockAuthFacade = MockAuthFacade();
+    mockLoginUser = MockLoginUser();
+    mockTokenState = MockTokenState();
 
     provider = LoginProvider(
-      authFacade: mockAuthFacade,
+      loginUser: mockLoginUser,
+      tokenState: mockTokenState,
     );
     registerFallbackValue<LoginParams>(FakeParams());
   });
@@ -37,13 +42,13 @@ void main() {
   final tToken = Token(access: '123', refresh: '321');
 
   void mockLoginSuccess() {
-    when(() => mockAuthFacade.loginUser(any())).thenAnswer(
+    when(() => mockLoginUser(any())).thenAnswer(
       (_) async => Right(tToken),
     );
   }
 
   void mockLoginfailure() {
-    when(() => mockAuthFacade.loginUser(any())).thenAnswer(
+    when(() => mockLoginUser(any())).thenAnswer(
       (_) async => Left(ServerFailure(message: 'Server failure')),
     );
   }
@@ -79,8 +84,8 @@ void main() {
       provider.onLoginSubmitted();
 
       // Assert
-      verify(() => mockAuthFacade
-          .loginUser(LoginParams(username: tUsername, password: tPassword)));
+      verify(() =>
+          mockLoginUser(LoginParams(username: tUsername, password: tPassword)));
     });
 
     test('should change provider state to idle after unsuccessful login',
@@ -142,5 +147,27 @@ void main() {
       // Assert
       verify(() => mockNavigationManager.navigateTo(RoutePaths.homeRoute));
     });
+  });
+
+  test('should set token result in state after successful login', () async {
+    // Arrange
+    mockLoginSuccess();
+
+    // Act
+    await provider.onLoginSubmitted();
+
+    // Assert
+    verify(() => mockTokenState.setToken(tToken));
+  });
+
+  test('should set null result in state after unsuccessful login', () async {
+    // Arrange
+    mockLoginfailure();
+
+    // Act
+    await provider.onLoginSubmitted();
+
+    // Assert
+    verify(() => mockTokenState.setToken(null));
   });
 }

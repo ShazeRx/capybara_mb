@@ -4,7 +4,7 @@ import 'package:capybara_app/core/config/routes/app_routes.dart';
 import 'package:capybara_app/core/config/themes/app_theme.dart';
 import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
+import 'package:capybara_app/ui/states/auth/token_state_notifier.dart';
 import 'package:capybara_app/ui/states/channel/channel_state_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,14 +19,14 @@ class CapybaraApp extends StatelessWidget {
           create: (_) => getIt<CapybaraAppProvider>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => getIt<AuthStateNotifier>(),
+          create: (_) => getIt<TokenStateNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<ChannelStateNotifier>(),
         ),
       ],
-      child: Consumer2<CapybaraAppProvider, AuthStateNotifier>(
-        builder: (_, capybaraApp, auth, __) {
+      child: Consumer2<CapybaraAppProvider, TokenStateNotifier>(
+        builder: (_, capybaraApp, tokenState, __) {
           return capybaraApp.state == ProviderState.busy
               ? Center(
                   child: CircularProgressIndicator(),
@@ -36,7 +36,7 @@ class CapybaraApp extends StatelessWidget {
                   debugShowCheckedModeBanner: false,
                   theme: appTheme,
                   routes: appRoutes,
-                  initialRoute: auth.token == null
+                  initialRoute: tokenState.token == null
                       ? RoutePaths.loginRoute
                       : RoutePaths.homeRoute,
                 );

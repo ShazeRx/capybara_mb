@@ -1,39 +1,57 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/cache_failure.dart';
-import 'package:capybara_app/ui/facades/auth_facade.dart';
+import 'package:capybara_app/domain/usecases/auth/logout_user.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
+import 'package:capybara_app/ui/states/auth/token_state.dart';
+import 'package:capybara_app/ui/states/auth/user_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../setup/test_helpers.dart';
 
-class MockAuthFacade extends Mock implements AuthFacade {}
+class MockTokenState extends Mock implements TokenState {}
+
+class MockUserState extends Mock implements UserState {}
+
+class MockLogoutUser extends Mock implements LogoutUser {}
+
+class FakeNoParams extends Fake implements NoParams {}
 
 void main() {
-  late MockAuthFacade mockAuthFacade;
+  late MockUserState mockUserState;
+  late MockTokenState mockTokenState;
+  late MockLogoutUser mockLogoutUser;
 
   late UserProfileProvider provider;
 
   setUp(() {
     registerManagers();
-    mockAuthFacade = MockAuthFacade();
+
+    mockUserState = MockUserState();
+    mockTokenState = MockTokenState();
+    mockLogoutUser = MockLogoutUser();
+
     provider = UserProfileProvider(
-      authFacade: mockAuthFacade,
+      logoutUser: mockLogoutUser,
+      tokenState: mockTokenState,
+      userState: mockUserState,
     );
+
+    registerFallbackValue<NoParams>(FakeNoParams());
   });
 
   tearDown(() => unregisterManagers());
 
   void mockLogoutFailure() {
-    when(() => mockAuthFacade.logoutUser())
+    when(() => mockLogoutUser(NoParams()))
         .thenAnswer((_) async => Left(CacheFailure()));
   }
 
   void mockLogoutSuccess() {
-    when(() => mockAuthFacade.logoutUser())
-        .thenAnswer((_) async => Right(unit));
+    when(() => mockLogoutUser(NoParams())).thenAnswer((_) async => Right(unit));
   }
 
   group('on logout pressed', () {
@@ -45,9 +63,7 @@ void main() {
       await provider.onLogoutPressed();
 
       // Assert
-      verify(() => mockAuthFacade.logoutUser());
-
-      verifyNoMoreInteractions(mockAuthFacade);
+      verify(() => mockLogoutUser(NoParams()));
     });
 
     test('should change provider state to idle after unsuccessful logout',
@@ -109,5 +125,29 @@ void main() {
       // Assert
       verify(() => mockNavigationManager.navigateTo((RoutePaths.loginRoute)));
     });
+  });
+
+  test('should set token as null value in state when logout is successful',
+      () async {
+    // Arrange
+    mockLogoutSuccess();
+
+    // Act
+    await provider.onLogoutPressed();
+
+    // Assert
+    verify(() => mockTokenState.setToken(null));
+  });
+
+  test('should set user as null value in state when logout is successful',
+      () async {
+    // Arrange
+    mockLogoutSuccess();
+
+    // Act
+    await provider.onLogoutPressed();
+
+    // Assert
+    verify(() => mockUserState.setUser(null));
   });
 }
