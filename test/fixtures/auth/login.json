@@ -1,11 +1,7 @@
 {
-  "user": {
-    "id": 1,
-    "username": "user",
-    "email": "user@user.com"
-  },
-  "token": {
-    "refresh": "123",
-    "access": "321"
-  }
+  "id": 1,
+  "username": "user",
+  "email": "user@user.com",
+  "refresh": "123",
+  "access": "321"
 }

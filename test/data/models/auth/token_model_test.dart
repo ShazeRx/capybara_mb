@@ -33,10 +33,8 @@ void main() {
 
     // Act
     final expectedJsonMap = {
-      'token': {
-        'refresh': '123',
-        'access': '321',
-      }
+      'refresh': '123',
+      'access': '321',
     };
 
     // Assert

@@ -33,11 +33,9 @@ void main() {
 
     // Act
     final expectedJsonMap = {
-      'user': {
-        'id': 1,
-        'username': 'user',
-        'email': 'user@user.com',
-      }
+      'id': 1,
+      'username': 'user',
+      'email': 'user@user.com',
     };
 
     // Assert

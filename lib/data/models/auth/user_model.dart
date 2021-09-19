@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:capybara_app/domain/entities/auth/user.dart';
 
 class UserModel extends User {
@@ -17,19 +19,17 @@ class UserModel extends User {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['user']['id'],
-      username: json['user']['username'],
-      email: json['user']['email'],
+      id: json['id'],
+      username: json['username'],
+      email: json['email'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'user': {
-        'id': this.id,
-        'username': this.username,
-        'email': this.email,
-      }
+      'id': this.id,
+      'username': this.username,
+      'email': this.email,
     };
   }
 
