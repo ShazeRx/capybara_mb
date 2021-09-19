@@ -1,4 +1,6 @@
+import 'package:capybara_app/app/capybara_app_provider.dart';
 import 'package:capybara_app/core/http/http_client.dart';
+import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
 import 'package:capybara_app/core/managers/navigation_manager.dart';
 import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:capybara_app/core/network/network_info.dart';
@@ -18,7 +20,6 @@ import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
-import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/facades/channel_facade.dart';
 import 'package:capybara_app/ui/providers/channels/channel_provider.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
@@ -27,8 +28,10 @@ import 'package:capybara_app/ui/providers/home/home_provider.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
 import 'package:capybara_app/ui/providers/profile/user_profile_provider.dart';
-import 'package:capybara_app/ui/states/auth/auth_state.dart';
-import 'package:capybara_app/ui/states/auth/auth_state_notifier.dart';
+import 'package:capybara_app/ui/states/auth/token_state.dart';
+import 'package:capybara_app/ui/states/auth/token_state_notifier.dart';
+import 'package:capybara_app/ui/states/auth/user_state.dart';
+import 'package:capybara_app/ui/states/auth/user_state_notifier.dart';
 import 'package:capybara_app/ui/states/channel/channel_state.dart';
 import 'package:capybara_app/ui/states/channel/channel_state_notifier.dart';
 
@@ -54,13 +57,16 @@ Future<void> registerDependencies() async {
 void _registerProviders() {
   getIt.registerFactory(
     () => LoginProvider(
-      authFacade: getIt(),
+      loginUser: getIt(),
+      tokenState: getIt(),
+      userState: getIt(),
     ),
   );
 
   getIt.registerFactory(
     () => RegisterProvider(
-      authFacade: getIt(),
+      registerUser: getIt(),
+      userState: getIt(),
     ),
   );
 
@@ -70,7 +76,9 @@ void _registerProviders() {
 
   getIt.registerFactory(
     () => UserProfileProvider(
-      authFacade: getIt(),
+      logoutUser: getIt(),
+      tokenState: getIt(),
+      userState: getIt(),
     ),
   );
 
@@ -84,18 +92,16 @@ void _registerProviders() {
     ),
   );
   getIt.registerFactory(() => ChannelProvider(channelFacade: getIt()));
+
+  getIt.registerFactory(
+    () => CapybaraAppProvider(
+      fetchToken: getIt(),
+      tokenState: getIt(),
+    ),
+  );
 }
 
 void _registerFacades() {
-  getIt.registerLazySingleton(
-    () => AuthFacade(
-      authState: getIt(),
-      fetchToken: getIt(),
-      loginUser: getIt(),
-      registerUser: getIt(),
-      logoutUser: getIt(),
-    ),
-  );
   getIt.registerLazySingleton(() => ChannelFacade(
       addToChannel: getIt(),
       channelsState: getIt(),
@@ -106,13 +112,22 @@ void _registerFacades() {
 
 void _registerStates() {
   //Auth
+  getIt.registerLazySingleton<TokenState>(
+    () => TokenStateImpl(),
+  );
+  getIt.registerLazySingleton<UserState>(
+    () => UserStateImpl(),
+  );
+
   getIt.registerLazySingleton(
-    () => AuthStateNotifier(
-      authState: getIt(),
+    () => TokenStateNotifier(
+      tokenState: getIt(),
     ),
   );
-  getIt.registerLazySingleton<AuthState>(
-    () => AuthStateImpl(),
+  getIt.registerLazySingleton(
+    () => UserStateNotifier(
+      userState: getIt(),
+    ),
   );
 
   //Channels
@@ -155,7 +170,6 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => CreateChannel(channelRepository: getIt()));
   getIt.registerLazySingleton(() => FetchChannels(channelRepository: getIt()));
   getIt.registerLazySingleton(() => FetchUsers(channelRepository: getIt()));
-
 }
 
 void _registerRepositories() {
@@ -199,6 +213,12 @@ void _registerDataSources() {
 }
 
 void _registerCoreFeatures() {
+  getIt.registerLazySingleton<InterceptorUtilities>(
+    () => InterceptorUtilitiesImpl(
+      sharedPreferences: getIt(),
+    ),
+  );
+
   getIt.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(
       connectionChecker: getIt(),

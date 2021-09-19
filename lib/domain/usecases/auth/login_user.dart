@@ -1,11 +1,12 @@
 import 'package:capybara_app/domain/entities/auth/token.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:capybara_app/core/errors/failures/failure.dart';
 import 'package:equatable/equatable.dart';
 
-class LoginUser implements UseCase<Token, LoginParams> {
+class LoginUser implements UseCase<Tuple2<Token, User>, LoginParams> {
   final AuthRepository _authRepository;
 
   LoginUser({
@@ -13,7 +14,7 @@ class LoginUser implements UseCase<Token, LoginParams> {
   }) : this._authRepository = authRepository;
 
   @override
-  Future<Either<Failure, Token>> call(LoginParams params) async {
+  Future<Either<Failure, Tuple2<Token, User>>> call(LoginParams params) async {
     return await this._authRepository.loginUser(params);
   }
 }

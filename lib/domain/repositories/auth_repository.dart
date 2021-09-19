@@ -6,7 +6,7 @@ import 'package:capybara_app/domain/usecases/auth/register_user.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, Token>> loginUser(LoginParams params);
+  Future<Either<Failure, Tuple2<Token, User>>> loginUser(LoginParams params);
 
   Future<Either<Failure, User>> registerUser(RegisterParams params);
 

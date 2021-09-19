@@ -8,15 +8,17 @@ class TokenModel extends Token {
 
   factory TokenModel.fromJson(Map<String, dynamic> json) {
     return TokenModel(
-      refresh: json['refresh'],
-      access: json['access'],
+      refresh: json['token']['refresh'],
+      access: json['token']['access'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'refresh': this.refresh,
-      'access': this.access,
+      'token': {
+        'refresh': this.refresh,
+        'access': this.access,
+      }
     };
   }
 }

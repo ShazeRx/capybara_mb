@@ -34,7 +34,8 @@ class AuthRepositoryImpl implements AuthRepository {
         this._networkInfo = networkInfo;
 
   @override
-  Future<Either<Failure, Token>> loginUser(LoginParams params) async {
+  Future<Either<Failure, Tuple2<Token, User>>> loginUser(
+      LoginParams params) async {
     if (!await this._networkInfo.isConnected) {
       return Left(NetworkFailure());
     }
@@ -43,7 +44,10 @@ class AuthRepositoryImpl implements AuthRepository {
       final result = await this._remoteDataSource.loginUser(
             LoginRequest.fromParams(params),
           );
-      this._localDataSource.cacheToken(result);
+
+      this._localDataSource.cacheToken(result.value1);
+      this._localDataSource.cacheUser(result.value2);
+
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

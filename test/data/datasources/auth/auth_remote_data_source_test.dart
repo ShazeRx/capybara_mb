@@ -10,6 +10,7 @@ import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/requests/auth/login_request.dart';
 import 'package:capybara_app/data/requests/auth/register_request.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -31,7 +32,7 @@ void main() {
   final tEmail = 'user@user.com';
   final tPassword = 'user123';
   final tTokenModel =
-      TokenModel.fromJson(json.decode(fixture(FixturePaths.tokenJson)));
+      TokenModel.fromJson(json.decode(fixture(FixturePaths.loginJson)));
   final tUserModel =
       UserModel.fromJson(json.decode(fixture(FixturePaths.userJson)));
   final tLoginRequest = LoginRequest(username: tUsername, password: tPassword);
@@ -43,7 +44,7 @@ void main() {
           url: any(named: 'url'),
           method: HttpMethods.post,
           body: tLoginRequest.toJson(),
-        )).thenAnswer((_) async => fixture(FixturePaths.tokenJson));
+        )).thenAnswer((_) async => fixture(FixturePaths.loginJson));
   }
 
   void mockHttpPostRegister200Success() {
@@ -89,7 +90,8 @@ void main() {
       );
     });
 
-    test('should return TokenModel when the response code is 200 (success)',
+    test(
+        'should return tuple with TokenModel and UserModel when the response code is 200 (success)',
         () async {
       // Arrange
       mockHttpPostLogin200Success();
@@ -98,7 +100,7 @@ void main() {
       final result = await dataSource.loginUser(tLoginRequest);
 
       // Assert
-      expect(result, equals(tTokenModel));
+      expect(result, equals(Tuple2(tTokenModel, tUserModel)));
     });
 
     test('should throw a ServerException for all error codes', () async {

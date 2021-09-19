@@ -27,6 +27,7 @@ class NewChannelNameProvider extends BaseProvider implements Disposable {
       (channel) => null,
     );
     this.navigateTo(RoutePaths.homeRoute);
+    this.showSuccess('Channel added successfully');
   }
 
   CreateChannelParams getChannelParams(String channelName, List<int> members) {

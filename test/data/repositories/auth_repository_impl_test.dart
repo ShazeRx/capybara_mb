@@ -93,8 +93,11 @@ void main() {
       when(() => mockLocalDataSource.cacheToken(tTokenModel))
           .thenAnswer((_) async => {});
 
+      when(() => mockLocalDataSource.cacheUser(tUserModel))
+          .thenAnswer((_) async => {});
+
       when(() => mockRemoteDataSource.loginUser(tLoginRequest))
-          .thenAnswer((_) async => tTokenModel);
+          .thenAnswer((_) async => Tuple2(tTokenModel, tUserModel));
     });
 
     test('should check if the device is online', () async {
@@ -110,11 +113,11 @@ void main() {
 
     runTestsOnline(() {
       test(
-        'should return the token when the remote call is successful',
+        'should return tuple with token and user when the remote call is successful',
         () async {
           // Arrange
           when(() => mockRemoteDataSource.loginUser(any()))
-              .thenAnswer((_) async => tTokenModel);
+              .thenAnswer((_) async => Tuple2(tTokenModel, tUserModel));
 
           // Act
           final result = await repository.loginUser(tLoginRequest);
@@ -123,7 +126,7 @@ void main() {
           verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
 
           // Assert
-          expect(result, equals(Right(tToken)));
+          expect(result, equals(Right(Tuple2(tTokenModel, tUserModel))));
         },
       );
 
@@ -132,7 +135,7 @@ void main() {
         () async {
           // Arrange
           when(() => mockRemoteDataSource.loginUser(any()))
-              .thenAnswer((_) async => tTokenModel);
+              .thenAnswer((_) async => Tuple2(tTokenModel, tUserModel));
 
           // Act
           await repository.loginUser(tLoginRequest);
@@ -141,6 +144,23 @@ void main() {
           verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
 
           verify(() => mockLocalDataSource.cacheToken(tTokenModel));
+        },
+      );
+
+      test(
+        'should cache the user locally when the remote call is successful',
+        () async {
+          // Arrange
+          when(() => mockRemoteDataSource.loginUser(any()))
+              .thenAnswer((_) async => Tuple2(tTokenModel, tUserModel));
+
+          // Act
+          await repository.loginUser(tLoginRequest);
+
+          // Assert
+          verify(() => mockRemoteDataSource.loginUser(tLoginRequest));
+
+          verify(() => mockLocalDataSource.cacheUser(tUserModel));
         },
       );
 
@@ -168,7 +188,7 @@ void main() {
       test('should return network failure if the device is offline', () async {
         // Arrange
         when(() => mockRemoteDataSource.loginUser(tLoginRequest))
-            .thenAnswer((_) async => tTokenModel);
+            .thenAnswer((_) async => Tuple2(tTokenModel, tUserModel));
 
         // Act
         final result = await repository.loginUser(tLoginRequest);

@@ -3,5 +3,9 @@
     "id": 1,
     "username": "user",
     "email": "user@user.com"
+  },
+  "token": {
+    "refresh": "123",
+    "access": "321"
   }
 }

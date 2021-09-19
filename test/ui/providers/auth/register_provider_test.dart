@@ -2,29 +2,34 @@ import 'package:capybara_app/core/enums/provider_state.dart';
 import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/domain/entities/auth/user.dart';
 import 'package:capybara_app/domain/usecases/auth/register_user.dart';
-import 'package:capybara_app/ui/facades/auth_facade.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
+import 'package:capybara_app/ui/states/auth/user_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../setup/test_helpers.dart';
 
-class MockAuthFacade extends Mock implements AuthFacade {}
+class MockRegisterUser extends Mock implements RegisterUser {}
+
+class MockUserState extends Mock implements UserState {}
 
 class FakeParams extends Fake implements RegisterParams {}
 
 void main() {
   late RegisterProvider provider;
-  late MockAuthFacade mockAuthFacade;
+  late MockRegisterUser mockRegisterUser;
+  late MockUserState mockUserState;
 
   setUp(() {
     registerManagers();
 
-    mockAuthFacade = MockAuthFacade();
+    mockRegisterUser = MockRegisterUser();
+    mockUserState = MockUserState();
 
     provider = RegisterProvider(
-      authFacade: mockAuthFacade,
+      registerUser: mockRegisterUser,
+      userState: mockUserState,
     );
 
     registerFallbackValue<RegisterParams>(FakeParams());
@@ -39,13 +44,13 @@ void main() {
   final tUser = User(id: tId, email: tEmail, username: tUsername);
 
   void mockRegisterSuccess() {
-    when(() => mockAuthFacade.registerUser(any())).thenAnswer(
+    when(() => mockRegisterUser(any())).thenAnswer(
       (_) async => Right(tUser),
     );
   }
 
   void mockRegisterFailure() {
-    when(() => mockAuthFacade.registerUser(any())).thenAnswer(
+    when(() => mockRegisterUser(any())).thenAnswer(
       (_) async => Left(ServerFailure(message: 'Server failure')),
     );
   }
@@ -88,7 +93,7 @@ void main() {
       provider.onRegisterSubmitted();
 
       // Assert
-      verify(() => mockAuthFacade.registerUser(RegisterParams(
+      verify(() => mockRegisterUser(RegisterParams(
             username: tUsername,
             email: tEmail,
             password: tPassword,
@@ -168,5 +173,29 @@ void main() {
       // Assert
       verify(() => mockNavigationManager.backToPreviousScreen());
     });
+  });
+
+  test('should set user result in state after successful registration',
+      () async {
+    // Arrange
+    mockRegisterSuccess();
+
+    // Act
+    await provider.onRegisterSubmitted();
+
+    // Assert
+    verify(() => mockUserState.setUser(tUser));
+  });
+
+  test('should set null result in state after unsuccesful registration',
+      () async {
+    // Arrange
+    mockRegisterFailure();
+
+    // Act
+    await provider.onRegisterSubmitted();
+
+    // Assert
+    verify(() => mockUserState.setUser(null));
   });
 }
