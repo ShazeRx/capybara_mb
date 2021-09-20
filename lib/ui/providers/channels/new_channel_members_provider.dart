@@ -1,15 +1,22 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
 import 'package:capybara_app/core/enums/provider_state.dart';
-import 'package:capybara_app/ui/facades/channel_facade.dart';
+import 'package:capybara_app/core/extensions/either_extensions.dart';
+import 'package:capybara_app/domain/entities/auth/user.dart';
+import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/providers/base_provider.dart';
+import 'package:capybara_app/ui/states/user/users_state.dart';
 
 class NewChannelMembersProvider extends BaseProvider {
   List<int> _selectedUserTiles = [];
-  final ChannelFacade _channelFacade;
+  final FetchUsers _fetchUsers;
+  final UsersState _usersState;
 
-  NewChannelMembersProvider({required ChannelFacade channelFacade})
-      : this._channelFacade = channelFacade {
-    fetchUsers();
+  NewChannelMembersProvider(
+      {required FetchUsers fetchUsers, required UsersState usersState})
+      : this._fetchUsers = fetchUsers,
+        this._usersState = usersState {
+    this.fetchUsers();
   }
 
   List<int> get selectedUserTiles => [...this._selectedUserTiles];
@@ -23,10 +30,13 @@ class NewChannelMembersProvider extends BaseProvider {
 
   fetchUsers() async {
     this.setState(ProviderState.busy);
-    final result = await this._channelFacade.fetchUsers();
+    final result = await this._fetchUsers(NoParams());
+    this._usersState.setUsers(result.getListValuesOrEmptyList<User>());
     this.setState(ProviderState.idle);
     result.fold(
-        (failure) => this.showError("Failed fetching users"), (users) => null);
+        (failure) =>
+            this.showError("Failed fetching users"),
+            (users) => null);
   }
 
   void onAddChannelMembersClicked() {

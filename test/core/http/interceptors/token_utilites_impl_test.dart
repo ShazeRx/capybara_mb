@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:capybara_app/core/constants/cached_values.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
-import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
+import 'package:capybara_app/core/protocols/token_utilites.dart';
 import 'package:capybara_app/data/models/auth/token_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,11 +14,11 @@ class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() async {
   late MockSharedPreferences mockSharedPreferences;
-  late InterceptorUtilities interceptorUtilities;
+  late TokenUtilities interceptorUtilities;
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    interceptorUtilities = InterceptorUtilitiesImpl(
+    interceptorUtilities = TokenUtilitiesImpl(
       sharedPreferences: mockSharedPreferences,
     );
   });

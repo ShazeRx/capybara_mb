@@ -8,7 +8,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class MockSocket extends Mock implements WebSocketChannel {}
 
 void main() {
-  final tChatSession = ChatStream(streamChannel: MockSocket());
+  final tChatSession = ChatStream(channelConnections: MockSocket());
   final tMessageBody='somebody';
   final tMessageType=SendMessageType();
   final tMessageRequest = MessageRequest(

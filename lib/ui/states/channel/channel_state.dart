@@ -8,11 +8,8 @@ import 'package:rxdart/rxdart.dart';
 abstract class ChannelsState implements Disposable {
   BehaviorSubject<List<Channel>> get channels$;
 
-  BehaviorSubject<List<User>> get users$;
-
   void setChannels(List<Channel> channels);
 
-  void setUsers(List<User> users);
 }
 
 class ChannelsStateImpl implements ChannelsState {
@@ -33,11 +30,5 @@ class ChannelsStateImpl implements ChannelsState {
     this._channels.close();
     this._users.close();
   }
-
-  @override
-  void setUsers(List<User> users) {
-    this._users.add(users);
-  }
-
 
 }

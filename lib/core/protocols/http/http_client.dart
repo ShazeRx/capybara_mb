@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
-import 'package:capybara_app/core/http/interceptors/error_interceptor.dart';
-import 'package:capybara_app/core/http/interceptors/token_interceptor.dart';
 import 'package:dio/dio.dart';
 
+import 'interceptors/error_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
+import 'interceptors/token_interceptor.dart';
 
 abstract class HttpClient {
   Future<dynamic> invoke({

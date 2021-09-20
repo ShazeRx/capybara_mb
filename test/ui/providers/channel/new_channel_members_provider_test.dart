@@ -1,20 +1,26 @@
 import 'package:capybara_app/core/constants/route_paths.dart';
-import 'package:capybara_app/core/errors/failures/network_failure.dart';
+import 'package:capybara_app/core/errors/failures/server_failure.dart';
 import 'package:capybara_app/data/models/auth/user_model.dart';
-import 'package:capybara_app/ui/facades/channel_facade.dart';
+import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
+import 'package:capybara_app/domain/usecases/usecase.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
+import 'package:capybara_app/ui/states/user/users_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../setup/test_helpers.dart';
 
-class MockChannelFacade extends Mock implements ChannelFacade {}
+class MockFetchUserUsecase extends Mock implements FetchUsers {}
+
+class MockUsersState extends Mock implements UsersState {}
+
+class FakeNoParams extends Fake implements NoParams {}
 
 void main() {
   late NewChannelMembersProvider provider;
-  late MockChannelFacade mockChannelFacade;
-
+  late MockUsersState mockUsersState;
+  late MockFetchUserUsecase mockFetchUsersUsecase;
   final users = List.generate(
       4,
       (index) => UserModel(
@@ -23,26 +29,35 @@ void main() {
 
   setUp(() {
     registerManagers();
+    mockUsersState = MockUsersState();
+    mockFetchUsersUsecase = MockFetchUserUsecase();
+    registerFallbackValue(FakeNoParams());
   });
-
-  //Need to do this in that way cuz some tests need different setups for provider
-  registerDefaultMocks() {
-    setUp(() {
-      mockChannelFacade = MockChannelFacade();
-      //Need to mock here once to be sure that on create instance there wont be any null exceptions from facade
-      when(() => mockChannelFacade.fetchUsers())
-          .thenAnswer((_) async => Right(users));
-      provider = NewChannelMembersProvider(channelFacade: mockChannelFacade);
-    });
-  }
 
   tearDown(() => unregisterManagers());
 
+  mockFetchFailure() {
+    reset(mockFetchUsersUsecase);
+    when(() => mockFetchUsersUsecase(any()))
+        .thenAnswer((_) async => Left(ServerFailure(message: 'xd')));
+    provider = NewChannelMembersProvider(
+        fetchUsers: mockFetchUsersUsecase, usersState: mockUsersState);
+  }
+
+  mockFetchSuccess() {
+    when(() => mockFetchUsersUsecase(any()))
+        .thenAnswer((_) async => Right(users));
+    provider = NewChannelMembersProvider(
+        fetchUsers: mockFetchUsersUsecase, usersState: mockUsersState);
+  }
+
   group('on user list tile clicked', () {
-    registerDefaultMocks();
     test(
         'should add user to selected user tiles if user not exists in the list',
         () async {
+      //Arrange
+      mockFetchSuccess();
+
       // Act
       provider.onUserListTileClicked(tUserId);
       final result = provider.selectedUserTiles;
@@ -54,7 +69,8 @@ void main() {
     test(
         'should remove user from selected user tiles if user exists in the list',
         () async {
-      // Arrange
+      //Arrange
+      mockFetchSuccess();
       provider.onUserListTileClicked(tUserId);
 
       // Act
@@ -67,8 +83,10 @@ void main() {
   });
 
   group('on add channel members clicked', () {
-    registerDefaultMocks();
     test('should show an error when no members are selected', () {
+      //Arrange
+      mockFetchSuccess();
+
       // Act
       provider.onAddChannelMembersClicked();
 
@@ -90,30 +108,22 @@ void main() {
           .pushRouteOnStack(RoutePaths.newChannelNameRoute, [tUserId]));
     });
   });
-  group('fetch users', () {
-    test('should call facade fetch user', () {
-      //Arrange
-      mockChannelFacade = MockChannelFacade();
-      when(() => mockChannelFacade.fetchUsers())
-          .thenAnswer((_) async => Right(users));
 
-      //Act
-      provider = NewChannelMembersProvider(channelFacade: mockChannelFacade);
+  group('fetch users', () {
+    test('should call fetch user usecase', () {
+      //Arrange
+      mockFetchSuccess();
 
       //Assert
-      verify(() => mockChannelFacade.fetchUsers()).called(1);
+      verify(() => mockFetchUsersUsecase.call(any())).called(1);
     });
 
     test('should show error on facade failure', () {
       //Arrange
-      mockChannelFacade = MockChannelFacade();
-      when(() => mockChannelFacade.fetchUsers())
-          .thenAnswer((_) async => Left(NetworkFailure()));
+      mockFetchFailure();
 
-      //Act
-      provider = NewChannelMembersProvider(channelFacade: mockChannelFacade);
       //Assert
-      verify(() => mockChannelFacade.fetchUsers()).called(1);
+      verify(() => mockFetchUsersUsecase.call(any())).called(1);
       //TODO: need to check this test!!
       //verify(() => mockSnackbarManager.showError(any()));
     });

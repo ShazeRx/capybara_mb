@@ -5,7 +5,7 @@ import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
 import 'package:capybara_app/data/models/auth/token_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class InterceptorUtilities {
+abstract class TokenUtilities {
   Future<TokenModel> getCurrentToken();
 
   Future<void> setTokenWithNewAccessInCache(String access);
@@ -13,10 +13,10 @@ abstract class InterceptorUtilities {
   Future<void> removeTokenFromCache();
 }
 
-class InterceptorUtilitiesImpl implements InterceptorUtilities {
+class TokenUtilitiesImpl implements TokenUtilities {
   final SharedPreferences _sharedPreferences;
 
-  InterceptorUtilitiesImpl({
+  TokenUtilitiesImpl({
     required SharedPreferences sharedPreferences,
   }) : this._sharedPreferences = sharedPreferences;
 

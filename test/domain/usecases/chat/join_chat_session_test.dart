@@ -18,7 +18,7 @@ void main() {
   late JoinChatSession usecase;
   final tChannelId = 1;
   final tJoinToChannelParams = JoinChannelSessionParams(channelId: tChannelId);
-  final chatSession = ChatStream(streamChannel: MockSocket());
+  final chatSession = ChatStream(channelConnections: MockSocket());
   setUp(() {
     mockChatRepository = MockChatRepository();
     usecase = JoinChatSession(chatRepository: mockChatRepository);

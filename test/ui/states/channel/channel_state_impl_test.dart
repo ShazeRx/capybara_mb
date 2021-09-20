@@ -32,16 +32,4 @@ void main() {
       expect(result, channels);
     });
   });
-  group('set users', () {
-    test('should set users', () {
-      //Arrange
-      channelsStateImpl.setUsers(users);
-
-      //Act
-      final result = channelsStateImpl.users$.value;
-
-      //Assert
-      expect(result, users);
-    });
-  });
 }

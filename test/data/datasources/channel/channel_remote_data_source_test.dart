@@ -3,7 +3,7 @@ import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/client_exception.dart';
 import 'package:capybara_app/core/errors/exceptions/server_exception.dart';
-import 'package:capybara_app/core/http/http_client.dart';
+import 'package:capybara_app/core/protocols/http/http_client.dart';
 import 'package:capybara_app/data/datasource/channel/channel_remote_data_source.dart';
 import 'package:capybara_app/data/models/auth/user_model.dart';
 import 'package:capybara_app/data/models/channel/channel_model.dart';

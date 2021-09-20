@@ -15,7 +15,7 @@ class MockSocket extends Mock implements WebSocketChannel {}
 void main() {
   late MockChatRepository mockChatRepository;
   late FetchLast10Msgs usecase;
-  final chatSession = ChatStream(streamChannel: MockSocket());
+  final chatSession = ChatStream(channelConnections: MockSocket());
   final messageList=[Message('21.02.1234', message: 'some', username: 'body')];
   final messageParams = MessageParams(
       body: null, chatStream: chatSession, messageType: SendMessageType());

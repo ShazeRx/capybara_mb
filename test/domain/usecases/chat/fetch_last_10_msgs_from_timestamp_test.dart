@@ -16,7 +16,7 @@ void main() {
   late MockChatRepository mockChatRepository;
   late FetchLast10MsgsFromTimestamp usecase;
   final String timestamp = '2021-07-21';
-  final chatSession = ChatStream(streamChannel: MockSocket());
+  final chatSession = ChatStream(channelConnections: MockSocket());
   final messageList=[Message('21.02.1234', message: 'some', username: 'body')];
   final messageParams = MessageParams(
       body: timestamp,

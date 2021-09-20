@@ -1,9 +1,9 @@
 import 'package:capybara_app/app/capybara_app_provider.dart';
-import 'package:capybara_app/core/http/http_client.dart';
-import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
 import 'package:capybara_app/core/managers/navigation_manager.dart';
 import 'package:capybara_app/core/managers/snackbar_manager.dart';
 import 'package:capybara_app/core/network/network_info.dart';
+import 'package:capybara_app/core/protocols/http/http_client.dart';
+import 'package:capybara_app/core/protocols/token_utilites.dart';
 import 'package:capybara_app/data/datasource/auth/auth_local_data_source.dart';
 import 'package:capybara_app/data/datasource/auth/auth_remote_data_source.dart';
 import 'package:capybara_app/data/datasource/channel/channel_local_data_source.dart';
@@ -20,10 +20,8 @@ import 'package:capybara_app/domain/usecases/channel/add_to_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/create_channel.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_channels.dart';
 import 'package:capybara_app/domain/usecases/channel/fetch_users.dart';
-import 'package:capybara_app/ui/facades/channel_facade.dart';
 import 'package:capybara_app/ui/providers/channels/channel_provider.dart';
 import 'package:capybara_app/ui/providers/channels/new_channel_members_provider.dart';
-import 'package:capybara_app/ui/providers/channels/new_channel_name_provider.dart';
 import 'package:capybara_app/ui/providers/home/home_provider.dart';
 import 'package:capybara_app/ui/providers/auth/login_provider.dart';
 import 'package:capybara_app/ui/providers/auth/register_provider.dart';
@@ -44,7 +42,6 @@ GetIt getIt = GetIt.instance;
 
 Future<void> registerDependencies() async {
   _registerProviders();
-  _registerFacades();
   _registerStates();
   _registerUseCases();
   _registerRepositories();
@@ -83,15 +80,17 @@ void _registerProviders() {
   );
 
   getIt.registerFactory(
-    () => NewChannelMembersProvider(channelFacade: getIt()),
+    () =>
+        NewChannelMembersProvider(fetchUsers: getIt(), usersState: getIt()),
   );
 
+  // getIt.registerFactory(
+  //   () => NewChannelNameProvider(
+  //     channelFacade: getIt(),
+  //   ),
+  // );
   getIt.registerFactory(
-    () => NewChannelNameProvider(
-      channelFacade: getIt(),
-    ),
-  );
-  getIt.registerFactory(() => ChannelProvider(channelFacade: getIt()));
+      () => ChannelProvider(channelsState: getIt(), fetchChannels: getIt()));
 
   getIt.registerFactory(
     () => CapybaraAppProvider(
@@ -99,15 +98,6 @@ void _registerProviders() {
       tokenState: getIt(),
     ),
   );
-}
-
-void _registerFacades() {
-  getIt.registerLazySingleton(() => ChannelFacade(
-      addToChannel: getIt(),
-      channelsState: getIt(),
-      createChannel: getIt(),
-      fetchChannels: getIt(),
-      fetchUsers: getIt()));
 }
 
 void _registerStates() {
@@ -213,8 +203,8 @@ void _registerDataSources() {
 }
 
 void _registerCoreFeatures() {
-  getIt.registerLazySingleton<InterceptorUtilities>(
-    () => InterceptorUtilitiesImpl(
+  getIt.registerLazySingleton<TokenUtilities>(
+    () => TokenUtilitiesImpl(
       sharedPreferences: getIt(),
     ),
   );

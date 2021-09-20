@@ -1,12 +1,11 @@
 import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
-import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
+import 'package:capybara_app/core/protocols/token_utilites.dart';
 import 'package:dio/dio.dart';
 
 class TokenInterceptor extends InterceptorsWrapper {
-  final InterceptorUtilities _interceptorUtilities =
-      getIt<InterceptorUtilities>();
+  final TokenUtilities _interceptorUtilities = getIt<TokenUtilities>();
 
   @override
   void onRequest(

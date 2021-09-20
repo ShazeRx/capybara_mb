@@ -37,7 +37,7 @@ void main() {
   messages
       .add(new Message(timestamp, message: messageBody, username: 'body'));
   messages.add(new Message(timestamp, message: 'once', username: 'told'));
-  final chatSession = ChatStream(streamChannel: MockSocket());
+  final chatSession = ChatStream(channelConnections: MockSocket());
   final messageParams = MessageParams(
       body: messageBody,
       chatStream: chatSession,
@@ -272,7 +272,7 @@ void main() {
     final tChannelId = 1;
     final tJoinToChannelParams =
         JoinChannelSessionParams(channelId: tChannelId);
-    final chatSession = ChatStream(streamChannel: MockSocket());
+    final chatSession = ChatStream(channelConnections: MockSocket());
     test('should check network connection', () async {
       //Arrange
       when(() => mockRemoteDataSource.joinChatSession(any()))

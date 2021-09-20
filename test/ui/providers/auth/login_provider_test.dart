@@ -29,11 +29,9 @@ void main() {
 
   setUp(() {
     registerManagers();
-
     mockLoginUser = MockLoginUser();
     mockTokenState = MockTokenState();
     mockUserState = MockUserState();
-
     provider = LoginProvider(
       loginUser: mockLoginUser,
       tokenState: mockTokenState,

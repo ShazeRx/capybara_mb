@@ -4,7 +4,7 @@ import 'package:capybara_app/app/injection_container.dart';
 import 'package:capybara_app/core/constants/api.dart';
 import 'package:capybara_app/core/constants/http_methods.dart';
 import 'package:capybara_app/core/errors/exceptions/cache_exception.dart';
-import 'package:capybara_app/core/http/interceptors/interceptor_utilites.dart';
+import 'package:capybara_app/core/protocols/token_utilites.dart';
 import 'package:capybara_app/data/models/auth/refresh_model.dart';
 import 'package:capybara_app/data/requests/auth/refresh_request.dart';
 import 'package:capybara_app/ui/states/auth/token_state.dart';
@@ -13,8 +13,8 @@ import 'package:dio/dio.dart';
 class ErrorInterceptor extends InterceptorsWrapper {
   final Function _invoke;
   final TokenState _tokenState = getIt<TokenState>();
-  final InterceptorUtilities _interceptorUtilities =
-      getIt<InterceptorUtilities>();
+  final TokenUtilities _interceptorUtilities =
+      getIt<TokenUtilities>();
 
   ErrorInterceptor({required invoke}) : this._invoke = invoke;
 
