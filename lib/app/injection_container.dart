@@ -32,6 +32,7 @@ import 'package:capybara_app/ui/states/auth/user_state.dart';
 import 'package:capybara_app/ui/states/auth/user_state_notifier.dart';
 import 'package:capybara_app/ui/states/channel/channel_state.dart';
 import 'package:capybara_app/ui/states/channel/channel_state_notifier.dart';
+import 'package:capybara_app/ui/states/user/users_state.dart';
 
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -108,7 +109,6 @@ void _registerStates() {
   getIt.registerLazySingleton<UserState>(
     () => UserStateImpl(),
   );
-
   getIt.registerLazySingleton(
     () => TokenStateNotifier(
       tokenState: getIt(),
@@ -126,7 +126,14 @@ void _registerStates() {
       channelsState: getIt(),
     ),
   );
-  getIt.registerLazySingleton<ChannelsState>(() => ChannelsStateImpl());
+  getIt.registerLazySingleton<ChannelsState>(
+          () => ChannelsStateImpl()
+  );
+
+  //Users
+  getIt.registerLazySingleton<UsersState>(
+          () => UsersStateImpl()
+  );
 }
 
 void _registerUseCases() {
